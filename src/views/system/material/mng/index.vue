@@ -5,60 +5,63 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-<!--            <a-col :md="8" :sm="24">-->
-<!--              <a-form-item label="项目id" prop="projId">-->
-<!--                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
             <a-col :md="8" :sm="24">
               <a-form-item label="物料名称" prop="name">
                 <a-input v-model="queryParam.name" placeholder="请输入物料名称" allow-clear/>
               </a-form-item>
             </a-col>
-<!--            <a-col :md="8" :sm="24">-->
-<!--              <a-form-item label="采购的单据单号" prop="materialNo">-->
-<!--                <a-input v-model="queryParam.materialNo" placeholder="请输入采购的单据单号" allow-clear/>-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
+            <a-col :md="8" :sm="24">
+              <a-form-item label="物料状态" prop="type">
+                <a-select placeholder="请选择物料状态" v-model="queryParam.type" style="width: 100%" allow-clear>
+                  <a-select-option value="0">
+                    入库
+                  </a-select-option>
+                  <a-select-option value="1">
+                  出库
+                </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
             <template v-if="advanced">
 
-<!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="无聊单位" prop="unit">-->
-<!--                  <a-input v-model="queryParam.unit" placeholder="请输入无聊单位" allow-clear/>-->
-<!--                </a-form-item>-->
-<!--              </a-col>-->
-<!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="物料型号" prop="type">-->
-<!--                  <a-select placeholder="请选择物料型号" v-model="queryParam.type" style="width: 100%" allow-clear>-->
-<!--                    <a-select-option>请选择字典生成</a-select-option>-->
-<!--                  </a-select>-->
-<!--                </a-form-item>-->
-<!--              </a-col>-->
-<!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="物料初期余额" prop="initAmt">-->
-<!--                  <a-input v-model="queryParam.initAmt" placeholder="请输入物料初期余额" allow-clear/>-->
-<!--                </a-form-item>-->
-<!--              </a-col>-->
-<!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="预留字段1" prop="reserveOne">-->
-<!--                  <a-input v-model="queryParam.reserveOne" placeholder="请输入预留字段1" allow-clear/>-->
-<!--                </a-form-item>-->
-<!--              </a-col>-->
-<!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="预留字段2" prop="reserveTwo">-->
-<!--                  <a-input v-model="queryParam.reserveTwo" placeholder="请输入预留字段2" allow-clear/>-->
-<!--                </a-form-item>-->
-<!--              </a-col>-->
-<!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="预留字段3" prop="reserveThree">-->
-<!--                  <a-input v-model="queryParam.reserveThree" placeholder="请输入预留字段3" allow-clear/>-->
-<!--                </a-form-item>-->
-<!--              </a-col>-->
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="无聊单位" prop="unit">-->
+              <!--                  <a-input v-model="queryParam.unit" placeholder="请输入无聊单位" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="物料型号" prop="type">-->
+              <!--                  <a-select placeholder="请选择物料型号" v-model="queryParam.type" style="width: 100%" allow-clear>-->
+              <!--                    <a-select-option>请选择字典生成</a-select-option>-->
+              <!--                  </a-select>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="物料初期余额" prop="initAmt">-->
+              <!--                  <a-input v-model="queryParam.initAmt" placeholder="请输入物料初期余额" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="预留字段1" prop="reserveOne">-->
+              <!--                  <a-input v-model="queryParam.reserveOne" placeholder="请输入预留字段1" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="预留字段2" prop="reserveTwo">-->
+              <!--                  <a-input v-model="queryParam.reserveTwo" placeholder="请输入预留字段2" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="预留字段3" prop="reserveThree">-->
+              <!--                  <a-input v-model="queryParam.reserveThree" placeholder="请输入预留字段3" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
-                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo" />重置</a-button>
+              <span class="table-page-search-submitButtons"
+                    :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                <a-button type="primary" @click="handleQuery"><a-icon type="search"/>查询</a-button>
+                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo"/>重置</a-button>
                 <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
@@ -71,24 +74,28 @@
       <!-- 操作 -->
       <div class="table-operations">
         <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:mng:add']">
-          <a-icon type="plus" />新增
+          <a-icon type="plus"/>
+          新增
         </a-button>
-        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:mng:edit']">
-          <a-icon type="edit" />修改
+        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
+                  v-hasPermi="['system:mng:edit']">
+          <a-icon type="edit"/>
+          修改
         </a-button>
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:mng:remove']">
-          <a-icon type="delete" />删除
+          <a-icon type="delete"/>
+          删除
         </a-button>
-<!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:mng:export']">-->
-<!--          <a-icon type="download" />导出-->
-<!--        </a-button>-->
+        <!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:mng:export']">-->
+        <!--          <a-icon type="download" />导出-->
+        <!--        </a-button>-->
         <a-button
           type="dashed"
           shape="circle"
           :loading="loading"
           :style="{float: 'right'}"
           icon="reload"
-          @click="getList" />
+          @click="getList"/>
       </div>
       <!-- 增加修改 -->
       <create-form
@@ -105,13 +112,13 @@
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:mng:edit']" />
+          <a-divider type="vertical" v-hasPermi="['system:mng:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:mng:edit']">
-            <a-icon type="edit" />修改
+            <a-icon type="edit"/>修改
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:mng:remove']" />
+          <a-divider type="vertical" v-hasPermi="['system:mng:remove']"/>
           <a @click="handleDelete(record)" v-hasPermi="['system:mng:remove']">
-            <a-icon type="delete" />删除
+            <a-icon type="delete"/>删除
           </a>
         </span>
       </a-table>
@@ -132,7 +139,7 @@
 </template>
 
 <script>
-import { listMng, delMng, exportMng } from '@/api/material/mng'
+import {delMng, exportMng, listMng} from '@/api/material/mng'
 import CreateForm from './modules/CreateForm'
 
 export default {
@@ -140,7 +147,7 @@ export default {
   components: {
     CreateForm
   },
-  data () {
+  data() {
     return {
       list: [],
       selectedRowKeys: [],
@@ -194,7 +201,7 @@ export default {
           align: 'center'
         },
         {
-          title: '无聊单位',
+          title: '物料单位',
           dataIndex: 'unit',
           ellipsis: true,
           align: 'center'
@@ -211,12 +218,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '预留字段1',
-          dataIndex: 'reserveOne',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '预留字段1',
+        //   dataIndex: 'reserveOne',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         // {
         //   title: '预留字段2',
         //   dataIndex: 'reserveTwo',
@@ -233,24 +240,21 @@ export default {
           title: '操作',
           dataIndex: 'operation',
           width: '18%',
-          scopedSlots: { customRender: 'operation' },
+          scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
       ]
     }
   },
-  filters: {
-  },
-  created () {
+  filters: {},
+  created() {
     this.getList()
   },
-  computed: {
-  },
-  watch: {
-  },
+  computed: {},
+  watch: {},
   methods: {
     /** 查询物料管理列表 */
-    getList () {
+    getList() {
       this.loading = true
       listMng(this.queryParam).then(response => {
         this.list = response.rows
@@ -259,12 +263,12 @@ export default {
       })
     },
     /** 搜索按钮操作 */
-    handleQuery () {
+    handleQuery() {
       this.queryParam.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery () {
+    resetQuery() {
       this.queryParam = {
         projId: undefined,
         materialNo: undefined,
@@ -280,33 +284,33 @@ export default {
       }
       this.handleQuery()
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    changeSize (current, pageSize) {
+    changeSize(current, pageSize) {
       this.queryParam.pageNum = current
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
       this.ids = this.selectedRows.map(item => item.id)
       this.single = selectedRowKeys.length !== 1
       this.multiple = !selectedRowKeys.length
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
     },
     /** 删除按钮操作 */
-    handleDelete (row) {
+    handleDelete(row) {
       var that = this
       const ids = row.id || this.ids
       this.$confirm({
         title: '确认删除所选中数据?',
         content: '当前选中编号为' + ids + '的数据',
-        onOk () {
+        onOk() {
           return delMng(ids)
             .then(() => {
               that.onSelectChange([], [])
@@ -315,18 +319,19 @@ export default {
                 '删除成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     },
     /** 导出按钮操作 */
-    handleExport () {
+    handleExport() {
       var that = this
       this.$confirm({
         title: '是否确认导出?',
         content: '此操作将导出当前条件下所有数据而非选中数据',
-        onOk () {
+        onOk() {
           return exportMng(that.queryParam)
             .then(response => {
               that.download(response.msg)
@@ -334,9 +339,10 @@ export default {
                 '导出成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     }
   }

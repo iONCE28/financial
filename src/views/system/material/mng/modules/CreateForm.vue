@@ -41,7 +41,7 @@
         <b>物料管理变更信息</b>
       </a-divider>
       <sub-table ref="subTable" :list="subList" @add="handleAddsysMaterialUpdate" @delete="handleDeletesysMaterialUpdate" />
-      <p>当前存在 {{ subList.length }} 条信息</p>
+      <p>当前存在 {{ subList==undefined?0:subList.length }} 条信息</p>
       <a-button type="dashed" @click="$refs.subTable.show()">
         详情
       </a-button>
@@ -167,7 +167,8 @@ export default {
       const id = row ? row.id : ids
       getMng(id).then(response => {
         this.form = response.data
-        this.subList = response.data.sysMaterialUpdateList
+        // this.subList = response.data.sysMaterialUpdateList
+        this.subList = []
         this.open = true
         this.formTitle = '修改'
       })
