@@ -12,13 +12,14 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="物料状态" prop="type">
+
+
                 <a-select placeholder="请选择物料状态" v-model="queryParam.type" style="width: 100%" allow-clear>
-                  <a-select-option value="0">
-                    入库
+
+                  <a-select-option :value="item.id" v-for="item in typeList" :key = "item.id">
+                    {{item.name}}
                   </a-select-option>
-                  <a-select-option value="1">
-                  出库
-                </a-select-option>
+
                 </a-select>
               </a-form-item>
             </a-col>
@@ -141,6 +142,7 @@
 <script>
 import {delMng, exportMng, listMng} from '@/api/material/mng'
 import CreateForm from './modules/CreateForm'
+import {listStatus} from "@/api/material/status";
 
 export default {
   name: 'Mng',
@@ -248,6 +250,10 @@ export default {
   },
   filters: {},
   created() {
+    listStatus().then(response => {
+      this.typeList =  response.rows
+      console.log("cc",response)
+    })
     this.getList()
   },
   computed: {},

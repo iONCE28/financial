@@ -5,11 +5,11 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="状态编号" prop="statusNo">
-                <a-input v-model="queryParam.statusNo" placeholder="请输入状态编号" allow-clear/>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="8" :sm="24">-->
+<!--              <a-form-item label="状态编号" prop="statusNo">-->
+<!--                <a-input v-model="queryParam.statusNo" placeholder="请输入状态编号" allow-clear/>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
             <a-col :md="8" :sm="24">
               <a-form-item label="状态名称" prop="name">
                 <a-input v-model="queryParam.name" placeholder="请输入状态名称" allow-clear/>
@@ -35,9 +35,9 @@
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:status:remove']">
           <a-icon type="delete" />删除
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:status:export']">
-          <a-icon type="download" />导出
-        </a-button>
+<!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:status:export']">-->
+<!--          <a-icon type="download" />导出-->
+<!--        </a-button>-->
         <a-button
           type="dashed"
           shape="circle"
@@ -119,7 +119,7 @@ export default {
       },
       columns: [
         {
-          title: '修改时间',
+          title: 'id',
           dataIndex: 'id',
           ellipsis: true,
           align: 'center'

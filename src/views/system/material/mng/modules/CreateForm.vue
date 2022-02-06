@@ -25,9 +25,9 @@
       <a-form-model-item label="物料初期余额" prop="initAmt" >
         <a-input v-model="form.initAmt" placeholder="请输入物料初期余额" />
       </a-form-model-item>
-      <a-form-model-item label="预留字段1" prop="reserveOne" >
-        <a-input v-model="form.reserveOne" placeholder="请输入预留字段1" />
-      </a-form-model-item>
+<!--      <a-form-model-item label="预留字段1" prop="reserveOne" >-->
+<!--        <a-input v-model="form.reserveOne" placeholder="请输入预留字段1" />-->
+<!--      </a-form-model-item>-->
 <!--      <a-form-model-item label="预留字段2" prop="reserveTwo" >-->
 <!--        <a-input v-model="form.reserveTwo" placeholder="请输入预留字段2" />-->
 <!--      </a-form-model-item>-->

@@ -4,11 +4,11 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="状态编号" prop="statusNo" >
-        <a-input v-model="form.statusNo" placeholder="请输入状态编号" />
+      <a-form-model-item label="状态编号" prop="statusNo">
+        <a-input v-model="form.statusNo" placeholder="请输入状态编号"/>
       </a-form-model-item>
-      <a-form-model-item label="状态名称" prop="name" >
-        <a-input v-model="form.name" placeholder="请输入状态名称" />
+      <a-form-model-item label="状态名称" prop="name">
+        <a-input v-model="form.name" placeholder="请输入状态名称"/>
       </a-form-model-item>
       <div class="bottom-control">
         <a-space>
@@ -25,15 +25,13 @@
 </template>
 
 <script>
-import { getStatus, addStatus, updateStatus } from '@/api/material/status'
+import {addStatus, getStatus, updateStatus} from '@/api/material/status'
 
 export default {
   name: 'CreateForm',
-  props: {
-  },
-  components: {
-  },
-  data () {
+  props: {},
+  components: {},
+  data() {
     return {
       loading: false,
       formTitle: '',
@@ -48,30 +46,33 @@ export default {
       formType: 1,
       open: false,
       rules: {
+        statusNo: [
+          {required: true, message: '不能为空', trigger: 'blur'}
+        ],
+        name: [
+          {required: true, message: '不能为空', trigger: 'blur'}
+        ]
       }
     }
   },
-  filters: {
+  filters: {},
+  created() {
   },
-  created () {
-  },
-  computed: {
-  },
-  watch: {
-  },
-  mounted () {
+  computed: {},
+  watch: {},
+  mounted() {
   },
   methods: {
-    onClose () {
+    onClose() {
       this.open = false
     },
     // 取消按钮
-    cancel () {
+    cancel() {
       this.open = false
       this.reset()
     },
     // 表单重置
-    reset () {
+    reset() {
       this.formType = 1
       this.form = {
         id: null,
@@ -81,14 +82,14 @@ export default {
       }
     },
     /** 新增按钮操作 */
-    handleAdd (row) {
+    handleAdd(row) {
       this.reset()
       this.formType = 1
       this.open = true
       this.formTitle = '添加'
     },
     /** 修改按钮操作 */
-    handleUpdate (row, ids) {
+    handleUpdate(row, ids) {
       this.reset()
       this.formType = 2
       const id = row ? row.id : ids

@@ -75,8 +75,20 @@ export default {
       loading: false,
       columns: [
         {
-          title: '项目id',
-          dataIndex: 'projId',
+          title: 'id',
+          dataIndex: 'id',
+          ellipsis: true,
+          align: 'center'
+        },
+        // {
+        //   title: '项目id',
+        //   dataIndex: 'projId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        {
+          title: '物料id',
+          dataIndex: 'materialId',
           ellipsis: true,
           align: 'center'
         },
@@ -87,7 +99,7 @@ export default {
           align: 'center'
         },
         {
-          title: '状态:0:入库,1:出库',
+          title: '状态',
           dataIndex: 'materialStatus',
           ellipsis: true,
           align: 'center'
@@ -98,60 +110,64 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '修改时间',
-          dataIndex: 'updateTime',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '说明:简单的摘要信息，如：因物料老化报损',
-          dataIndex: 'remark',
-          ellipsis: true,
-          align: 'center'
-        },
+
+
         {
           title: '经办人',
           dataIndex: 'handler',
           ellipsis: true,
           align: 'center'
         },
+        // {
+        //   title: '经办人id',
+        //   dataIndex: 'handlerId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '预留字段1',
+        //   dataIndex: 'reserveOne',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '预留字段2',
+        //   dataIndex: 'reserveTwo',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '预留字段3',
+        //   dataIndex: 'reserveThree',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '费用报销日期',
+        //   dataIndex: 'createTime',
+        //   scopedSlots: { customRender: 'createTime' },
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
-          title: '经办人id',
-          dataIndex: 'handlerId',
+          title: '修改时间',
+          dataIndex: 'updateTime',
+          scopedSlots: { customRender: 'updateTime' },
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '预留字段1',
-          dataIndex: 'reserveOne',
+          title: '说明',
+          dataIndex: 'remark',
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '预留字段2',
-          dataIndex: 'reserveTwo',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '预留字段3',
-          dataIndex: 'reserveThree',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '费用报销日期',
-          dataIndex: 'createTime',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '删除状态 0. 正常 1. 删除',
-          dataIndex: 'delFlag',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '删除状态 0. 正常 1. 删除',
+        //   dataIndex: 'delFlag',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '操作',
           dataIndex: 'operation',
