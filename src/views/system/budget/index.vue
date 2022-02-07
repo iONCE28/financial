@@ -6,8 +6,8 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="部门名称">
-                <a-input v-model="queryParam.deptName" placeholder="请输入" allow-clear/>
+              <a-form-item label="科目名称">
+                <a-input v-model="queryParam.subjectName" placeholder="请输入" allow-clear/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -28,7 +28,7 @@
       </div>
       <!-- 操作 -->
       <div class="table-operations">
-        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:dept:add']">
+        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:budget:add']">
           <a-icon type="plus" />新增
         </a-button>
         <a-button
@@ -42,7 +42,7 @@
       <!-- 增加修改 -->
       <create-form
         ref="createForm"
-        :deptOptions="deptOptions"
+        :budgetOptions="budgetOptions"
         :statusOptions="statusOptions"
         @ok="getList"
         @select-tree="getTreeselect"
@@ -51,7 +51,7 @@
       <a-table
         :loading="loading"
         :size="tableSize"
-        rowKey="deptId"
+        rowKey="id"
         :columns="columns"
         :data-source="list"
         :pagination="false">
@@ -62,15 +62,15 @@
           {{ parseTime(record.createTime) }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a @click="$refs.createForm.handleUpdate(record)" v-hasPermi="['system:dept:edit']">
+          <a @click="$refs.createForm.handleUpdate(record)" v-hasPermi="['system:budget:edit']">
             <a-icon type="edit" />修改
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:dept:add']" />
-          <a @click="$refs.createForm.handleAdd(record)" v-hasPermi="['system:dept:add']">
+          <a-divider type="vertical" v-hasPermi="['system:budget:add']" />
+          <a @click="$refs.createForm.handleAdd(record)" v-hasPermi="['system:budget:add']">
             <a-icon type="plus" />新增
           </a>
-          <a-divider type="vertical" v-if="record.parentId != 0" v-hasPermi="['system:dept:remove']" />
-          <a @click="handleDelete(record)" v-if="record.parentId != 0" v-hasPermi="['system:dept:remove']">
+          <a-divider type="vertical" v-if="record.parentNo != 0" v-hasPermi="['system:budget:remove']" />
+          <a @click="handleDelete(record)" v-if="record.parentNo != 0" v-hasPermi="['system:budget:remove']">
             <a-icon type="delete" />删除
           </a>
         </span>
@@ -81,11 +81,11 @@
 
 <script>
 
-import { listDept, delDept, listDeptExcludeChild } from '@/api/system/dept'
+import { listbudget, delbudget, listbudgetExcludeChild } from '@/api/system/budget'
 import CreateForm from './modules/CreateForm'
 
 export default {
-  name: 'Dept',
+  name: 'budget',
   components: {
     CreateForm
   },
@@ -93,22 +93,22 @@ export default {
     return {
       list: [],
       // 部门树选项
-      deptOptions: [],
+      budgetOptions: [],
       loading: false,
       // 状态数据字典
       statusOptions: [],
       queryParam: {
-        deptName: undefined,
+        subjectName: undefined,
         status: undefined
       },
       columns: [
         {
-          title: '部门名称',
-          dataIndex: 'deptName'
+          title: '科目名称',
+          dataIndex: 'subjectName'
         },
         {
           title: '排序',
-          dataIndex: 'orderNum',
+          dataIndex: 'subNo',
           align: 'center'
         },
         {
@@ -150,8 +150,8 @@ export default {
     /** 查询部门列表 */
     getList () {
       this.loading = true
-      listDept(this.queryParam).then(response => {
-          this.list = this.handleTree(response.data, 'deptId')
+      listbudget(this.queryParam).then(response => {
+          this.list = this.handleTrees(response.data, 'id')
           this.loading = false
         }
       )
@@ -159,12 +159,12 @@ export default {
     /** 查询菜单下拉树结构 */
     getTreeselect (row) {
       if (!row) {
-        listDept().then(response => {
-          this.deptOptions = this.handleTree(response.data, 'deptId')
+        listbudget().then(response => {
+          this.budgetOptions = this.handleTrees(response.data, 'id')
         })
       } else {
-        listDeptExcludeChild(row.deptId).then(response => {
-          this.deptOptions = this.handleTree(response.data, 'deptId')
+        listbudgetExcludeChild(row.id).then(response => {
+          this.budgetOptions = this.handleTrees(response.data, 'id')
         })
       }
     },
@@ -179,7 +179,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery () {
       this.queryParam = {
-        deptName: undefined,
+        subjectName: undefined,
         status: undefined
       }
       this.handleQuery()
@@ -187,12 +187,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete (row) {
       var that = this
-      const deptId = row.deptId
+      const id = row.id
       this.$confirm({
         title: '确认删除所选中数据?',
-        content: '当前选中编号为' + deptId + '的数据',
+        content: '当前选中编号为' + id + '的数据',
         onOk () {
-          return delDept(deptId)
+          return delbudget(id)
             .then(() => {
               that.getList()
               that.$message.success(
