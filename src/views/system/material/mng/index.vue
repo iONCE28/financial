@@ -16,8 +16,8 @@
 
                 <a-select placeholder="请选择物料状态" v-model="queryParam.type" style="width: 100%" allow-clear>
 
-                  <a-select-option :value="item.id" v-for="item in typeList" :key = "item.id">
-                    {{item.name}}
+                  <a-select-option :value="item.id" v-for="item in typeList" :key="item.id">
+                    {{ item.name }}
                   </a-select-option>
 
                 </a-select>
@@ -113,13 +113,13 @@
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:mng:edit']"/>
-          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:mng:edit']">
-            <a-icon type="edit"/>修改
-          </a>
+<!--          <a-divider type="vertical" v-hasPermi="['system:mng:edit']"/>-->
+          <!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:mng:edit']">-->
+          <!--            <a-icon type="edit"/>修改-->
+          <!--          </a>-->
           <a-divider type="vertical" v-hasPermi="['system:mng:remove']"/>
-          <a @click="handleDelete(record)" v-hasPermi="['system:mng:remove']">
-            <a-icon type="delete"/>删除
+          <a @click="handleDetails(record)" v-hasPermi="['system:mng:remove']">
+            <a-icon type="edit"/>查看详情
           </a>
         </span>
       </a-table>
@@ -245,14 +245,16 @@ export default {
           scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
-      ]
+      ],
+      typeList:[]
     }
+
+
   },
   filters: {},
   created() {
     listStatus().then(response => {
-      this.typeList =  response.rows
-      console.log("cc",response)
+      this.typeList = response.rows
     })
     this.getList()
   },
@@ -309,6 +311,20 @@ export default {
     toggleAdvanced() {
       this.advanced = !this.advanced
     },
+
+    handleDetails(row) {
+      var that = this
+      const ids = row.id || this.ids
+
+      this.$router.push({
+        path: '/material/update',
+        query: {
+          id: ids,
+        }
+      })
+
+    },
+
     /** 删除按钮操作 */
     handleDelete(row) {
       var that = this

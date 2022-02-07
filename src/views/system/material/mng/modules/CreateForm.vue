@@ -42,9 +42,12 @@
       </a-divider>
       <sub-table ref="subTable" :list="subList" @add="handleAddsysMaterialUpdate" @delete="handleDeletesysMaterialUpdate" />
       <p>当前存在 {{ subList==undefined?0:subList.length }} 条信息</p>
-      <a-button type="dashed" @click="$refs.subTable.show()">
-        详情
-      </a-button>
+      <router-link :to="{path:'/material/update', params: {id:1}}">
+<!--        @click="$refs.subTable.show()"-->
+        <a-button type="dashed" >
+          详情
+        </a-button>
+      </router-link>
       <br>
       <div class="bottom-control">
         <a-space>
