@@ -4,9 +4,11 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="合同类型：0收入，1支出类合同" prop="type" >
-        <a-select placeholder="请选择合同类型：0收入，1支出类合同" v-model="form.type">
-          <a-select-option value="" >请选择字典生成</a-select-option>
+      <a-form-model-item label="合同类型" prop="type" >
+        <a-select placeholder="请选择合同类型" v-model="form.type">
+          <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
+            {{ item.maxType }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="甲方名称" prop="nailName" >
@@ -79,14 +81,19 @@
       <a-form-model-item label="签约日期" prop="signTime" >
         <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
-      <a-form-model-item label="合同大类别:0：收入合同，1：支出合同" prop="constractBigType" >
-        <a-select placeholder="请选择合同大类别:0：收入合同，1：支出合同" v-model="form.constractBigType">
-          <a-select-option value="" >请选择字典生成</a-select-option>
+
+      <a-form-model-item label="合同大类别" prop="constractBigType" >
+        <a-select placeholder="请选择合同大类别" v-model="form.constractBigType">
+          <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
+            {{ item.maxType }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同小类别:投资方分类。演员合同、职员合同……" prop="constractSmallType" >
-        <a-select placeholder="请选择合同小类别:投资方分类。演员合同、职员合同……" v-model="form.constractSmallType">
-          <a-select-option value="" >请选择字典生成</a-select-option>
+      <a-form-model-item label="合同小类别" prop="constractSmallType" >
+        <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">
+          <a-select-option :value="item.maxType" v-for="item in minTypes" :key="item.id">
+            {{ item.minType }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="合同上传文件时间" prop="uploadTime" >
@@ -122,6 +129,7 @@
 import { getContract, addContract, updateContract } from '@/api/system/contract'
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
+import {listType} from "@/api/system/type";
 
 export default {
   name: 'CreateForm',
@@ -131,6 +139,8 @@ export default {
   },
   data () {
     return {
+      maxTypes: [],//合同类型-大
+      minTypes: [],//合同类型-小
       loading: false,
       formTitle: '',
       contentEditor: '',
@@ -219,6 +229,10 @@ export default {
   filters: {
   },
   created () {
+    listType().then(response => {
+      this.maxTypes = response.maxTypes;
+      this.minTypes = response.minTypes;
+    })
   },
   computed: {
   },

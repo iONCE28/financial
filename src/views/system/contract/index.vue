@@ -6,9 +6,11 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="合同类型：0收入，1支出类合同" prop="type">
-                <a-select placeholder="请选择合同类型：0收入，1支出类合同" v-model="queryParam.type" style="width: 100%" allow-clear>
-                  <a-select-option>请选择字典生成</a-select-option>
+              <a-form-item label="合同类型" prop="type">
+                <a-select placeholder="请选择合同类型" v-model="queryParam.type" style="width: 100%" allow-clear>
+                  <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
+                    {{ item.maxType }}
+                  </a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -23,11 +25,11 @@
                   <a-input v-model="queryParam.bname" placeholder="请输入乙方名称" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算金额" prop="closeAmount">
-                  <a-input v-model="queryParam.closeAmount" placeholder="请输入结算金额" allow-clear/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="结算金额" prop="closeAmount">-->
+<!--                  <a-input v-model="queryParam.closeAmount" placeholder="请输入结算金额" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="结算项目" prop="closeProj">
                   <a-input v-model="queryParam.closeProj" placeholder="请输入结算项目" allow-clear/>
@@ -38,11 +40,11 @@
                   <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同凭证:扫描图片地址" prop="voucher">
-                  <a-input v-model="queryParam.voucher" placeholder="请输入合同凭证:扫描图片地址" allow-clear/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="合同凭证:扫描图片地址" prop="voucher">-->
+<!--                  <a-input v-model="queryParam.voucher" placeholder="请输入合同凭证:扫描图片地址" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="结算账户" prop="account">
                   <a-input v-model="queryParam.account" placeholder="请输入结算账户" allow-clear/>
@@ -242,6 +244,7 @@
 <script>
 import { listContract, delContract, exportContract } from '@/api/system/contract'
 import CreateForm from './modules/CreateForm'
+import {listType} from "@/api/system/type";
 
 export default {
   name: 'Contract',
@@ -250,6 +253,8 @@ export default {
   },
   data () {
     return {
+      maxTypes: [],//合同类型-大
+      minTypes: [],//合同类型-小
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -492,6 +497,10 @@ export default {
   filters: {
   },
   created () {
+    listType().then(response => {
+      this.maxTypes = response.maxTypes;
+      this.minTypes = response.minTypes;
+    })
     this.getList()
   },
   computed: {
