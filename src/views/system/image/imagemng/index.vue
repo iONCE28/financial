@@ -102,6 +102,12 @@
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
         </span>
+        <span slot="preview" slot-scope="text, record">
+
+          <a @click="handlePreview(record)" v-hasPermi="['system:imagemng:remove']">
+           文件预览
+          </a>
+        </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:imagemng:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:imagemng:edit']">
@@ -133,7 +139,7 @@
 import {delImagemng, exportImagemng, listImagemng} from '@/api/system/imagemng'
 import CreateForm from './modules/CreateForm'
 import {listImagetype} from "@/api/system/imagetype";
-
+import Base from '@/utils/base64'
 export default {
   name: 'Imagemng',
   components: {
@@ -172,12 +178,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '项目id',
-          dataIndex: 'projId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '项目id',
+        //   dataIndex: 'projId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
 
         {
           title: '影像类别',
@@ -192,10 +198,11 @@ export default {
           align: 'center'
         },
         {
-          title: '影像文件:存文件地址',
+          title: '影像文件预览',
           dataIndex: 'image',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: {customRender: 'preview'},
         },
         {
           title: '操作人',
@@ -238,6 +245,12 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    handlePreview(value) {
+      var base1 = new Base()
+      const url = value.image
+      window.open('http://127.0.0.1:8012/onlinePreview?url=' + encodeURIComponent(base1.encode(url)));
+
+    },
     /** 查询影像管理信息列表 */
     getList() {
       this.loading = true

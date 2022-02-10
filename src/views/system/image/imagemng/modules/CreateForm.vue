@@ -7,30 +7,36 @@
       <a-form-model-item label="项目id" prop="projId">
         <a-input v-model="form.projId" placeholder="请输入项目id"/>
       </a-form-model-item>
-      <a-form-model-item label="影像文件:存文件地址" prop="image">
-        <file-upload v-model="form.image" type="image"></file-upload>
+      <a-form-model-item label="影像文件" prop="image">
+        <a-upload
+          :file-list="fileList"
+          :customRequest="handleUploadone"
+          :before-upload="beforeUploadone"
+          @change="handleChange"
+          :multiple="true">
+          <a-button type="primary"> <a-icon type="upload"/>文件上传</a-button>
+          <a-icon :type="loading ? 'loading' : 'plus'"/>
+        </a-upload>
       </a-form-model-item>
       <a-form-model-item label="影像类别" prop="type">
         <a-select placeholder="请选择影像类别" v-model="form.type" style="width: 100%" allow-clear>
-
           <a-select-option :value="item.id" v-for="item in Imagetype" :key="item.id">
             {{ item.name }}
           </a-select-option>
-
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="影像标签" prop="label">
         <a-input v-model="form.label" placeholder="请输入影像标签"/>
       </a-form-model-item>
-      <a-form-model-item label="操作人" prop="operator">
-        <a-input v-model="form.operator" placeholder="请输入操作人"/>
-      </a-form-model-item>
-      <a-form-model-item label="操作人员ID" prop="operatorId">
-        <a-input v-model="form.operatorId" placeholder="请输入操作人员ID"/>
-      </a-form-model-item>
-      <a-form-model-item label="文件上传时间" prop="uploadTime">
-        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
-      </a-form-model-item>
+<!--      <a-form-model-item label="操作人" prop="operator">-->
+      <!--        <a-input v-model="form.operator" placeholder="请输入操作人"/>-->
+      <!--      </a-form-model-item>-->
+      <!--      <a-form-model-item label="操作人员ID" prop="operatorId">-->
+      <!--        <a-input v-model="form.operatorId" placeholder="请输入操作人员ID"/>-->
+      <!--      </a-form-model-item>-->
+<!--      <a-form-model-item label="文件上传时间" prop="uploadTime">-->
+<!--        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
+<!--      </a-form-model-item>-->
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -48,6 +54,7 @@
 <script>
 import {addImagemng, getImagemng, updateImagemng} from '@/api/system/imagemng'
 import {listImagetype} from "@/api/system/imagetype";
+import {uploadCover} from "@/api/system/upload";
 
 export default {
   name: 'CreateForm',
@@ -55,6 +62,7 @@ export default {
   components: {},
   data() {
     return {
+      fileList:[],
       loading: false,
       formTitle: '',
       // 表单参数
@@ -73,9 +81,9 @@ export default {
       formType: 1,
       open: false,
       rules: {
-        projId: [
-          {required: true, message: '项目id不能为空', trigger: 'blur'}
-        ],
+        // projId: [
+        //   {required: true, message: '项目id不能为空', trigger: 'blur'}
+        // ],
         image: [
           {required: true, message: '影像文件:存文件地址不能为空', trigger: 'blur'}
         ],
@@ -107,6 +115,57 @@ export default {
   mounted() {
   },
   methods: {
+    handleChange (info) {
+      let fileList = [...info.fileList]
+      fileList = fileList.slice(-1)
+      this.fileList = fileList
+      if (info.file.status === 'uploading') {
+        this.loading = true
+        return
+      }
+      if (info.file.status === 'done') {
+        this.loading = false
+      }
+    },
+    // 文件上传相关
+    handleUploadone (file) {
+      this.formData = file.file
+      const progress = { percent: 1 }
+      const speed = 100 / (file.file.size / 65000)// 上传速度
+      const intervalId = setInterval(() => {
+        // 控制进度条防止在未上传成功时进度条达到100
+        if (progress.percent < 100) {
+          progress.percent += speed// 控制进度条速度
+
+          file.onProgress(progress)// onProgress接收一个对象{ percent: 进度 }在进度条上显示
+        } else if ((progress.percent === 99)) {
+          progress.percent++
+        } else if (progress.percent > 100) {
+          file.onSuccess(file)
+          clearInterval(intervalId)
+        }
+      }, 100)
+      const formData = new FormData()
+      formData.append('file', file.file)
+      // formData.append('noticeId', this.id)
+      uploadCover(formData).then(res => {
+        console.log('进入了方法')
+        this.$notification.success({
+          message: '上传成功'
+        })
+        setTimeout(() => {
+          this.form.image = res.data.url
+          // this.form.noticeId = this.id
+          // this.imagesUrl = res.data.url
+        }, 0)
+        file.onSuccess(res, file.file)
+      }).catch(function (error) {
+        // 由网络或者服务器抛出的错误
+        console.log(error.toString())
+        // alert(error.toString())
+      })
+    },
+
     onClose() {
       this.open = false
     },

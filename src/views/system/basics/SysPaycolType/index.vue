@@ -6,8 +6,8 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="网页消息，网页表单预警……" prop="type">
-                <a-select placeholder="请选择网页消息，网页表单预警……" v-model="queryParam.type" style="width: 100%" allow-clear>
+              <a-form-item label="收/付款到期提醒方式" prop="type">
+                <a-select placeholder="请选择收/付款到期提醒方式" v-model="queryParam.type" style="width: 100%" allow-clear>
                   <a-select-option value="0">网页消息</a-select-option>
                   <a-select-option value="1">网页表单预警</a-select-option>
                 </a-select>
@@ -116,13 +116,13 @@ export default {
       },
       columns: [
         {
-          title: '收/付款提醒ID',
+          title: '序号/ID',
           dataIndex: 'id',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '网页消息，网页表单预警……',
+          title: '收/付款到期提醒方式',
           dataIndex: 'type',
           ellipsis: true,
           align: 'center'
