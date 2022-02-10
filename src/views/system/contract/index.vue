@@ -14,27 +14,34 @@
                 </a-select>
               </a-form-item>
             </a-col>
+
             <a-col :md="8" :sm="24">
               <a-form-item label="甲方名称" prop="nailName">
                 <a-input v-model="queryParam.nailName" placeholder="请输入甲方名称" allow-clear/>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="乙方名称" prop="bname">
-                  <a-input v-model="queryParam.bname" placeholder="请输入乙方名称" allow-clear/>
-                </a-form-item>
-              </a-col>
+
+
+<!--            <template v-if="advanced">-->
+<!--&lt;!&ndash;              <a-col :md="8" :sm="24">&ndash;&gt;-->
+<!--&lt;!&ndash;                <a-form-item label="乙方名称" prop="bname">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <a-input v-model="queryParam.bname" placeholder="请输入乙方名称" allow-clear/>&ndash;&gt;-->
+<!--&lt;!&ndash;                </a-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              </a-col>&ndash;&gt;-->
+
+<!--&lt;!&ndash;              <a-col :md="8" :sm="24">&ndash;&gt;-->
+<!--&lt;!&ndash;                <a-form-item label="结算金额" prop="closeAmount">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <a-input v-model="queryParam.closeAmount" placeholder="请输入结算金额" allow-clear/>&ndash;&gt;-->
+<!--&lt;!&ndash;                </a-form-item>&ndash;&gt;-->
+<!--&lt;!&ndash;              </a-col>&ndash;&gt;-->
+
 <!--              <a-col :md="8" :sm="24">-->
-<!--                <a-form-item label="结算金额" prop="closeAmount">-->
-<!--                  <a-input v-model="queryParam.closeAmount" placeholder="请输入结算金额" allow-clear/>-->
+<!--                <a-form-item label="结算项目" prop="closeProj">-->
+<!--                  <a-input v-model="queryParam.closeProj" placeholder="请输入结算项目" allow-clear/>-->
 <!--                </a-form-item>-->
 <!--              </a-col>-->
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算项目" prop="closeProj">
-                  <a-input v-model="queryParam.closeProj" placeholder="请输入结算项目" allow-clear/>
-                </a-form-item>
-              </a-col>
+
+
 <!--              <a-col :md="8" :sm="24">-->
 <!--                <a-form-item label="投资方" prop="investor">-->
 <!--                  <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>-->
@@ -109,11 +116,12 @@
 <!--                  <a-input v-model="queryParam.constractName" placeholder="请输入合同名称" allow-clear/>-->
 <!--                </a-form-item>-->
 <!--              </a-col>-->
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同编号" prop="constractNo">
-                  <a-input v-model="queryParam.constractNo" placeholder="请输入合同编号" allow-clear/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="合同编号" prop="constractNo">-->
+<!--                  <a-input v-model="queryParam.constractNo" placeholder="请输入合同编号" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+
 <!--              <a-col :md="8" :sm="24">-->
 <!--                <a-form-item label="签约日期" prop="signTime">-->
 <!--                  <a-date-picker style="width: 100%" v-model="queryParam.signTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
@@ -126,19 +134,20 @@
 <!--                  </a-select>-->
 <!--                </a-form-item>-->
 <!--              </a-col>-->
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同小类别" prop="constractSmallType">
-<!--                  <a-select placeholder="请选择合同小类别:投资方分类。演员合同、职员合同……" v-model="queryParam.constractSmallType" style="width: 100%" allow-clear>-->
-<!--                    <a-select-option>请选择字典生成</a-select-option>-->
-<!--                  </a-select>-->
-                  <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">
-                    <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">
-                      {{ item.minType }}
-                    </a-select-option>
-                  </a-select>
 
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="合同小类别" prop="constractSmallType">-->
+<!--&lt;!&ndash;                  <a-select placeholder="请选择合同小类别:投资方分类。演员合同、职员合同……" v-model="queryParam.constractSmallType" style="width: 100%" allow-clear>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a-select-option>请选择字典生成</a-select-option>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </a-select>&ndash;&gt;-->
+<!--                  <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">-->
+<!--                    <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">-->
+<!--                      {{ item.minType }}-->
+<!--                    </a-select-option>-->
+<!--                  </a-select>-->
+
+<!--                </a-form-item>-->
+<!--              </a-col>-->
 <!--              <a-col :md="8" :sm="24">-->
 <!--                <a-form-item label="合同上传文件时间" prop="uploadTime">-->
 <!--                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
@@ -164,7 +173,9 @@
 <!--                  <a-input v-model="queryParam.contactsOthers" placeholder="请输入联系人其他" allow-clear/>-->
 <!--                </a-form-item>-->
 <!--              </a-col>-->
-            </template>
+
+
+<!--            </template>-->
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>

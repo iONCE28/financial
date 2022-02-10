@@ -1,0 +1,437 @@
+<template>
+  <page-header-wrapper>
+    <a-card :bordered="false">
+      <!-- 条件搜索 -->
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="项目ID" prop="projId">
+                <a-input v-model="queryParam.projId" placeholder="请输入项目ID" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="合同ID" prop="contractId">
+                <a-input v-model="queryParam.contractId" placeholder="请输入合同ID" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+                <a-form-item label="结算项目ID" prop="resultContractId">
+                  <a-input v-model="queryParam.resultContractId" placeholder="请输入结算项目ID" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="个人借款单据编号" prop="resultContractNo">
+                  <a-input v-model="queryParam.resultContractNo" placeholder="请输入个人借款单据编号" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="0：支付借款，2：报销借款，3：归还借款" prop="loanType">
+                  <a-select placeholder="请选择0：支付借款，2：报销借款，3：归还借款" v-model="queryParam.loanType" style="width: 100%" allow-clear>
+                    <a-select-option>请选择字典生成</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="借款人:对内借款，借款人从内部人员中取" prop="borrower">
+                  <a-input v-model="queryParam.borrower" placeholder="请输入借款人:对内借款，借款人从内部人员中取" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="借款人id：关联个人ID支持费用报销的联查预付款~" prop="borrowerId">
+                  <a-input v-model="queryParam.borrowerId" placeholder="请输入借款人id：关联个人ID支持费用报销的联查预付款~" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="个人借款发生金额" prop="amount">
+                  <a-input v-model="queryParam.amount" placeholder="请输入个人借款发生金额" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="支付账户" prop="payAccount">
+                  <a-input v-model="queryParam.payAccount" placeholder="请输入支付账户" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="冲销状态0：未冲销；1：已冲销" prop="writeoffStatus">
+                  <a-select placeholder="请选择冲销状态0：未冲销；1：已冲销" v-model="queryParam.writeoffStatus" style="width: 100%" allow-clear>
+                    <a-select-option>请选择字典生成</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="经办人" prop="handler">
+                  <a-input v-model="queryParam.handler" placeholder="请输入经办人" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="经办人id" prop="handlerId">
+                  <a-input v-model="queryParam.handlerId" placeholder="请输入经办人id" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="预留字段1" prop="reserveOne">
+                  <a-input v-model="queryParam.reserveOne" placeholder="请输入预留字段1" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="预留字段2" prop="reserveTwo">
+                  <a-input v-model="queryParam.reserveTwo" placeholder="请输入预留字段2" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="预留字段3" prop="reserveThree">
+                  <a-input v-model="queryParam.reserveThree" placeholder="请输入预留字段3" allow-clear/>
+                </a-form-item>
+              </a-col>
+            </template>
+            <a-col :md="!advanced && 8 || 24" :sm="24">
+              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
+                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo" />重置</a-button>
+                <a @click="toggleAdvanced" style="margin-left: 8px">
+                  {{ advanced ? '收起' : '展开' }}
+                  <a-icon :type="advanced ? 'up' : 'down'"/>
+                </a>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- 操作 -->
+      <div class="table-operations">
+        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:loan:add']">
+          <a-icon type="plus" />新增
+        </a-button>
+        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:loan:edit']">
+          <a-icon type="edit" />修改
+        </a-button>
+        <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:loan:remove']">
+          <a-icon type="delete" />删除
+        </a-button>
+        <a-button type="primary" @click="handleExport" v-hasPermi="['system:loan:export']">
+          <a-icon type="download" />导出
+        </a-button>
+        <a-button
+          type="dashed"
+          shape="circle"
+          :loading="loading"
+          :style="{float: 'right'}"
+          icon="reload"
+          @click="getList" />
+      </div>
+      <!-- 增加修改 -->
+      <create-form
+        ref="createForm"
+        @ok="getList"
+      />
+      <!-- 数据展示 -->
+      <a-table
+        :loading="loading"
+        :size="tableSize"
+        rowKey="id"
+        :columns="columns"
+        :data-source="list"
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        :pagination="false">
+        <span slot="operation" slot-scope="text, record">
+          <a-divider type="vertical" v-hasPermi="['system:loan:edit']" />
+          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:loan:edit']">
+            <a-icon type="edit" />修改
+          </a>
+          <a-divider type="vertical" v-hasPermi="['system:loan:remove']" />
+          <a @click="handleDelete(record)" v-hasPermi="['system:loan:remove']">
+            <a-icon type="delete" />删除
+          </a>
+        </span>
+      </a-table>
+      <!-- 分页 -->
+      <a-pagination
+        class="ant-table-pagination"
+        show-size-changer
+        show-quick-jumper
+        :current="queryParam.pageNum"
+        :total="total"
+        :page-size="queryParam.pageSize"
+        :showTotal="total => `共 ${total} 条`"
+        @showSizeChange="onShowSizeChange"
+        @change="changeSize"
+      />
+    </a-card>
+  </page-header-wrapper>
+</template>
+
+<script>
+import { listLoan, delLoan, exportLoan } from '@/api/system/loan'
+import CreateForm from './modules/CreateForm'
+
+export default {
+  name: 'Loan',
+  components: {
+    CreateForm
+  },
+  data () {
+    return {
+      list: [],
+      selectedRowKeys: [],
+      selectedRows: [],
+      // 高级搜索 展开/关闭
+      advanced: false,
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      ids: [],
+      loading: false,
+      total: 0,
+      // 查询参数
+      queryParam: {
+        projId: null,
+        contractId: null,
+        resultContractId: null,
+        resultContractNo: null,
+        loanType: null,
+        borrower: null,
+        borrowerId: null,
+        abstracted: null,
+        amount: null,
+        payAccount: null,
+        writeoffStatus: null,
+        handler: null,
+        handlerId: null,
+        reserveOne: null,
+        reserveTwo: null,
+        reserveThree: null,
+        pageNum: 1,
+        pageSize: 10
+      },
+      columns: [
+        {
+          title: '个人借款ID',
+          dataIndex: 'id',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '项目ID',
+          dataIndex: 'projId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '合同ID',
+          dataIndex: 'contractId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '结算项目ID',
+          dataIndex: 'resultContractId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '个人借款单据编号',
+          dataIndex: 'resultContractNo',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '0：支付借款，2：报销借款，3：归还借款',
+          dataIndex: 'loanType',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '借款人:对内借款，借款人从内部人员中取',
+          dataIndex: 'borrower',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '借款人id：关联个人ID支持费用报销的联查预付款~',
+          dataIndex: 'borrowerId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '个人借款事由摘要',
+          dataIndex: 'abstracted',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '个人借款发生金额',
+          dataIndex: 'amount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '支付账户',
+          dataIndex: 'payAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '冲销状态0：未冲销；1：已冲销',
+          dataIndex: 'writeoffStatus',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '备注',
+          dataIndex: 'remark',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '经办人',
+          dataIndex: 'handler',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '经办人id',
+          dataIndex: 'handlerId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '预留字段1',
+          dataIndex: 'reserveOne',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '预留字段2',
+          dataIndex: 'reserveTwo',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '预留字段3',
+          dataIndex: 'reserveThree',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '操作',
+          dataIndex: 'operation',
+          width: '18%',
+          scopedSlots: { customRender: 'operation' },
+          align: 'center'
+        }
+      ]
+    }
+  },
+  filters: {
+  },
+  created () {
+    this.getList()
+  },
+  computed: {
+  },
+  watch: {
+  },
+  methods: {
+    /** 查询个人借款信息列表 */
+    getList () {
+      this.loading = true
+      listLoan(this.queryParam).then(response => {
+        this.list = response.rows
+        this.total = response.total
+        this.loading = false
+      })
+    },
+    /** 搜索按钮操作 */
+    handleQuery () {
+      this.queryParam.pageNum = 1
+      this.getList()
+    },
+    /** 重置按钮操作 */
+    resetQuery () {
+      this.queryParam = {
+        projId: undefined,
+        contractId: undefined,
+        resultContractId: undefined,
+        resultContractNo: undefined,
+        loanType: undefined,
+        borrower: undefined,
+        borrowerId: undefined,
+        abstracted: undefined,
+        amount: undefined,
+        payAccount: undefined,
+        writeoffStatus: undefined,
+        handler: undefined,
+        handlerId: undefined,
+        reserveOne: undefined,
+        reserveTwo: undefined,
+        reserveThree: undefined,
+        pageNum: 1,
+        pageSize: 10
+      }
+      this.handleQuery()
+    },
+    onShowSizeChange (current, pageSize) {
+      this.queryParam.pageSize = pageSize
+      this.getList()
+    },
+    changeSize (current, pageSize) {
+      this.queryParam.pageNum = current
+      this.queryParam.pageSize = pageSize
+      this.getList()
+    },
+    onSelectChange (selectedRowKeys, selectedRows) {
+      this.selectedRowKeys = selectedRowKeys
+      this.selectedRows = selectedRows
+      this.ids = this.selectedRows.map(item => item.id)
+      this.single = selectedRowKeys.length !== 1
+      this.multiple = !selectedRowKeys.length
+    },
+    toggleAdvanced () {
+      this.advanced = !this.advanced
+    },
+    /** 删除按钮操作 */
+    handleDelete (row) {
+      var that = this
+      const ids = row.id || this.ids
+      this.$confirm({
+        title: '确认删除所选中数据?',
+        content: '当前选中编号为' + ids + '的数据',
+        onOk () {
+          return delLoan(ids)
+            .then(() => {
+              that.onSelectChange([], [])
+              that.getList()
+              that.$message.success(
+                '删除成功',
+                3
+              )
+          })
+        },
+        onCancel () {}
+      })
+    },
+    /** 导出按钮操作 */
+    handleExport () {
+      var that = this
+      this.$confirm({
+        title: '是否确认导出?',
+        content: '此操作将导出当前条件下所有数据而非选中数据',
+        onOk () {
+          return exportLoan(that.queryParam)
+            .then(response => {
+              that.download(response.msg)
+              that.$message.success(
+                '导出成功',
+                3
+              )
+          })
+        },
+        onCancel () {}
+      })
+    }
+  }
+}
+</script>
