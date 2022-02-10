@@ -72,12 +72,12 @@
       </div>
       <!-- 操作 -->
       <div class="table-operations">
-        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:result:add']">
-          <a-icon type="plus" />新增
-        </a-button>
-        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:result:edit']">
-          <a-icon type="edit" />修改
-        </a-button>
+<!--        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:result:add']">-->
+<!--          <a-icon type="plus" />新增-->
+<!--        </a-button>-->
+<!--        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:result:edit']">-->
+<!--          <a-icon type="edit" />修改-->
+<!--        </a-button>-->
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:result:remove']">
           <a-icon type="delete" />删除
         </a-button>
@@ -110,10 +110,10 @@
           {{ parseTime(record.colpayExpireTime) }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:result:edit']" />
-          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:result:edit']">
-            <a-icon type="edit" />修改
-          </a>
+<!--          <a-divider type="vertical" v-hasPermi="['system:result:edit']" />-->
+<!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:result:edit']">-->
+<!--            <a-icon type="edit" />修改-->
+<!--          </a>-->
           <a-divider type="vertical" v-hasPermi="['system:result:remove']" />
           <a @click="handleDelete(record)" v-hasPermi="['system:result:remove']">
             <a-icon type="delete" />删除
@@ -175,30 +175,30 @@ export default {
         pageSize: 10
       },
       columns: [
-        {
-          title: '删除状态 0. 正常 1. 删除',
-          dataIndex: 'id',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '删除状态 0. 正常 1. 删除',
+        //   dataIndex: 'id',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         // {
         //   title: '结算项目id',
         //   dataIndex: 'projId',
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '结算项目名称',
-        //   dataIndex: 'projName',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '结算金额',
-        //   dataIndex: 'projAmt',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '结算项目名称',
+          dataIndex: 'projName',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '结算金额',
+          dataIndex: 'projAmt',
+          ellipsis: true,
+          align: 'center'
+        },
         // {
         //   title: '收付款周期：比如：三月、半年、一年',
         //   dataIndex: 'colpayCycle',

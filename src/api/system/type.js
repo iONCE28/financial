@@ -8,6 +8,14 @@ export function listType (query) {
     params: query
   })
 }
+// 查询合同类型列表
+export function collects (query) {
+  return request({
+    url: '/system/type/collects',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询合同类型详细
 export function getType (id) {

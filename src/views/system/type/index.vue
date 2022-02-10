@@ -6,17 +6,31 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="大类：0收入合同，1支出合同" prop="maxType">
-                <a-select placeholder="请选择大类：0收入合同，1支出合同" v-model="queryParam.maxType" style="width: 100%" allow-clear>
-                  <a-select-option>请选择字典生成</a-select-option>
+              <a-form-item label="大类" prop="maxType">
+<!--                <a-select placeholder="请选择大类：0收入合同，1支出合同" v-model="queryParam.maxType" style="width: 100%" allow-clear>-->
+<!--                  <a-select-option>请选择字典生成</a-select-option>-->
+<!--                </a-select>-->
+
+                <a-select placeholder="请选择合同类型" v-model="queryParam.maxType" style="width: 100%" allow-clear>
+                  <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
+                    {{ item.maxType }}
+                  </a-select-option>
                 </a-select>
+
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="小类：演员合同，职员合同.." prop="minType">
-                <a-select placeholder="请选择小类：演员合同，职员合同.." v-model="queryParam.minType" style="width: 100%" allow-clear>
-                  <a-select-option>请选择字典生成</a-select-option>
+              <a-form-item label="小类" prop="minType">
+<!--                <a-select placeholder="请选择小类：演员合同，职员合同.." v-model="queryParam.minType" style="width: 100%" allow-clear>-->
+<!--                  <a-select-option>请选择字典生成</a-select-option>-->
+<!--                </a-select>-->
+
+                <a-select placeholder="请选择合同小类别" v-model="queryParam.minType">
+                  <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">
+                    {{ item.minType }}
+                  </a-select-option>
                 </a-select>
+
               </a-form-item>
             </a-col>
             <a-col :md="!advanced && 8 || 24" :sm="24">
@@ -92,7 +106,7 @@
 </template>
 
 <script>
-import { listType, delType, exportType } from '@/api/system/type'
+import { listType,collects, delType, exportType } from '@/api/system/type'
 import CreateForm from './modules/CreateForm'
 
 export default {
@@ -102,6 +116,8 @@ export default {
   },
   data () {
     return {
+      maxTypes: [],//合同类型-大
+      minTypes: [],//合同类型-小
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -153,6 +169,12 @@ export default {
   filters: {
   },
   created () {
+
+    listType().then(response => {
+      this.maxTypes = response.maxTypes;
+      this.minTypes = response.minTypes;
+    })
+
     this.getList()
   },
   computed: {
@@ -163,7 +185,7 @@ export default {
     /** 查询合同类型列表 */
     getList () {
       this.loading = true
-      listType(this.queryParam).then(response => {
+      collects(this.queryParam).then(response => {
         this.list = response.rows
         this.total = response.total
         this.loading = false
