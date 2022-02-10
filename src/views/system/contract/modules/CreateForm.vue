@@ -4,13 +4,13 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="合同类型" prop="type" >
-        <a-select placeholder="请选择合同类型" v-model="form.type">
-          <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
-            {{ item.maxType }}
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
+<!--      <a-form-model-item label="合同类型" prop="type" >-->
+<!--        <a-select placeholder="请选择合同类型" v-model="form.type">-->
+<!--          <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">-->
+<!--            {{ item.maxType }}-->
+<!--          </a-select-option>-->
+<!--        </a-select>-->
+<!--      </a-form-model-item>-->
       <a-form-model-item label="甲方名称" prop="nailName" >
         <a-input v-model="form.nailName" placeholder="请输入甲方名称" />
       </a-form-model-item>
@@ -20,7 +20,7 @@
       <a-form-model-item label="合同内容" prop="content" >
         <div id="content" name="content" ></div>
       </a-form-model-item>
-      <a-form-model-item label="结算金额" prop="closeAmount" >
+      <a-form-model-item label="结算金额(单位: w)" prop="closeAmount" >
         <a-input v-model="form.closeAmount" placeholder="请输入结算金额" />
       </a-form-model-item>
       <a-form-model-item label="结算项目" prop="closeProj" >
@@ -38,36 +38,53 @@
       <a-form-model-item label="开户银行" prop="openBank" >
         <a-input v-model="form.openBank" placeholder="请输入开户银行" />
       </a-form-model-item>
-      <a-form-model-item label="付款周期数：年月日" prop="payCycle" >
-        <a-input v-model="form.payCycle" placeholder="请输入付款周期数：年月日" />
+<!--      <a-form-model-item label="付款周期数：年月日" prop="payCycle" >-->
+<!--        <a-input v-model="form.payCycle" placeholder="请输入付款周期数：年月日" />-->
+<!--      </a-form-model-item>-->
+
+      <a-form-model-item label="付款周期数" prop="payCycle" >
+        <a-select placeholder="请选择" v-model="form.payCycle">
+          <a-select-option :value="item.val" v-for="item in payCycles" :key="item.id">
+            {{ item.text }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
+
       <a-form-model-item label="付款条件" prop="payCondition" >
         <a-input v-model="form.payCondition" placeholder="请输入付款条件" />
       </a-form-model-item>
-      <a-form-model-item label="付款金额" prop="payAmount" >
+      <a-form-model-item label="付款金额(单位: w)" prop="payAmount" >
         <a-input v-model="form.payAmount" placeholder="请输入付款金额" />
       </a-form-model-item>
-      <a-form-model-item label="付款提醒方式：短信，邮箱等" prop="payCallType" >
-        <a-select placeholder="请选择付款提醒方式：短信，邮箱等" v-model="form.payCallType">
-          <a-select-option value="" >请选择字典生成</a-select-option>
+      <a-form-model-item label="付款提醒方式" prop="payCallType" >
+        <a-select placeholder="请选择提示方式" v-model="form.payCallType">
+          <a-select-option  :value="item.id" v-for="item in callTypes" :key="item.id">
+            {{ item.val }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="收款周期数:" prop="harvestCycle" >
-        <a-input v-model="form.harvestCycle" placeholder="请输入收款周期数:" />
+<!--        <a-input v-model="form.harvestCycle" placeholder="请输入收款周期数:" />-->
+
+        <a-select placeholder="请选择" v-model="form.harvestCycle">
+          <a-select-option :value="item.val" v-for="item in colCycles" :key="item.id">
+            {{ item.text }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="收款条件" prop="harvestCondition" >
         <a-input v-model="form.harvestCondition" placeholder="请输入收款条件" />
       </a-form-model-item>
-      <a-form-model-item label="收款金额" prop="harvestAmount" >
+      <a-form-model-item label="收款金额(单位: w)" prop="harvestAmount" >
         <a-input v-model="form.harvestAmount" placeholder="请输入收款金额" />
       </a-form-model-item>
-      <a-form-model-item label="收款提醒方式：短信，邮箱等" prop="harvestCallType" >
-        <a-select placeholder="请选择收款提醒方式：短信，邮箱等" v-model="form.harvestCallType">
-          <a-select-option value="" >请选择字典生成</a-select-option>
+      <a-form-model-item label="收款提醒方式" prop="harvestCallType" >
+        <a-select placeholder="请选择提示方式" v-model="form.harvestCallType">
+          <a-select-option  :value="item.id" v-for="item in colTypes" :key="item.id">
+            {{ item.val }}
+          </a-select-option>
         </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">
-        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除" />
+
       </a-form-model-item>
       <a-form-model-item label="项目id" prop="projId" >
         <a-input v-model="form.projId" placeholder="请输入项目id" />
@@ -79,19 +96,19 @@
         <a-input v-model="form.constractNo" placeholder="请输入合同编号" />
       </a-form-model-item>
       <a-form-model-item label="签约日期" prop="signTime" >
-        <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD" allow-clear/>
       </a-form-model-item>
 
       <a-form-model-item label="合同大类别" prop="constractBigType" >
         <a-select placeholder="请选择合同大类别" v-model="form.constractBigType">
-          <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
+          <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
             {{ item.maxType }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="合同小类别" prop="constractSmallType" >
         <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">
-          <a-select-option :value="item.maxType" v-for="item in minTypes" :key="item.id">
+          <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">
             {{ item.minType }}
           </a-select-option>
         </a-select>
@@ -139,6 +156,24 @@ export default {
   },
   data () {
     return {
+      payCycles: [
+        {"id":1,"val":360,"text":"年"},
+        {"id":2,"val":30,"text":"月"},
+        {"id":3,"val":1,"text":"日"}
+      ],
+      colCycles: [
+        {"id":1,"val":360,"text":"年"},
+        {"id":2,"val":30,"text":"月"},
+        {"id":3,"val":1,"text":"日"}
+      ],
+      callTypes: [
+        {"id":0,"val":"手机"},
+        {"id":1,"val":"邮箱"}
+      ],
+      colTypes: [
+        {"id":0,"val":"手机"},
+        {"id":1,"val":"邮箱"}
+      ],
       maxTypes: [],//合同类型-大
       minTypes: [],//合同类型-小
       loading: false,

@@ -8,7 +8,7 @@
             <a-col :md="8" :sm="24">
               <a-form-item label="合同类型" prop="type">
                 <a-select placeholder="请选择合同类型" v-model="queryParam.type" style="width: 100%" allow-clear>
-                  <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
+                  <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
                     {{ item.maxType }}
                   </a-select-option>
                 </a-select>
@@ -35,129 +35,135 @@
                   <a-input v-model="queryParam.closeProj" placeholder="请输入结算项目" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="投资方" prop="investor">
-                  <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="投资方" prop="investor">-->
+<!--                  <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
 <!--              <a-col :md="8" :sm="24">-->
 <!--                <a-form-item label="合同凭证:扫描图片地址" prop="voucher">-->
 <!--                  <a-input v-model="queryParam.voucher" placeholder="请输入合同凭证:扫描图片地址" allow-clear/>-->
 <!--                </a-form-item>-->
 <!--              </a-col>-->
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算账户" prop="account">
-                  <a-input v-model="queryParam.account" placeholder="请输入结算账户" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="开户银行" prop="openBank">
-                  <a-input v-model="queryParam.openBank" placeholder="请输入开户银行" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="付款周期数：年月日" prop="payCycle">
-                  <a-input v-model="queryParam.payCycle" placeholder="请输入付款周期数：年月日" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="付款条件" prop="payCondition">
-                  <a-input v-model="queryParam.payCondition" placeholder="请输入付款条件" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="付款金额" prop="payAmount">
-                  <a-input v-model="queryParam.payAmount" placeholder="请输入付款金额" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="付款提醒方式：短信，邮箱等" prop="payCallType">
-                  <a-select placeholder="请选择付款提醒方式：短信，邮箱等" v-model="queryParam.payCallType" style="width: 100%" allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款周期数:" prop="harvestCycle">
-                  <a-input v-model="queryParam.harvestCycle" placeholder="请输入收款周期数:" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款条件" prop="harvestCondition">
-                  <a-input v-model="queryParam.harvestCondition" placeholder="请输入收款条件" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款金额" prop="harvestAmount">
-                  <a-input v-model="queryParam.harvestAmount" placeholder="请输入收款金额" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款提醒方式：短信，邮箱等" prop="harvestCallType">
-                  <a-select placeholder="请选择收款提醒方式：短信，邮箱等" v-model="queryParam.harvestCallType" style="width: 100%" allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="项目id" prop="projId">
-                  <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同名称" prop="constractName">
-                  <a-input v-model="queryParam.constractName" placeholder="请输入合同名称" allow-clear/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="结算账户" prop="account">-->
+<!--                  <a-input v-model="queryParam.account" placeholder="请输入结算账户" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="开户银行" prop="openBank">-->
+<!--                  <a-input v-model="queryParam.openBank" placeholder="请输入开户银行" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="付款周期数：年月日" prop="payCycle">-->
+<!--                  <a-input v-model="queryParam.payCycle" placeholder="请输入付款周期数：年月日" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="付款条件" prop="payCondition">-->
+<!--                  <a-input v-model="queryParam.payCondition" placeholder="请输入付款条件" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="付款金额" prop="payAmount">-->
+<!--                  <a-input v-model="queryParam.payAmount" placeholder="请输入付款金额" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="付款提醒方式：短信，邮箱等" prop="payCallType">-->
+<!--                  <a-select placeholder="请选择付款提醒方式：短信，邮箱等" v-model="queryParam.payCallType" style="width: 100%" allow-clear>-->
+<!--                    <a-select-option>请选择字典生成</a-select-option>-->
+<!--                  </a-select>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="收款周期数:" prop="harvestCycle">-->
+<!--                  <a-input v-model="queryParam.harvestCycle" placeholder="请输入收款周期数:" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="收款条件" prop="harvestCondition">-->
+<!--                  <a-input v-model="queryParam.harvestCondition" placeholder="请输入收款条件" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="收款金额" prop="harvestAmount">-->
+<!--                  <a-input v-model="queryParam.harvestAmount" placeholder="请输入收款金额" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="收款提醒方式：短信，邮箱等" prop="harvestCallType">-->
+<!--                  <a-select placeholder="请选择收款提醒方式：短信，邮箱等" v-model="queryParam.harvestCallType" style="width: 100%" allow-clear>-->
+<!--                    <a-select-option>请选择字典生成</a-select-option>-->
+<!--                  </a-select>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="项目id" prop="projId">-->
+<!--                  <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="合同名称" prop="constractName">-->
+<!--                  <a-input v-model="queryParam.constractName" placeholder="请输入合同名称" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="合同编号" prop="constractNo">
                   <a-input v-model="queryParam.constractNo" placeholder="请输入合同编号" allow-clear/>
                 </a-form-item>
               </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="签约日期" prop="signTime">-->
+<!--                  <a-date-picker style="width: 100%" v-model="queryParam.signTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="合同大类别:0：收入合同，1：支出合同" prop="constractBigType">-->
+<!--                  <a-select placeholder="请选择合同大类别:0：收入合同，1：支出合同" v-model="queryParam.constractBigType" style="width: 100%" allow-clear>-->
+<!--                    <a-select-option>请选择字典生成</a-select-option>-->
+<!--                  </a-select>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
               <a-col :md="8" :sm="24">
-                <a-form-item label="签约日期" prop="signTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.signTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同大类别:0：收入合同，1：支出合同" prop="constractBigType">
-                  <a-select placeholder="请选择合同大类别:0：收入合同，1：支出合同" v-model="queryParam.constractBigType" style="width: 100%" allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
+                <a-form-item label="合同小类别" prop="constractSmallType">
+<!--                  <a-select placeholder="请选择合同小类别:投资方分类。演员合同、职员合同……" v-model="queryParam.constractSmallType" style="width: 100%" allow-clear>-->
+<!--                    <a-select-option>请选择字典生成</a-select-option>-->
+<!--                  </a-select>-->
+                  <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">
+                    <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">
+                      {{ item.minType }}
+                    </a-select-option>
                   </a-select>
+
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同小类别:投资方分类。演员合同、职员合同……" prop="constractSmallType">
-                  <a-select placeholder="请选择合同小类别:投资方分类。演员合同、职员合同……" v-model="queryParam.constractSmallType" style="width: 100%" allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同上传文件时间" prop="uploadTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="联系人名称" prop="contactsor">
-                  <a-input v-model="queryParam.contactsor" placeholder="请输入联系人名称" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="联系人电话" prop="contactsPhone">
-                  <a-input v-model="queryParam.contactsPhone" placeholder="请输入联系人电话" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="联系人邮箱" prop="contactsEmai">
-                  <a-input v-model="queryParam.contactsEmai" placeholder="请输入联系人邮箱" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="联系人其他" prop="contactsOthers">
-                  <a-input v-model="queryParam.contactsOthers" placeholder="请输入联系人其他" allow-clear/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="合同上传文件时间" prop="uploadTime">-->
+<!--                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="联系人名称" prop="contactsor">-->
+<!--                  <a-input v-model="queryParam.contactsor" placeholder="请输入联系人名称" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="联系人电话" prop="contactsPhone">-->
+<!--                  <a-input v-model="queryParam.contactsPhone" placeholder="请输入联系人电话" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="联系人邮箱" prop="contactsEmai">-->
+<!--                  <a-input v-model="queryParam.contactsEmai" placeholder="请输入联系人邮箱" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="8" :sm="24">-->
+<!--                <a-form-item label="联系人其他" prop="contactsOthers">-->
+<!--                  <a-input v-model="queryParam.contactsOthers" placeholder="请输入联系人其他" allow-clear/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
@@ -308,36 +314,36 @@ export default {
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '合同类型：0收入，1支出类合同',
-        //   dataIndex: 'type',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '甲方名称',
-        //   dataIndex: 'nailName',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '乙方名称',
-        //   dataIndex: 'bname',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '合同内容',
-        //   dataIndex: 'content',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '结算金额',
-        //   dataIndex: 'closeAmount',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '合同类型',
+          dataIndex: 'type',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '甲方名称',
+          dataIndex: 'nailName',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '乙方名称',
+          dataIndex: 'bname',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '合同内容',
+          dataIndex: 'content',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '结算金额',
+          dataIndex: 'closeAmount',
+          ellipsis: true,
+          align: 'center'
+        },
         // {
         //   title: '结算项目',
         //   dataIndex: 'closeProj',
@@ -351,7 +357,7 @@ export default {
         //   align: 'center'
         // },
         // {
-        //   title: '合同凭证:扫描图片地址',
+        //   title: '合同凭证',
         //   dataIndex: 'voucher',
         //   ellipsis: true,
         //   align: 'center'
@@ -422,37 +428,37 @@ export default {
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '合同名称',
-        //   dataIndex: 'constractName',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '合同编号',
-        //   dataIndex: 'constractNo',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '签约日期',
-        //   dataIndex: 'signTime',
-        //   scopedSlots: { customRender: 'signTime' },
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '合同名称',
+          dataIndex: 'constractName',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '合同编号',
+          dataIndex: 'constractNo',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '签约日期',
+          dataIndex: 'signTime',
+          scopedSlots: { customRender: 'signTime' },
+          ellipsis: true,
+          align: 'center'
+        },
         // {
         //   title: '合同大类别:0：收入合同，1：支出合同',
         //   dataIndex: 'constractBigType',
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '合同小类别:投资方分类。演员合同、职员合同……',
-        //   dataIndex: 'constractSmallType',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '合同小类别',
+          dataIndex: 'constractSmallType',
+          ellipsis: true,
+          align: 'center'
+        },
         // {
         //   title: '合同上传文件时间',
         //   dataIndex: 'uploadTime',
@@ -460,18 +466,18 @@ export default {
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '联系人名称',
-        //   dataIndex: 'contactsor',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '联系人电话',
-        //   dataIndex: 'contactsPhone',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '联系人名称',
+          dataIndex: 'contactsor',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '联系人电话',
+          dataIndex: 'contactsPhone',
+          ellipsis: true,
+          align: 'center'
+        },
         {
           title: '联系人邮箱',
           dataIndex: 'contactsEmai',
