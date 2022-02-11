@@ -58,6 +58,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:SysPaycolType:edit']" />
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysPaycolType:edit']">
@@ -116,11 +119,10 @@ export default {
       },
       columns: [
         {
-          title: '序号/ID',
-          dataIndex: 'id',
-          ellipsis: true,
-          align: 'center'
-        },
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
+          align: 'center'        },
         {
           title: '收/付款到期提醒方式',
           dataIndex: 'type',

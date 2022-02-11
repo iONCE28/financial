@@ -15,12 +15,11 @@
           @change="handleChange"
           :multiple="true">
           <a-button type="primary"> <a-icon type="upload"/>文件上传</a-button>
-          <a-icon :type="loading ? 'loading' : 'plus'"/>
         </a-upload>
       </a-form-model-item>
       <a-form-model-item label="影像类别" prop="type">
         <a-select placeholder="请选择影像类别" v-model="form.type" style="width: 100%" allow-clear>
-          <a-select-option :value="item.id" v-for="item in Imagetype" :key="item.id">
+          <a-select-option :value="item.typeNo.toString()" v-for="item in Imagetype" :key="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>

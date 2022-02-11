@@ -37,18 +37,6 @@
 <!--      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">-->
 <!--        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除" />-->
 <!--      </a-form-model-item>-->
-      <a-divider orientation="left">
-        <b>物料管理变更信息</b>
-      </a-divider>
-      <sub-table ref="subTable" :list="subList" @add="handleAddsysMaterialUpdate" @delete="handleDeletesysMaterialUpdate" />
-      <p>当前存在 {{ subList==undefined?0:subList.length }} 条信息</p>
-      <router-link :to="{path:'/material/update', params: {id:1}}">
-<!--        @click="$refs.subTable.show()"-->
-        <a-button type="dashed" >
-          详情
-        </a-button>
-      </router-link>
-      <br>
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">

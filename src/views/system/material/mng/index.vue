@@ -112,6 +112,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="operation" slot-scope="text, record">
 <!--          <a-divider type="vertical" v-hasPermi="['system:mng:edit']"/>-->
           <!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:mng:edit']">-->
@@ -179,9 +182,9 @@ export default {
       },
       columns: [
         {
-          title: '物料ID',
-          dataIndex: 'id',
-          ellipsis: true,
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
           align: 'center'
         },
         // {

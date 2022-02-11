@@ -60,6 +60,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:status:edit']" />
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:status:edit']">
@@ -119,11 +122,11 @@ export default {
       },
       columns: [
         {
-          title: 'id',
-          dataIndex: 'id',
-          ellipsis: true,
-          align: 'center'
-        },
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
+          align: 'center'          
+          },
         {
           title: '状态编号',
           dataIndex: 'statusNo',

@@ -109,6 +109,9 @@
         <span slot="colpayExpireTime" slot-scope="text, record">
           {{ parseTime(record.colpayExpireTime) }}
         </span>
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="operation" slot-scope="text, record">
 <!--          <a-divider type="vertical" v-hasPermi="['system:result:edit']" />-->
 <!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:result:edit']">-->
@@ -187,6 +190,12 @@ export default {
         //   ellipsis: true,
         //   align: 'center'
         // },
+        {
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
+          align: 'center'
+        },
         {
           title: '结算项目名称',
           dataIndex: 'projName',

@@ -7,9 +7,6 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="大类" prop="maxType">
-<!--                <a-select placeholder="请选择大类：0收入合同，1支出合同" v-model="queryParam.maxType" style="width: 100%" allow-clear>-->
-<!--                  <a-select-option>请选择字典生成</a-select-option>-->
-<!--                </a-select>-->
 
                 <a-select placeholder="请选择合同类型" v-model="queryParam.maxType" style="width: 100%" allow-clear>
                   <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
@@ -21,9 +18,6 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="小类" prop="minType">
-<!--                <a-select placeholder="请选择小类：演员合同，职员合同.." v-model="queryParam.minType" style="width: 100%" allow-clear>-->
-<!--                  <a-select-option>请选择字典生成</a-select-option>-->
-<!--                </a-select>-->
 
                 <a-select placeholder="请选择合同小类别" v-model="queryParam.minType">
                   <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">
@@ -78,6 +72,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:type:edit']" />
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:type:edit']">
@@ -139,19 +136,19 @@ export default {
       },
       columns: [
         {
-          title: '删除状态 0. 正常 1. 删除',
-          dataIndex: 'id',
-          ellipsis: true,
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
           align: 'center'
         },
         {
-          title: '大类：0收入合同，1支出合同',
+          title: '大类：',
           dataIndex: 'maxType',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '小类：演员合同，职员合同..',
+          title: '小类：',
           dataIndex: 'minType',
           ellipsis: true,
           align: 'center'

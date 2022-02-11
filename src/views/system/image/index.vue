@@ -99,6 +99,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
         </span>
@@ -173,18 +176,11 @@ export default {
       },
       columns: [
         {
-          title: '影像ID',
-          dataIndex: 'id',
-          ellipsis: true,
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
           align: 'center'
         },
-        // {
-        //   title: '项目id',
-        //   dataIndex: 'projId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-
         {
           title: '影像类别',
           dataIndex: 'type',

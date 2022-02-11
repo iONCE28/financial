@@ -61,6 +61,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="onTime" slot-scope="text, record">
           {{ parseTime(record.onTime) }}
         </span>
@@ -156,9 +159,9 @@ export default {
       },
       columns: [
         {
-          title: '项目ID',
-          dataIndex: 'id',
-          ellipsis: true,
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
           align: 'center'
         },
         {
@@ -182,7 +185,7 @@ export default {
             if(text === '0') {
               return "新建"
             } else if (text === '1'){
-              return "再见"
+              return "在建"
             } else if (text === '2') {
               return "维护"
             }
@@ -203,13 +206,6 @@ export default {
             }
           }
         },
-        // {
-        //   title: '摘要',
-        //   dataIndex: 'abstracts',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
         {
           title: '场次',
           dataIndex: 'showNum',
@@ -228,75 +224,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '开机时间',
-        //   dataIndex: 'onTime',
-        //   scopedSlots: { customRender: 'onTime' },
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '关机时间',
-        //   dataIndex: 'offTime',
-        //   scopedSlots: { customRender: 'offTime' },
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '项目周期数：比如：三月、半年、一年',
-        //   dataIndex: 'cycle',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '投资方：甲方',
-        //   dataIndex: 'investor',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '承接单位：乙方',
-        //   dataIndex: 'undertakor',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        {
-          title: '立项部门',
-          dataIndex: 'depart',
-          ellipsis: true,
-          align: 'center'
-        },
         {
           title: '负责人',
           dataIndex: 'dutior',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '负责人职称',
-        //   dataIndex: 'dutiorTitle',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '负责人电话',
-        //   dataIndex: 'dutiorPhone',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '项目规模',
-        //   dataIndex: 'scale',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '上传时间',
-        //   dataIndex: 'uploadTime',
-        //   scopedSlots: { customRender: 'uploadTime' },
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '项目文件',
           dataIndex: 'file',

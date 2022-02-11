@@ -7,7 +7,7 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="合同类型" prop="type">
-                <a-select placeholder="请选择合同类型" v-model="queryParam.type" style="width: 100%" allow-clear>
+                <a-select placeholder="请选择合同类型" v-model="queryParam.constractBigType" style="width: 100%" allow-clear>
                   <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
                     {{ item.maxType }}
                   </a-select-option>
@@ -225,11 +225,23 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="files" slot-scope="text, record">
+          <a @click="preview(record.voucher)">
+            <a-icon type="eye" />预览
+          </a>
+          <a-divider type="vertical"  />
+          <a @click="download(record.voucher)">
+            <a-icon type="download" />下载
+          </a>
+        </span>
         <span slot="signTime" slot-scope="text, record">
           {{ parseTime(record.signTime) }}
         </span>
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
+        </span>
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:contract:edit']" />
@@ -262,7 +274,7 @@
 import { listContract, delContract, exportContract } from '@/api/system/contract'
 import CreateForm from './modules/CreateForm'
 import {listType} from "@/api/system/type";
-
+import Base from '@/utils/base64'
 export default {
   name: 'Contract',
   components: {
@@ -319,18 +331,18 @@ export default {
         pageSize: 10
       },
       columns: [
+        {
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
+          align: 'center'
+        },
         // {
-        //   title: '联系人其他',
-        //   dataIndex: 'id',
+        //   title: '合同类型',
+        //   dataIndex: 'type',
         //   ellipsis: true,
         //   align: 'center'
         // },
-        {
-          title: '合同类型',
-          dataIndex: 'type',
-          ellipsis: true,
-          align: 'center'
-        },
         {
           title: '甲方名称',
           dataIndex: 'nailName',
@@ -343,12 +355,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '合同内容',
-          dataIndex: 'content',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '合同内容',
+        //   dataIndex: 'content',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '结算金额',
           dataIndex: 'closeAmount',
@@ -483,22 +495,29 @@ export default {
           ellipsis: true,
           align: 'center'
         },
+        // {
+        //   title: '联系人电话',
+        //   dataIndex: 'contactsPhone',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '联系人邮箱',
+        //   dataIndex: 'contactsEmai',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '联系人其他',
+        //   dataIndex: 'contactsOthers',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
-          title: '联系人电话',
-          dataIndex: 'contactsPhone',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '联系人邮箱',
-          dataIndex: 'contactsEmai',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '联系人其他',
-          dataIndex: 'contactsOthers',
-          ellipsis: true,
+          title: '合同文件',
+          dataIndex: 'voucher',
+          width: '8%',
+          scopedSlots: { customRender: 'files' },
           align: 'center'
         },
         {
@@ -525,6 +544,14 @@ export default {
   watch: {
   },
   methods: {
+    preview(row) {
+      var base1 = new Base();
+      const url =  row
+      window.open('http://127.0.0.1:8012/onlinePreview?url='+encodeURIComponent(base1.encode(url)));
+    },
+    download(row) {
+     window.location.href = row
+    },
     /** 查询合同基本信息列表 */
     getList () {
       this.loading = true

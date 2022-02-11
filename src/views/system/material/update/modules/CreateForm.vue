@@ -13,7 +13,7 @@
       <a-form-model-item label="状态" prop="materialStatus">
         <a-select placeholder="请选择物料状态" v-model="form.materialStatus" style="width: 100%" allow-clear>
 
-          <a-select-option :value="item.id" v-for="item in typeList" :key="item.id">
+          <a-select-option :value="item.statusNo.toString()" v-for="item in typeList" :key="item.id">
             {{ item.name }}
           </a-select-option>
 
@@ -78,7 +78,7 @@ export default {
         projId: null,
         materialId: null,
         materialNo: null,
-        materialStatus: 0,
+        materialStatus: '0',
         num: null,
         updateTime: null,
         remark: null,
@@ -163,7 +163,7 @@ export default {
         projId: null,
         materialId: materialId,
         materialNo: null,
-        materialStatus: 0,
+        materialStatus: '0',
         num: null,
         updateTime: null,
         remark: null,

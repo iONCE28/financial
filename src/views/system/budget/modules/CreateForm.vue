@@ -22,11 +22,18 @@
       <a-form-model-item label="排序" prop="subNo">
         <a-input-number v-model="form.subNo" :min="0" style="width: 100%"/>
       </a-form-model-item>
+      <a-form-model-item label="科目类别：" prop="subType">
+        <a-select placeholder="请选择" v-model="form.subType">
+          <a-select-option value="0">收入科目</a-select-option>
+            <a-select-option value="1">支出科目</a-select-option>
+        </a-select>
+      </a-form-model-item>
       <a-form-model-item label="状态" prop="status">
         <a-radio-group v-model="form.status" button-style="solid">
           <a-radio-button v-for="(d, index) in statusOptions" :key="index" :value="d.dictValue">{{ d.dictLabel }}</a-radio-button>
         </a-radio-group>
       </a-form-model-item>
+      
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -67,7 +74,8 @@ export default {
         parentNo: undefined,
         subjectName: undefined,
         subNo: 0,
-        status: '0'
+        status: '0',
+        subType: '0'
       },
       open: false,
       rules: {
@@ -101,7 +109,8 @@ export default {
         parentNo: undefined,
         subjectName: undefined,
         subNo: 0,
-        status: '0'
+        status: '0',
+        subType: '0'
       }
     },
      /** 新增按钮操作 */

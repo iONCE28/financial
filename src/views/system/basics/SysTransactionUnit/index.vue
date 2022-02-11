@@ -86,6 +86,9 @@
          <span slot="type" slot-scope="typeRender">
         {{ type == 0 ? "公司" : type == 1 ? "个人" : "/" }}
       </span>
+      <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:SysTransactionUnit:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysTransactionUnit:edit']">
@@ -146,9 +149,9 @@ export default {
       },
       columns: [
         {
-          title: '往来ID',
-          dataIndex: 'id',
-          ellipsis: true,
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
           align: 'center'
         },
         // {

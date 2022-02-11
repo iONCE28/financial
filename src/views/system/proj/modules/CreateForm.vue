@@ -32,7 +32,6 @@
           @change="handleChange"
           :multiple="true">
         <a-button type="primary"> <a-icon type="upload"/>文件上传</a-button>
-        <a-icon :type="loading ? 'loading' : 'plus'"/>
       </a-upload>
       </a-form-model-item>
       <a-form-model-item label="场次" prop="showNum">
@@ -59,9 +58,6 @@
       <a-form-model-item label="承接单位：乙方" prop="undertakor">
         <a-input v-model="form.undertakor" placeholder="请输入承接单位：乙方" />
       </a-form-model-item>
-      <!-- <a-form-model-item label="立项部门" prop="depart">
-        <a-input v-model="form.depart" placeholder="请输入立项部门" />
-      </a-form-model-item> -->
       <a-form-model-item label="部门" prop="depart">
         <a-tree-select
           v-model="form.depart"
@@ -127,7 +123,7 @@ import { uploadCover } from '@/api/system/upload'
         label: '',
         children: []
       }],
-          replaceFields: { children: 'children', title: 'label', key: 'id', value: 'label' },
+          replaceFields: { children: 'children', title: 'label', key: 'id', value: 'id' },
           statusList:["未开始","正在进行","已验收"],
         loading: false,
         formTitle: '',

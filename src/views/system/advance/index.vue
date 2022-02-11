@@ -150,6 +150,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="advanceOpenTime" slot-scope="text, record">
           {{ parseTime(record.advanceOpenTime) }}
         </span>
@@ -228,11 +231,10 @@ export default {
       },
       columns: [
         {
-          title: '预付账款id',
-          dataIndex: 'id',
-          ellipsis: true,
-          align: 'center'
-        },
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
+          align: 'center'        },
         {
           title: '项目id',
           dataIndex: 'projId',

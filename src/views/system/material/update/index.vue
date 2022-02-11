@@ -159,6 +159,9 @@
         <span slot="updateTime" slot-scope="text, record">
           {{ parseTime(record.updateTime) }}
         </span>
+        <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="createTime" slot-scope="text, record">
           {{ parseTime(record.createTime) }}
         </span>
@@ -235,9 +238,9 @@ export default {
       },
       columns: [
         {
-          title: 'id',
-          dataIndex: 'id',
-          ellipsis: true,
+          title: '序号',
+          key: 'number',
+          scopedSlots: { customRender: 'serial' },
           align: 'center'
         },
         // {
