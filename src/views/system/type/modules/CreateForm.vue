@@ -5,35 +5,15 @@
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
       <a-form-model-item label="大类" prop="maxType" >
-<!--        <a-select placeholder="请选择大类：0收入合同，1支出合同" v-model="form.maxType">-->
-<!--          <a-select-option value="" >请选择字典生成</a-select-option>-->
-<!--        </a-select>-->
-
-        <a-select placeholder="请选择合同大类别" v-model="form.maxType">
+        <a-select placeholder="请选择合同类别" v-model="form.maxType">
           <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
             {{ item.maxType }}
           </a-select-option>
         </a-select>
-
       </a-form-model-item>
       <a-form-model-item label="小类" prop="minType" >
-<!--        <a-select placeholder="请选择小类：演员合同，职员合同.." v-model="form.minType">-->
-<!--          <a-select-option value="" >请选择字典生成</a-select-option>-->
-<!--        </a-select>-->
-
         <a-input v-model="form.minType" placeholder="请输入" />
-
-<!--        <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">-->
-<!--          <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">-->
-<!--            {{ item.minType }}-->
-<!--          </a-select-option>-->
-<!--        </a-select>-->
-
-
       </a-form-model-item>
-<!--      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">-->
-<!--        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除" />-->
-<!--      </a-form-model-item>-->
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">

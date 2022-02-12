@@ -9,6 +9,14 @@ export function listContract (query) {
   })
 }
 
+// 根据用户查询合同
+export function listByUser () {
+  return request({
+    url: '/system/contract/listByUser',
+    method: 'get'
+  })
+}
+
 // 查询合同基本信息详细
 export function getContract (id) {
   return request({

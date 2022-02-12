@@ -6,8 +6,8 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="结算项目id" prop="projId">
-                <a-input v-model="queryParam.projId" placeholder="请输入结算项目id" allow-clear/>
+              <a-form-item label="合同名称" prop="projName">
+                <a-input v-model="queryParam.constractName" placeholder="请输入结算项目名称" allow-clear/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -15,56 +15,19 @@
                 <a-input v-model="queryParam.projName" placeholder="请输入结算项目名称" allow-clear/>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算金额" prop="projAmt">
-                  <a-input v-model="queryParam.projAmt" placeholder="请输入结算金额" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收付款周期：比如：三月、半年、一年" prop="colpayCycle">
-                  <a-input v-model="queryParam.colpayCycle" placeholder="请输入收付款周期：比如：三月、半年、一年" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收付款条件" prop="colpayCondition">
-                  <a-input v-model="queryParam.colpayCondition" placeholder="请输入收付款条件" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收付款金额" prop="colpayAmt">
-                  <a-input v-model="queryParam.colpayAmt" placeholder="请输入收付款金额" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收付款过期时间" prop="colpayExpireTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.colpayExpireTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算账户名称" prop="accountName">
-                  <a-input v-model="queryParam.accountName" placeholder="请输入结算账户名称" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算账户开户行" prop="openBank">
-                  <a-input v-model="queryParam.openBank" placeholder="请输入结算账户开户行" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="结算账户" prop="account">
-                  <a-input v-model="queryParam.account" placeholder="请输入结算账户" allow-clear/>
-                </a-form-item>
-              </a-col>
-            </template>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="大类" prop="maxType">
+                <a-select placeholder="请选择合同类型" v-model="queryParam.contractType" style="width: 100%" allow-clear>
+                  <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
+                    {{ item.maxType }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
                 <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo" />重置</a-button>
-                <a @click="toggleAdvanced" style="margin-left: 8px">
-                  {{ advanced ? '收起' : '展开' }}
-                  <a-icon :type="advanced ? 'up' : 'down'"/>
-                </a>
               </span>
             </a-col>
           </a-row>
@@ -72,12 +35,12 @@
       </div>
       <!-- 操作 -->
       <div class="table-operations">
-<!--        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:result:add']">-->
-<!--          <a-icon type="plus" />新增-->
-<!--        </a-button>-->
-<!--        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:result:edit']">-->
-<!--          <a-icon type="edit" />修改-->
-<!--        </a-button>-->
+        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:result:add']">
+          <a-icon type="plus" />新增
+        </a-button>
+        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:result:edit']">
+          <a-icon type="edit" />修改
+        </a-button>
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:result:remove']">
           <a-icon type="delete" />删除
         </a-button>
@@ -113,10 +76,10 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-<!--          <a-divider type="vertical" v-hasPermi="['system:result:edit']" />-->
-<!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:result:edit']">-->
-<!--            <a-icon type="edit" />修改-->
-<!--          </a>-->
+          <a-divider type="vertical" v-hasPermi="['system:result:edit']" />
+          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:result:edit']">
+            <a-icon type="edit" />修改
+          </a>
           <a-divider type="vertical" v-hasPermi="['system:result:remove']" />
           <a @click="handleDelete(record)" v-hasPermi="['system:result:remove']">
             <a-icon type="delete" />删除
@@ -142,6 +105,7 @@
 <script>
 import { listResult, delResult, exportResult } from '@/api/system/result'
 import CreateForm from './modules/CreateForm'
+import {listType} from "@/api/system/type";
 
 export default {
   name: 'Result',
@@ -150,6 +114,7 @@ export default {
   },
   data () {
     return {
+      maxTypes: [],//合同类型-大
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -164,32 +129,13 @@ export default {
       total: 0,
       // 查询参数
       queryParam: {
-        projId: null,
+        contractType : null,
+        constractName: null,
         projName: null,
-        projAmt: null,
-        colpayCycle: null,
-        colpayCondition: null,
-        colpayAmt: null,
-        colpayExpireTime: null,
-        accountName: null,
-        openBank: null,
-        account: null,
         pageNum: 1,
         pageSize: 10
       },
       columns: [
-        // {
-        //   title: '删除状态 0. 正常 1. 删除',
-        //   dataIndex: 'id',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '结算项目id',
-        //   dataIndex: 'projId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '序号',
           key: 'number',
@@ -197,8 +143,14 @@ export default {
           align: 'center'
         },
         {
-          title: '结算项目名称',
+          title: '合同名称',
           dataIndex: 'projName',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '结算项目名称',
+          dataIndex: 'maxType',
           ellipsis: true,
           align: 'center'
         },
@@ -208,31 +160,6 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '收付款周期：比如：三月、半年、一年',
-        //   dataIndex: 'colpayCycle',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收付款条件',
-        //   dataIndex: 'colpayCondition',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收付款金额',
-        //   dataIndex: 'colpayAmt',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收付款过期时间',
-        //   dataIndex: 'colpayExpireTime',
-        //   scopedSlots: { customRender: 'colpayExpireTime' },
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '结算账户名称',
           dataIndex: 'accountName',
@@ -264,6 +191,9 @@ export default {
   filters: {
   },
   created () {
+    listType().then(response => {
+      this.maxTypes = response.maxTypes;
+    })
     this.getList()
   },
   computed: {
@@ -275,8 +205,8 @@ export default {
     getList () {
       this.loading = true
       listResult(this.queryParam).then(response => {
-        this.list = response.rows
-        this.total = response.total
+        this.list = response.list
+        this.total = response.totalSize
         this.loading = false
       })
     },
@@ -288,16 +218,9 @@ export default {
     /** 重置按钮操作 */
     resetQuery () {
       this.queryParam = {
-        projId: undefined,
-        projName: undefined,
-        projAmt: undefined,
-        colpayCycle: undefined,
-        colpayCondition: undefined,
-        colpayAmt: undefined,
-        colpayExpireTime: undefined,
-        accountName: undefined,
-        openBank: undefined,
-        account: undefined,
+        contractType : null,
+        constractName: null,
+        projName: null,
         pageNum: 1,
         pageSize: 10
       }

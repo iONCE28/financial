@@ -4,6 +4,15 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
+
+      <a-form-model-item label="合同" prop="contractId" >
+        <a-select placeholder="请选择合同类别" v-model="form.contractId">
+          <a-select-option :value="item.id" v-for="item in contractList" :key="item.id">
+            {{ item.constractName }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+
       <a-form-model-item label="结算项目id" prop="projId" >
         <a-input v-model="form.projId" placeholder="请输入结算项目id" />
       </a-form-model-item>
@@ -53,6 +62,8 @@
 
 <script>
 import { getResult, addResult, updateResult } from '@/api/system/result'
+import { listByUser } from '@/api/system/contract'
+import {listType} from "@/api/system/type";
 
 export default {
   name: 'CreateForm',
@@ -62,10 +73,12 @@ export default {
   },
   data () {
     return {
+      contractList: [],//合同列表
       loading: false,
       formTitle: '',
       // 表单参数
       form: {
+        contractId: null,
         id: null,
         projId: null,
         projName: null,
@@ -85,6 +98,9 @@ export default {
       formType: 1,
       open: false,
       rules: {
+        contractId: [
+          { required: true, message: '合同项目不能为空', trigger: 'blur' }
+        ],
         projId: [
           { required: true, message: '结算项目id不能为空', trigger: 'blur' }
         ],
@@ -121,6 +137,9 @@ export default {
   filters: {
   },
   created () {
+    listByUser().then(response => {
+      this.contractList = response;
+    })
   },
   computed: {
   },
