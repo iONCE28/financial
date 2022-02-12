@@ -5,45 +5,34 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <!--            <a-col :md="8" :sm="24">-->
-            <!--              <a-form-item label="项目id" prop="projId">-->
-            <!--                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>-->
-            <!--              </a-form-item>-->
-            <!--            </a-col>-->
             <a-col :md="8" :sm="24">
-              <a-form-item label="影像类别" prop="type">
-                <a-select placeholder="请选择影像类别" v-model="queryParam.type" style="width: 100%" allow-clear>
-
-                  <a-select-option :value="item.id" v-for="item in Imagetype" :key="item.id">
-                    {{ item.name }}
-                  </a-select-option>
-
+              <a-form-item label="科目名称" prop="name">
+                <a-select placeholder="请选择科目名称" v-model="queryParam.name" style="width: 100%" allow-clear>
+                  <a-select-option>请选择字典生成</a-select-option>
                 </a-select>
-
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="预算属性" prop="attribute">
+                <a-select placeholder="请选择预算属性" v-model="queryParam.attribute" style="width: 100%" allow-clear>
+                  <a-select-option value="0">收入科目</a-select-option>
+                  <a-select-option value="1">支出科目</a-select-option>
 
-              <a-col :md="8" :sm="24">
-                <a-form-item label="影像标签" prop="label">
-                  <a-input v-model="queryParam.label" placeholder="请输入影像标签" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="操作人" prop="operator">
-                  <a-input v-model="queryParam.operator" placeholder="请输入操作人" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <!--              <a-col :md="8" :sm="24">-->
-              <!--                <a-form-item label="操作人员ID" prop="operatorId">-->
-              <!--                  <a-input v-model="queryParam.operatorId" placeholder="请输入操作人员ID" allow-clear/>-->
-              <!--                </a-form-item>-->
-              <!--              </a-col>-->
-              <!--              <a-col :md="8" :sm="24">-->
-              <!--                <a-form-item label="文件上传时间" prop="uploadTime">-->
-              <!--                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
-              <!--                </a-form-item>-->
-              <!--              </a-col>-->
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <!--            <a-col :md="8" :sm="24">
+                          <a-form-item label="预算金额" prop="amount">
+                            <a-input v-model="queryParam.amount" placeholder="请输入预算金额" allow-clear/>
+                          </a-form-item>
+                        </a-col>-->
+            <template v-if="advanced">
+              <!--              <a-col :md="8" :sm="24">
+                              <a-form-item label="项目id" prop="projId">
+                                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
+                              </a-form-item>
+                            </a-col>-->
+
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
@@ -61,20 +50,20 @@
       </div>
       <!-- 操作 -->
       <div class="table-operations">
-        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:imagemng:add']">
+        <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:SysBudgetMng:add']">
           <a-icon type="plus"/>
           新增
         </a-button>
         <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
-                  v-hasPermi="['system:imagemng:edit']">
+                  v-hasPermi="['system:SysBudgetMng:edit']">
           <a-icon type="edit"/>
           修改
         </a-button>
-        <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:imagemng:remove']">
+        <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:SysBudgetMng:remove']">
           <a-icon type="delete"/>
           删除
         </a-button>
-        <!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:imagemng:export']">-->
+        <!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:SysBudgetMng:export']">-->
         <!--          <a-icon type="download" />导出-->
         <!--        </a-button>-->
         <a-button
@@ -99,28 +88,19 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+          <span slot="attribute" slot-scope="text, record">
+          {{ attributeFormat(record) }}
+        </span>
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
-        <span slot="uploadTime" slot-scope="text, record">
-          {{ parseTime(record.uploadTime) }}
-        </span>
-        <span slot="imagetype" slot-scope="text, record">
-           {{ imagetypeFormat(record) }}
-        </span>
-        <span slot="preview" slot-scope="text, record">
-
-          <a @click="handlePreview(record)" v-hasPermi="['system:imagemng:remove']">
-           文件预览
-          </a>
-        </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:imagemng:edit']"/>
-          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:imagemng:edit']">
+          <a-divider type="vertical" v-hasPermi="['system:SysBudgetMng:edit']"/>
+          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysBudgetMng:edit']">
             <a-icon type="edit"/>修改
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:imagemng:remove']"/>
-          <a @click="handleDelete(record)" v-hasPermi="['system:imagemng:remove']">
+          <a-divider type="vertical" v-hasPermi="['system:SysBudgetMng:remove']"/>
+          <a @click="handleDelete(record)" v-hasPermi="['system:SysBudgetMng:remove']">
             <a-icon type="delete"/>删除
           </a>
         </span>
@@ -142,13 +122,11 @@
 </template>
 
 <script>
-import {delImagemng, exportImagemng, listImagemng} from '@/api/system/imagemng'
+import {delSysBudgetMng, exportSysBudgetMng, listSysBudgetMng} from '@/api/system/SysBudgetMng'
 import CreateForm from './modules/CreateForm'
-import {listImagetype} from "@/api/system/imagetype";
-import Base from '@/utils/base64'
 
 export default {
-  name: 'Imagemng',
+  name: 'SysBudgetMng',
   components: {
     CreateForm
   },
@@ -168,13 +146,11 @@ export default {
       total: 0,
       // 查询参数
       queryParam: {
+        name: null,
+        amount: null,
+        explain: null,
         projId: null,
-        image: null,
-        type: null,
-        label: null,
-        operator: null,
-        operatorId: null,
-        uploadTime: null,
+        attribute: null,
         pageNum: 1,
         pageSize: 10
       },
@@ -185,45 +161,39 @@ export default {
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
+
         {
-          title: '影像类别',
-          dataIndex: 'type',
+          title: '科目名称',
+          dataIndex: 'name',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '预算属性',
+          dataIndex: 'attribute',
           ellipsis: true,
           align: 'center',
-          scopedSlots: {customRender: 'imagetype'},
+          scopedSlots: {customRender: 'attribute'},
         },
         {
-          title: '影像标签',
-          dataIndex: 'label',
+          title: '预算金额',
+          dataIndex: 'amount',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '影像文件预览',
-          dataIndex: 'image',
-          ellipsis: true,
-          align: 'center',
-          scopedSlots: {customRender: 'preview'},
-        },
-        {
-          title: '操作人',
-          dataIndex: 'operator',
+          title: '预算说明',
+          dataIndex: 'interpretation',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '操作人员ID',
-        //   dataIndex: 'operatorId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        {
-          title: '文件上传时间',
-          dataIndex: 'uploadTime',
-          scopedSlots: {customRender: 'uploadTime'},
-          ellipsis: true,
-          align: 'center'
-        },
+        /*   {
+             title: '项目id',
+             dataIndex: 'projId',
+             ellipsis: true,
+             align: 'center'
+           },
+         */
         {
           title: '操作',
           dataIndex: 'operation',
@@ -231,40 +201,23 @@ export default {
           scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
-      ],
-      Imagetype: []
+      ]
     }
   },
   filters: {},
   created() {
-    listImagetype().then(response => {
-      this.Imagetype = response.rows
-
-    })
     this.getList()
   },
   computed: {},
   watch: {},
   methods: {
-    imagetypeFormat(row){
-      console.log(row.type)
-      for (let i = 0; i < this.Imagetype.length; i++) {
-        if (row.type == this.Imagetype[i].id){
-          return this.Imagetype[i].name
-        }
-      }
-      return '/'
+    attributeFormat(row){
+      return row.attribute == '0'?"收入科目":"支出科目"
     },
-    handlePreview(value) {
-      var base1 = new Base()
-      const url = value.image
-      window.open('http://127.0.0.1:8012/onlinePreview?url=' + encodeURIComponent(base1.encode(url)));
-
-    },
-    /** 查询影像管理信息列表 */
+    /** 查询预算管理列表 */
     getList() {
       this.loading = true
-      listImagemng(this.queryParam).then(response => {
+      listSysBudgetMng(this.queryParam).then(response => {
         this.list = response.rows
         this.total = response.total
         this.loading = false
@@ -278,13 +231,11 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.queryParam = {
+        name: undefined,
+        amount: undefined,
+        explain: undefined,
         projId: undefined,
-        image: undefined,
-        type: undefined,
-        label: undefined,
-        operator: undefined,
-        operatorId: undefined,
-        uploadTime: undefined,
+        attribute: undefined,
         pageNum: 1,
         pageSize: 10
       }
@@ -317,7 +268,7 @@ export default {
         title: '确认删除所选中数据?',
         content: '当前选中编号为' + ids + '的数据',
         onOk() {
-          return delImagemng(ids)
+          return delSysBudgetMng(ids)
             .then(() => {
               that.onSelectChange([], [])
               that.getList()
@@ -338,7 +289,7 @@ export default {
         title: '是否确认导出?',
         content: '此操作将导出当前条件下所有数据而非选中数据',
         onOk() {
-          return exportImagemng(that.queryParam)
+          return exportSysBudgetMng(that.queryParam)
             .then(response => {
               that.download(response.msg)
               that.$message.success(
