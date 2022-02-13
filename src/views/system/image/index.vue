@@ -182,6 +182,7 @@ export default {
         {
           title: '序号',
           key: 'number',
+          width: '4%',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
@@ -247,7 +248,6 @@ export default {
   watch: {},
   methods: {
     imagetypeFormat(row){
-      console.log(row.type)
       for (let i = 0; i < this.Imagetype.length; i++) {
         if (row.type == this.Imagetype[i].id){
           return this.Imagetype[i].name

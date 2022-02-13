@@ -129,8 +129,10 @@ export default {
         {
           title: '序号',
           key: 'number',
-          scopedSlots: { customRender: 'serial' },
-          align: 'center'          },
+          width: '4%',
+          scopedSlots: {customRender: 'serial'},
+          align: 'center'
+        },
         {
           title: '类型编号',
           dataIndex: 'typeNo',

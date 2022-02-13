@@ -25,9 +25,10 @@
               </a-form-item>
             </a-col>
             <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
-                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo" />重置</a-button>
+              <span class="table-page-search-submitButtons"
+                    :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                <a-button type="primary" @click="handleQuery"><a-icon type="search"/>查询</a-button>
+                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo"/>重置</a-button>
               </span>
             </a-col>
           </a-row>
@@ -36,16 +37,21 @@
       <!-- 操作 -->
       <div class="table-operations">
         <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:result:add']">
-          <a-icon type="plus" />新增
+          <a-icon type="plus"/>
+          新增
         </a-button>
-        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:result:edit']">
-          <a-icon type="edit" />修改
+        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
+                  v-hasPermi="['system:result:edit']">
+          <a-icon type="edit"/>
+          修改
         </a-button>
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:result:remove']">
-          <a-icon type="delete" />删除
+          <a-icon type="delete"/>
+          删除
         </a-button>
         <a-button type="primary" @click="handleExport" v-hasPermi="['system:result:export']">
-          <a-icon type="download" />导出
+          <a-icon type="download"/>
+          导出
         </a-button>
         <a-button
           type="dashed"
@@ -53,7 +59,7 @@
           :loading="loading"
           :style="{float: 'right'}"
           icon="reload"
-          @click="getList" />
+          @click="getList"/>
       </div>
       <!-- 增加修改 -->
       <create-form
@@ -76,13 +82,13 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:result:edit']" />
+          <a-divider type="vertical" v-hasPermi="['system:result:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:result:edit']">
-            <a-icon type="edit" />修改
+            <a-icon type="edit"/>修改
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:result:remove']" />
+          <a-divider type="vertical" v-hasPermi="['system:result:remove']"/>
           <a @click="handleDelete(record)" v-hasPermi="['system:result:remove']">
-            <a-icon type="delete" />删除
+            <a-icon type="delete"/>删除
           </a>
         </span>
       </a-table>
@@ -103,7 +109,7 @@
 </template>
 
 <script>
-import { listResult, delResult, exportResult } from '@/api/system/result'
+import {delResult, exportResult, listResult} from '@/api/system/result'
 import CreateForm from './modules/CreateForm'
 import {listType} from "@/api/system/type";
 
@@ -112,7 +118,7 @@ export default {
   components: {
     CreateForm
   },
-  data () {
+  data() {
     return {
       maxTypes: [],//合同类型-大
       list: [],
@@ -129,7 +135,7 @@ export default {
       total: 0,
       // 查询参数
       queryParam: {
-        contractType : null,
+        contractType: null,
         constractName: null,
         projName: null,
         pageNum: 1,
@@ -139,7 +145,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          scopedSlots: { customRender: 'serial' },
+          width: '4%',
+          scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         {
@@ -182,27 +189,24 @@ export default {
           title: '操作',
           dataIndex: 'operation',
           width: '18%',
-          scopedSlots: { customRender: 'operation' },
+          scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
       ]
     }
   },
-  filters: {
-  },
-  created () {
+  filters: {},
+  created() {
     listType().then(response => {
       this.maxTypes = response.maxTypes;
     })
     this.getList()
   },
-  computed: {
-  },
-  watch: {
-  },
+  computed: {},
+  watch: {},
   methods: {
     /** 查询合同结算项目信息列表 */
-    getList () {
+    getList() {
       this.loading = true
       listResult(this.queryParam).then(response => {
         this.list = response.list
@@ -211,14 +215,14 @@ export default {
       })
     },
     /** 搜索按钮操作 */
-    handleQuery () {
+    handleQuery() {
       this.queryParam.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery () {
+    resetQuery() {
       this.queryParam = {
-        contractType : null,
+        contractType: null,
         constractName: null,
         projName: null,
         pageNum: 1,
@@ -226,33 +230,33 @@ export default {
       }
       this.handleQuery()
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    changeSize (current, pageSize) {
+    changeSize(current, pageSize) {
       this.queryParam.pageNum = current
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
       this.ids = this.selectedRows.map(item => item.id)
       this.single = selectedRowKeys.length !== 1
       this.multiple = !selectedRowKeys.length
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
     },
     /** 删除按钮操作 */
-    handleDelete (row) {
+    handleDelete(row) {
       var that = this
       const ids = row.id || this.ids
       this.$confirm({
         title: '确认删除所选中数据?',
         content: '当前选中编号为' + ids + '的数据',
-        onOk () {
+        onOk() {
           return delResult(ids)
             .then(() => {
               that.onSelectChange([], [])
@@ -261,18 +265,19 @@ export default {
                 '删除成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     },
     /** 导出按钮操作 */
-    handleExport () {
+    handleExport() {
       var that = this
       this.$confirm({
         title: '是否确认导出?',
         content: '此操作将导出当前条件下所有数据而非选中数据',
-        onOk () {
+        onOk() {
           return exportResult(that.queryParam)
             .then(response => {
               that.download(response.msg)
@@ -280,9 +285,10 @@ export default {
                 '导出成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     }
   }

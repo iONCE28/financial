@@ -83,10 +83,10 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
-         <span slot="type" slot-scope="typeRender">
-        {{ type == 0 ? "公司" : type == 1 ? "个人" : "/" }}
+         <span slot="typeRender" slot-scope="text, record, index">
+        {{ record.type == 0 ? "公司" : type == 1 ? "个人" : "/" }}
       </span>
-      <span slot="serial" slot-scope="text, record, index">
+        <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
@@ -142,7 +142,7 @@ export default {
       // 查询参数
       queryParam: {
         projId: null,
-        type: 0,
+        type: null,
         name: null,
         pageNum: 1,
         pageSize: 10
@@ -151,7 +151,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          scopedSlots: { customRender: 'serial' },
+          width: '4%',
+          scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         // {

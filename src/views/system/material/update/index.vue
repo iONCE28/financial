@@ -240,7 +240,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          scopedSlots: { customRender: 'serial' },
+          width: '4%',
+          scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         // {
@@ -273,8 +274,6 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-
-
         {
           title: '经办人',
           dataIndex: 'handler',
@@ -346,7 +345,10 @@ export default {
   //监听路由变化
   watch: {
     $route(to, from) {
+      console.log(to.query.id,"ccc")
       if (to.query.id != from.query.id) {
+
+
         this.queryParam.materialId = to.query.id
         this.$refs.createForm.form.materialId = this.queryParam.materialId
         //加载数据
@@ -359,6 +361,8 @@ export default {
     this.getList()
   },
   created() {
+    console.log("ccc")
+    console.log(this.$router,"ccc")
     listStatus().then(response => {
       this.typeList = response.rows
     })
