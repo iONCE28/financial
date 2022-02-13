@@ -7,15 +7,16 @@ const createThemeColorReplacerPlugin = require('./config/plugin.config')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const productionGzipExtensions = ['js', 'css']
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
 // check Git
-function getGitHash () {
+function getGitHash() {
   try {
     return GitRevision.version()
-  } catch (e) {}
+  } catch (e) {
+  }
   return 'unknown'
 }
 
@@ -41,6 +42,7 @@ const assetsCDN = {
 
 // vue.config.js
 const vueConfig = {
+  publicPath: "/financial/",
   configureWebpack: {
     // webpack plugins
     plugins: [
