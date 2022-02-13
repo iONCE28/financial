@@ -43,7 +43,14 @@ export function dataScope (data) {
     data: data
   })
 }
-
+// 角色数据权限
+export function dataSubject (data) {
+  return request({
+    url: '/system/role/Subject',
+    method: 'put',
+    data: data
+  })
+}
 // 角色状态修改
 export function changeRoleStatus (roleId, status) {
   const data = {

@@ -59,3 +59,10 @@ export function delbudget (id) {
     method: 'delete'
   })
 }
+// 根据角色ID查询部门树结构
+export function rolebudgetTreeselect (roleId) {
+  return request({
+    url: '/system/budget/roleBudgetTreeselect/' + roleId,
+    method: 'get'
+  })
+}
