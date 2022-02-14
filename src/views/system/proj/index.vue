@@ -78,7 +78,7 @@
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
         </span>
-        <span slot="files" slot-scope="text, record">
+        <span slot="files" slot-scope="text, record" v-if="record.file !== null">
           <a @click="preview(record.file)">
             <a-icon type="eye"/>预览
           </a>
@@ -87,6 +87,17 @@
             <a-icon type="download"/>下载
           </a>
         </span>
+          <div v-else>
+            <span slot="files" slot-scope="text, record" style="display: none">
+          <a @click="preview(record.file)">
+            <a-icon type="eye"/>预览
+          </a>
+          <a-divider type="vertical"/>
+          <a @click="download(record.file)">
+            <a-icon type="download"/>下载
+          </a>
+        </span>
+          </div>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:proj:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:proj:edit']">

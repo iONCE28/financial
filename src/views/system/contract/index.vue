@@ -71,7 +71,7 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
-        <span slot="files" slot-scope="text, record">
+        <span slot="files" slot-scope="text, record" v-if="record.voucher !== ''">
           <a @click="preview(record.voucher)">
             <a-icon type="eye"/>预览
           </a>
@@ -80,6 +80,17 @@
             <a-icon type="download"/>下载
           </a>
         </span>
+        <div v-else>
+          <span slot="files" slot-scope="text, record" style="display: none">
+          <a @click="preview(record.voucher)">
+            <a-icon type="eye"/>预览
+          </a>
+          <a-divider type="vertical"/>
+          <a @click="download(record.voucher)">
+            <a-icon type="download"/>下载
+          </a>
+        </span>
+        </div>
         <span slot="signTime" slot-scope="text, record">
           {{ parseTime(record.signTime) }}
         </span>

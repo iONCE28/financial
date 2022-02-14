@@ -9,11 +9,6 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form">
-      <!-- <a-form-model-item label="权限范围" prop="dataScope">
-        <a-select placeholder="请选择" v-model="form.dataScope" style="width: 100%">
-          <a-select-option v-for="(d, index) in dataScopeOptions" :key="index" :value="d.value">{{ d.label }}</a-select-option>
-        </a-select>
-      </a-form-model-item> -->
       <a-form-model-item label="数据权限" >
         <a-checkbox @change="handleCheckedTreeExpand($event)">
           展开/折叠
@@ -60,13 +55,6 @@ export default {
   data () {
     return {
       loading: false,
-      // 数据范围选项
-      // dataScopeOptions: [
-      //   {
-      //     value: '6',
-      //     label: '科目权限'
-      //   },
-      // ],
       deptExpandedKeys: [],
       autoExpandParent: false,
       deptCheckedKeys: [],
