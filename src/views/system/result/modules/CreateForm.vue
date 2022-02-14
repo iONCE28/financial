@@ -29,7 +29,7 @@
 <!--      </a-form-model-item>-->
 
       <a-form-model-item label="收付款周期" prop="colpayCycle" >
-        <a-select placeholder="请选择" v-model="form.contractId">
+        <a-select placeholder="请选择" v-model="form.colpayCycle">
           <a-select-option :value="item.val" v-for="item in cycles" :key="item.id">
             {{ item.val }}
           </a-select-option>
@@ -43,7 +43,7 @@
         <a-input v-model="form.colpayAmt" placeholder="请输入收付款金额" />
       </a-form-model-item>
       <a-form-model-item label="收付款过期时间" prop="colpayExpireTime" >
-        <a-date-picker style="width: 100%" v-model="form.colpayExpireTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.colpayExpireTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="结算账户名称" prop="accountName" >
         <a-input v-model="form.accountName" placeholder="请输入结算账户名称" />
@@ -53,9 +53,6 @@
       </a-form-model-item>
       <a-form-model-item label="结算账户" prop="account" >
         <a-input v-model="form.account" placeholder="请输入结算账户" />
-      </a-form-model-item>
-      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">
-        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除" />
       </a-form-model-item>
       <div class="bottom-control">
         <a-space>
@@ -168,6 +165,7 @@ export default {
   methods: {
     selected(data){
       console.log("data--"+data)
+      this.form.projId = data;
       contractSByProj(data).then(response => {
         this.contracts = response;
       })
@@ -232,6 +230,7 @@ export default {
               this.$emit('ok')
             })
           } else {
+            // this.form
             addResult(this.form).then(response => {
               this.$message.success(
                 '新增成功',

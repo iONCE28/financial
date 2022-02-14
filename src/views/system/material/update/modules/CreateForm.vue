@@ -127,9 +127,6 @@ export default {
            reserveThree: [
              { required: true, message: '预留字段3不能为空', trigger: 'blur' }
            ],*/
-        delFlag: [
-          {required: true, message: '删除状态 0. 正常 1. 删除不能为空', trigger: 'blur'}
-        ]
       },
       typeList: []
     }

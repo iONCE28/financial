@@ -17,12 +17,22 @@
       :auto-size="{ minRows: 3, maxRows: 5 }"
     />
       </a-form-model-item>
+
+
+      <a-form-model-item label="项目" prop="closeProj" >
+        <a-select placeholder="请选择项目"  v-model="form.projName">
+          <a-select-option :value="item.name" @click="selected(item.id)" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+
       <a-form-model-item label="结算金额(单位: w)" prop="closeAmount" >
         <a-input v-model="form.closeAmount" placeholder="请输入结算金额" />
       </a-form-model-item>
-      <a-form-model-item label="结算项目" prop="closeProj" >
-        <a-input v-model="form.closeProj" placeholder="请输入结算项目" />
-      </a-form-model-item>
+
+
+
       <a-form-model-item label="投资方" prop="investor" >
         <a-input v-model="form.investor" placeholder="请输入投资方" />
       </a-form-model-item>
@@ -91,11 +101,11 @@
       <a-form-model-item label="合同名称" prop="constractName" >
         <a-input v-model="form.constractName" placeholder="请输入合同名称" />
       </a-form-model-item>
-      <a-form-model-item label="合同编号" prop="constractNo" >
-        <a-input v-model="form.constractNo" placeholder="请输入合同编号" />
-      </a-form-model-item>
+<!--      <a-form-model-item label="合同编号" prop="constractNo" >-->
+<!--        <a-input v-model="form.constractNo" placeholder="请输入合同编号" />-->
+<!--      </a-form-model-item>-->
       <a-form-model-item label="签约日期" prop="signTime" >
-        <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD"  valueFormat="YYYY-MM-DD" allow-clear/>
       </a-form-model-item>
 
       <a-form-model-item label="合同大类别" prop="constractBigType" >
@@ -113,7 +123,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="合同上传文件时间" prop="uploadTime" >
-        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="联系人名称" prop="contactsor" >
         <a-input v-model="form.contactsor" placeholder="请输入联系人名称" />
@@ -142,11 +152,13 @@
 </template>
 
 <script>
-import { getContract, addContract, updateContract } from '@/api/system/contract'
+import {getContract, addContract, updateContract, contractSByProj} from '@/api/system/contract'
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import {listType} from "@/api/system/type";
 import { uploadCover } from '@/api/system/upload'
+import { projsByUser } from '@/api/system/proj'
+
 export default {
   name: 'CreateForm',
   props: {
@@ -155,6 +167,7 @@ export default {
   },
   data () {
     return {
+      projs: [],
       payCycles: [
         {"id":1,"val":360,"text":"年"},
         {"id":2,"val":30,"text":"月"},
@@ -201,10 +214,10 @@ export default {
         harvestCallType: null,
         createTime: null,
         updateTime: null,
-        delFlag: null,
+        // delFlag: null,
         projId: null,
         constractName: null,
-        constractNo: null,
+        // constractNo: null,
         signTime: null,
         constractBigType: null,
         constractSmallType: null,
@@ -230,9 +243,9 @@ export default {
         closeProj: [
           { required: true, message: '结算项目不能为空', trigger: 'blur' }
         ],
-        delFlag: [
-          { required: true, message: '删除状态 0. 正常 1. 删除不能为空', trigger: 'blur' }
-        ],
+        // delFlag: [
+        //   { required: true, message: '删除状态 0. 正常 1. 删除不能为空', trigger: 'blur' }
+        // ],
         projId: [
           { required: true, message: '项目id不能为空', trigger: 'blur' }
         ],
@@ -277,6 +290,9 @@ export default {
       this.maxTypes = response.maxTypes;
       this.minTypes = response.minTypes;
     })
+    projsByUser().then(response => {
+      this.projs = response;
+    })
   },
   computed: {
   },
@@ -285,6 +301,13 @@ export default {
   mounted () {
   },
   methods: {
+      selected(data){
+        console.log("data--"+data)
+        this.form.projId = data;
+        contractSByProj(data).then(response => {
+          this.contracts = response;
+        })
+      },
       // 文件上传相关
       handleUploadone (file) {
         this.formData = file.file
@@ -393,10 +416,10 @@ export default {
         harvestCallType: null,
         createTime: null,
         updateTime: null,
-        delFlag: null,
+        // delFlag: null,
         projId: null,
         constractName: null,
-        constractNo: null,
+        // constractNo: null,
         signTime: null,
         constractBigType: null,
         constractSmallType: null,
