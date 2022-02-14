@@ -70,6 +70,10 @@
         :statusOptions="statusOptions"
         @ok="getList"
       />
+      <create-subject-form 
+        ref="CreateSubjectForm"
+        @ok="getList"
+      />
 
       <!-- 分配角色数据权限对话框 -->
       <create-data-scope-form
@@ -107,6 +111,10 @@
           <a @click="$refs.createDataScopeForm.handleDataScope(record)" v-hasPermi="['system:role:edit']">
             <a-icon type="lock" />数据权限
           </a>
+          <a-divider type="vertical" v-hasPermi="['system:role:edit']" />
+          <a @click="$refs.CreateSubjectForm.handleSubject(record)" v-hasPermi="['system:role:edit']">
+            <a-icon type="lock" />科目权限
+          </a>
           <a-divider type="vertical" v-hasPermi="['system:role:remove']" />
           <a @click="handleDelete(record)" v-hasPermi="['system:role:remove']">
             <a-icon type="delete" />删除
@@ -134,12 +142,13 @@
 import { listRole, delRole, exportRole, changeRoleStatus } from '@/api/system/role'
 import CreateForm from './modules/CreateForm'
 import CreateDataScopeForm from './modules/CreateDataScopeForm'
-
+import CreateSubjectForm from './modules/CreateSubjectForm'
 export default {
   name: 'Role',
   components: {
     CreateForm,
-    CreateDataScopeForm
+    CreateDataScopeForm,
+    CreateSubjectForm
   },
   data () {
     return {

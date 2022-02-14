@@ -158,10 +158,10 @@ export default {
         {
           title: '序号',
           key: 'number',
+          width: '4%',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
-
         {
           title: '科目名称',
           dataIndex: 'name',
@@ -211,8 +211,8 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    attributeFormat(row){
-      return row.attribute == '0'?"收入科目":"支出科目"
+    attributeFormat(row) {
+      return row.attribute == '0' ? "收入科目" : "支出科目"
     },
     /** 查询预算管理列表 */
     getList() {

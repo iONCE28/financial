@@ -184,7 +184,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          scopedSlots: { customRender: 'serial' },
+          width: '4%',
+          scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         // {
@@ -249,7 +250,7 @@ export default {
           align: 'center'
         }
       ],
-      typeList:[]
+      typeList: []
     }
 
 

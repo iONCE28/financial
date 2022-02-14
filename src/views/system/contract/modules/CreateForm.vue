@@ -44,6 +44,7 @@
           @change="handleChange"
           :multiple="true">
         <a-button type="primary"> <a-icon type="upload"/>文件上传</a-button>
+        <a-icon :type="loading"/>
       </a-upload>
       </a-form-model-item>
       <a-form-model-item label="结算账户" prop="account" >

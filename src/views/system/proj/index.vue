@@ -16,9 +16,10 @@
               </a-form-item>
             </a-col>
             <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
-                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo" />重置</a-button>
+              <span class="table-page-search-submitButtons"
+                    :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                <a-button type="primary" @click="handleQuery"><a-icon type="search"/>查询</a-button>
+                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo"/>重置</a-button>
                 <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
@@ -31,13 +32,17 @@
       <!-- 操作 -->
       <div class="table-operations">
         <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:proj:add']">
-          <a-icon type="plus" />新增
+          <a-icon type="plus"/>
+          新增
         </a-button>
-        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:proj:edit']">
-          <a-icon type="edit" />修改
+        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
+                  v-hasPermi="['system:proj:edit']">
+          <a-icon type="edit"/>
+          修改
         </a-button>
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:proj:remove']">
-          <a-icon type="delete" />删除
+          <a-icon type="delete"/>
+          删除
         </a-button>
         <a-button
           type="dashed"
@@ -45,7 +50,7 @@
           :loading="loading"
           :style="{float: 'right'}"
           icon="reload"
-          @click="getList" />
+          @click="getList"/>
       </div>
       <!-- 增加修改 -->
       <create-form
@@ -73,23 +78,34 @@
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
         </span>
-        <span slot="files" slot-scope="text, record">
+        <span slot="files" slot-scope="text, record" v-if="record.file !== null">
           <a @click="preview(record.file)">
-            <a-icon type="eye" />预览
+            <a-icon type="eye"/>预览
           </a>
-          <a-divider type="vertical"  />
+          <a-divider type="vertical"/>
           <a @click="download(record.file)">
-            <a-icon type="download" />下载
+            <a-icon type="download"/>下载
           </a>
         </span>
-        <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:proj:edit']" />
-          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:proj:edit']">
-            <a-icon type="edit" />修改
+          <div v-else>
+            <span slot="files" slot-scope="text, record" style="display: none">
+          <a @click="preview(record.file)">
+            <a-icon type="eye"/>预览
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:proj:remove']" />
+          <a-divider type="vertical"/>
+          <a @click="download(record.file)">
+            <a-icon type="download"/>下载
+          </a>
+        </span>
+          </div>
+        <span slot="operation" slot-scope="text, record">
+          <a-divider type="vertical" v-hasPermi="['system:proj:edit']"/>
+          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:proj:edit']">
+            <a-icon type="edit"/>修改
+          </a>
+          <a-divider type="vertical" v-hasPermi="['system:proj:remove']"/>
           <a @click="handleDelete(record)" v-hasPermi="['system:proj:remove']">
-            <a-icon type="delete" />删除
+            <a-icon type="delete"/>删除
           </a>
         </span>
       </a-table>
@@ -110,15 +126,16 @@
 </template>
 
 <script>
-import { listProj, delProj, exportProj } from '@/api/system/proj'
+import {delProj, exportProj, listProj} from '@/api/system/proj'
 import CreateForm from './modules/CreateForm'
 import Base from '@/utils/base64'
+
 export default {
   name: 'Proj',
   components: {
     CreateForm
   },
-  data () {
+  data() {
     return {
       list: [],
       selectedRowKeys: [],
@@ -141,7 +158,6 @@ export default {
         abstracts: null,
         file: null,
         showNum: null,
-        pageNum: null,
         setNum: null,
         onTime: null,
         offTime: null,
@@ -161,7 +177,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          scopedSlots: { customRender: 'serial' },
+          width: '4%',
+          scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         {
@@ -182,9 +199,9 @@ export default {
           ellipsis: true,
           align: 'center',
           customRender: function (text) {
-            if(text === '0') {
+            if (text === '0') {
               return "新建"
-            } else if (text === '1'){
+            } else if (text === '1') {
               return "在建"
             } else if (text === '2') {
               return "维护"
@@ -197,9 +214,9 @@ export default {
           ellipsis: true,
           align: 'center',
           customRender: function (text) {
-            if(text === '0') {
+            if (text === '0') {
               return "未开始"
-            } else if (text === '1'){
+            } else if (text === '1') {
               return "正在进行"
             } else if (text === '2') {
               return "已验收"
@@ -233,40 +250,37 @@ export default {
         {
           title: '项目文件',
           dataIndex: 'file',
-          width: '18%',
-          scopedSlots: { customRender: 'files' },
+          width: '12%',
+          scopedSlots: {customRender: 'files'},
           align: 'center'
         },
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '10%',
-          scopedSlots: { customRender: 'operation' },
+          width: '12%',
+          scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
       ]
     }
   },
-  filters: {
-  },
-  created () {
+  filters: {},
+  created() {
     this.getList()
   },
-  computed: {
-  },
-  watch: {
-  },
+  computed: {},
+  watch: {},
   methods: {
     preview(row) {
       var base1 = new Base();
-      const url =  row
-      window.open('http://127.0.0.1:8012/onlinePreview?url='+encodeURIComponent(base1.encode(url)));
+      const url = row
+      window.open('http://127.0.0.1:8012/onlinePreview?url=' + encodeURIComponent(base1.encode(url)));
     },
     download(row) {
-     window.location.href = row
+      window.location.href = row
     },
     /** 查询项目基本信息列表 */
-    getList () {
+    getList() {
       this.loading = true
       listProj(this.queryParam).then(response => {
         this.list = response.rows
@@ -275,12 +289,12 @@ export default {
       })
     },
     /** 搜索按钮操作 */
-    handleQuery () {
+    handleQuery() {
       this.queryParam.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery () {
+    resetQuery() {
       this.queryParam = {
         name: undefined,
         number: undefined,
@@ -289,7 +303,6 @@ export default {
         abstracts: undefined,
         file: undefined,
         showNum: undefined,
-        pageNum: undefined,
         setNum: undefined,
         onTime: undefined,
         offTime: undefined,
@@ -307,33 +320,33 @@ export default {
       }
       this.handleQuery()
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    changeSize (current, pageSize) {
+    changeSize(current, pageSize) {
       this.queryParam.pageNum = current
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
       this.ids = this.selectedRows.map(item => item.id)
       this.single = selectedRowKeys.length !== 1
       this.multiple = !selectedRowKeys.length
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
     },
     /** 删除按钮操作 */
-    handleDelete (row) {
+    handleDelete(row) {
       var that = this
       const ids = row.id || this.ids
       this.$confirm({
         title: '确认删除所选中数据?',
         content: '当前选中编号为' + ids + '的数据',
-        onOk () {
+        onOk() {
           return delProj(ids)
             .then(() => {
               that.onSelectChange([], [])
@@ -342,18 +355,19 @@ export default {
                 '删除成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     },
     /** 导出按钮操作 */
-    handleExport () {
+    handleExport() {
       var that = this
       this.$confirm({
         title: '是否确认导出?',
         content: '此操作将导出当前条件下所有数据而非选中数据',
-        onOk () {
+        onOk() {
           return exportProj(that.queryParam)
             .then(response => {
               that.download(response.msg)
@@ -361,9 +375,10 @@ export default {
                 '导出成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     }
   }

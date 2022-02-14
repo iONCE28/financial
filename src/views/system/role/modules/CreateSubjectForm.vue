@@ -9,18 +9,7 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form">
-      <a-form-model-item label="角色名称" prop="roleName">
-        <a-input v-model="form.roleName" :disabled="true" />
-      </a-form-model-item>
-      <a-form-model-item label="角色标识" prop="roleKey">
-        <a-input v-model="form.roleKey" :disabled="true" />
-      </a-form-model-item>
-      <a-form-model-item label="权限范围" prop="dataScope">
-        <a-select placeholder="请选择" v-model="form.dataScope" style="width: 100%">
-          <a-select-option v-for="(d, index) in dataScopeOptions" :key="index" :value="d.value">{{ d.label }}</a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="数据权限" v-show="form.dataScope == 2">
+      <a-form-model-item label="数据权限" >
         <a-checkbox @change="handleCheckedTreeExpand($event)">
           展开/折叠
         </a-checkbox>
@@ -36,7 +25,7 @@
           :checkStrictly="!form.deptCheckStrictly"
           :expanded-keys="deptExpandedKeys"
           :auto-expand-parent="autoExpandParent"
-          :tree-data="deptOptions"
+          :tree-data="budgetOptions"
           @expand="onExpandDept"
           :replaceFields="defaultProps"
         />
@@ -57,9 +46,8 @@
 
 <script>
 
-import { getRole, dataScope } from '@/api/system/role'
-import { treeselect as deptTreeselect, roleDeptTreeselect } from '@/api/system/dept'
-
+import { getRole, dataSubject } from '@/api/system/role'
+import { treeselect as budgetTreeselect, rolebudgetTreeselect } from '@/api/system/budget'
 export default {
   name: 'CreateDataScopeForm',
   components: {
@@ -67,35 +55,12 @@ export default {
   data () {
     return {
       loading: false,
-      // 数据范围选项
-      dataScopeOptions: [
-        {
-          value: '1',
-          label: '全部数据权限'
-        },
-        {
-          value: '2',
-          label: '自定义数据权限'
-        },
-        {
-          value: '3',
-          label: '本部门数据权限'
-        },
-        {
-          value: '4',
-          label: '本部门及以下数据权限'
-        },
-        {
-          value: '5',
-          label: '仅本人数据权限'
-        }
-      ],
       deptExpandedKeys: [],
       autoExpandParent: false,
       deptCheckedKeys: [],
       halfCheckedKeys: [],
       // 部门列表
-      deptOptions: [],
+      budgetOptions: [],
       formTitle: '',
       // 表单参数
       form: {
@@ -104,7 +69,8 @@ export default {
         roleKey: undefined,
         roleSort: 0,
         status: '0',
-        deptIds: [],
+        // deptIds: [],
+        id: [],
         deptCheckStrictly: true,
         remark: undefined
       },
@@ -128,14 +94,15 @@ export default {
   watch: {
   },
   methods: {
+      
     onExpandDept (expandedKeys) {
       this.deptExpandedKeys = expandedKeys
       this.autoExpandParent = false
     },
     /** 查询部门树结构 */
     getDeptTreeselect () {
-      deptTreeselect().then(response => {
-        this.deptOptions = response.data
+      budgetTreeselect().then(response => {
+        this.budgetOptions = response.data
       })
     },
     // 所有部门节点数据
@@ -153,7 +120,7 @@ export default {
       })
     },
     // 回显过滤
-    selectNodefilter (nodes, parentIds) {
+    selectNodefilter (nodes, parentNos) {
       if (!nodes || nodes.length === 0) {
         return []
       }
@@ -162,25 +129,25 @@ export default {
         const currentIndex = this.deptCheckedKeys.indexOf(node.id)
         // 当前节点存在,且父节点不存在，则说明父节点应是半选中状态
         if (currentIndex !== -1) {
-          parentIds.forEach(parentId => {
-            if (this.halfCheckedKeys.indexOf(parentId) === -1) {
-              this.halfCheckedKeys.push(parentId)
+          parentNos.forEach(parentNo => {
+            if (this.halfCheckedKeys.indexOf(parentNo) === -1) {
+              this.halfCheckedKeys.push(parentNo)
             }
           })
-          parentIds = []
+          parentNos = []
         }
         // 防重
         const isExist = this.halfCheckedKeys.indexOf(node.id)
-        const isExistParentIds = parentIds.indexOf(node.id)
-        if (isExist === -1 && isExistParentIds === -1 && currentIndex === -1) {
-          parentIds.push(node.id)
+        const isExistparentNos = parentNos.indexOf(node.id)
+        if (isExist === -1 && isExistparentNos === -1 && currentIndex === -1) {
+          parentNos.push(node.id)
         }
-        return this.selectNodefilter(node.children, parentIds)
+        return this.selectNodefilter(node.children, parentNos)
       })
     },
     handleCheckedTreeNodeAll (value) {
       if (value.target.checked) {
-        this.getAllDeptNode(this.deptOptions)
+        this.getAllDeptNode(this.budgetOptions)
       } else {
         this.deptCheckedKeys = []
         this.halfCheckedKeys = []
@@ -188,7 +155,7 @@ export default {
     },
     handleCheckedTreeExpand (value) {
       if (value.target.checked) {
-        const treeList = this.deptOptions
+        const treeList = this.budgetOptions
         for (let i = 0; i < treeList.length; i++) {
           this.deptExpandedKeys.push(treeList[i].id)
         }
@@ -202,8 +169,8 @@ export default {
     },
     /** 根据角色ID查询部门树结构 */
     getRoleDeptTreeselect (roleId) {
-      return roleDeptTreeselect(roleId).then(response => {
-        this.deptOptions = response.data.depts
+      return rolebudgetTreeselect(roleId).then(response => {
+        this.budgetOptions = response.data.depts
         return response
       })
     },
@@ -245,24 +212,24 @@ export default {
         roleKey: undefined,
         roleSort: 0,
         status: '0',
-        deptIds: [],
+        id: [],
         deptCheckStrictly: true,
         remark: undefined
       }
     },
     /** 分配数据权限操作 */
-    handleDataScope (row) {
+    handleSubject (row) {
       this.reset()
-      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.roleId)
+      const rolebudgetTreeselect = this.getRoleDeptTreeselect(row.roleId)
       getRole(row.roleId).then(response => {
         this.form = response.data
         this.openDataScope = true
         this.$nextTick(() => {
-          roleDeptTreeselect.then(res => {
+          rolebudgetTreeselect.then(res => {
             this.deptCheckedKeys = res.data.checkedKeys
             // 过滤回显时的半选中node(父)
             if (this.form.deptCheckStrictly) {
-              this.selectNodefilter(this.deptOptions, [])
+              this.selectNodefilter(this.budgetOptions, [])
             }
           })
         })
@@ -272,8 +239,8 @@ export default {
     /** 提交按钮（数据权限） */
     submitDataScope: function () {
       if (this.form.roleId !== undefined) {
-        this.form.deptIds = this.getDeptAllCheckedKeys()
-        dataScope(this.form).then(response => {
+        this.form.id = this.getDeptAllCheckedKeys()
+        dataSubject(this.form).then(response => {
           this.$message.success(
             '修改成功',
             3

@@ -5,11 +5,6 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <!--            <a-col :md="8" :sm="24">-->
-            <!--              <a-form-item label="项目id" prop="projId">-->
-            <!--                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>-->
-            <!--              </a-form-item>-->
-            <!--            </a-col>-->
             <a-col :md="8" :sm="24">
               <a-form-item label="影像类别" prop="type">
                 <a-select placeholder="请选择影像类别" v-model="queryParam.type" style="width: 100%" allow-clear>
@@ -182,6 +177,7 @@ export default {
         {
           title: '序号',
           key: 'number',
+          width: '4%',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
@@ -247,7 +243,6 @@ export default {
   watch: {},
   methods: {
     imagetypeFormat(row){
-      console.log(row.type)
       for (let i = 0; i < this.Imagetype.length; i++) {
         if (row.type == this.Imagetype[i].id){
           return this.Imagetype[i].name
