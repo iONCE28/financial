@@ -9,6 +9,14 @@ export function listProj (query) {
   })
 }
 
+// 根据用户查询项目
+export function projsByUser () {
+  return request({
+    url: '/system/proj/projsByUser',
+    method: 'get'
+  })
+}
+
 // 查询项目基本信息详细
 export function getProj (id) {
   return request({

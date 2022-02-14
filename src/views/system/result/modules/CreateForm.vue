@@ -5,26 +5,37 @@
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
 
+      <a-form-model-item label="项目" prop="projName" >
+        <a-select placeholder="请选择项目"  v-model="form.projName">
+          <a-select-option :value="item.name" @click="selected(item.id)" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+
       <a-form-model-item label="合同" prop="contractId" >
         <a-select placeholder="请选择合同类别" v-model="form.contractId">
-          <a-select-option :value="item.id" v-for="item in contractList" :key="item.id">
+          <a-select-option :value="item.id" v-for="item in contracts" :key="item.id">
             {{ item.constractName }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="结算项目id" prop="projId" >
-        <a-input v-model="form.projId" placeholder="请输入结算项目id" />
-      </a-form-model-item>
-      <a-form-model-item label="结算项目名称" prop="projName" >
-        <a-input v-model="form.projName" placeholder="请输入结算项目名称" />
-      </a-form-model-item>
       <a-form-model-item label="结算金额" prop="projAmt" >
         <a-input v-model="form.projAmt" placeholder="请输入结算金额" />
       </a-form-model-item>
-      <a-form-model-item label="收付款周期：比如：三月、半年、一年" prop="colpayCycle" >
-        <a-input v-model="form.colpayCycle" placeholder="请输入收付款周期：比如：三月、半年、一年" />
+<!--      <a-form-model-item label="收付款周期：比如：三月、半年、一年" prop="colpayCycle" >-->
+<!--        <a-input v-model="form.colpayCycle" placeholder="请输入收付款周期：比如：三月、半年、一年" />-->
+<!--      </a-form-model-item>-->
+
+      <a-form-model-item label="收付款周期" prop="colpayCycle" >
+        <a-select placeholder="请选择" v-model="form.contractId">
+          <a-select-option :value="item.val" v-for="item in cycles" :key="item.id">
+            {{ item.val }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
+
       <a-form-model-item label="收付款条件" prop="colpayCondition" >
         <a-input v-model="form.colpayCondition" placeholder="请输入收付款条件" />
       </a-form-model-item>
@@ -62,8 +73,8 @@
 
 <script>
 import { getResult, addResult, updateResult } from '@/api/system/result'
-import { listByUser } from '@/api/system/contract'
-import {listType} from "@/api/system/type";
+import { contractSByProj } from '@/api/system/contract'
+import { projsByUser } from '@/api/system/proj'
 
 export default {
   name: 'CreateForm',
@@ -73,7 +84,14 @@ export default {
   },
   data () {
     return {
-      contractList: [],//合同列表
+      cycles: [
+        {id:1,val:"年"},
+        {id:2,val:"月"},
+        {id:3,val:"周"},
+        {id:4,val:"日"},
+      ],//周期 月、半年、一年
+      projs: [],//项目列表
+      contracts: [],//合同列表
       loading: false,
       formTitle: '',
       // 表单参数
@@ -137,8 +155,8 @@ export default {
   filters: {
   },
   created () {
-    listByUser().then(response => {
-      this.contractList = response;
+    projsByUser().then(response => {
+      this.projs = response;
     })
   },
   computed: {
@@ -148,6 +166,12 @@ export default {
   mounted () {
   },
   methods: {
+    selected(data){
+      console.log("data--"+data)
+      contractSByProj(data).then(response => {
+        this.contracts = response;
+      })
+    },
     onClose () {
       this.open = false
     },
