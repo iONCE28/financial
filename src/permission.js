@@ -12,7 +12,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const allowList = ['login'] // no redirect allowList
 const loginRoutePath = '/user/login'
-const defaultRoutePath = '/index'
+const defaultRoutePath = '/project/proj'
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
             })
             // 失败时，获取用户信息失败时，调用登出，来清空历史保留信息
             store.dispatch('Logout').then(() => {
-              location.href = '/index'
+              location.href = '/project/proj'
             })
           })
       } else {

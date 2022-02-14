@@ -4,21 +4,27 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <!--      <a-form-model-item label="项目id" prop="projId">
-              <a-input v-model="form.projId" placeholder="请输入项目id"/>
-            </a-form-model-item>-->
       <a-form-model-item label="类别" prop="type">
         <a-select placeholder="请选择类别" v-model="form.type">
-          <a-select-option value="0">单位</a-select-option>
-          <a-select-option value="1">个人</a-select-option>
+          <a-select-option :value="0">单位</a-select-option>
+          <a-select-option :value="1">个人</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="来往名称" prop="name">
         <a-input v-model="form.name" placeholder="请输入来往名称"/>
       </a-form-model-item>
-<!--      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">
-              <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除"/>
-            </a-form-model-item>-->
+      <a-form-model-item label="所属部门" prop="departId">
+        <a-tree-select
+          v-model="form.deptId"
+          style="width: 100%"
+          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          :tree-data="deptOptions"
+          placeholder="请选择"
+          :replaceFields="replaceFields"
+          tree-default-expand-all
+        >
+        </a-tree-select>
+        </a-form-model-item>
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -35,13 +41,19 @@
 
 <script>
 import {addSysTransactionUnit, getSysTransactionUnit, updateSysTransactionUnit} from '@/api/system/SysTransactionUnit'
-
+import { treeselect } from '@/api/system/dept'
 export default {
   name: 'CreateForm',
   props: {},
   components: {},
   data() {
     return {
+      deptOptions: [{
+        id: 0,
+        label: '',
+        children: []
+      }],
+          replaceFields: { children: 'children', title: 'label', key: 'id', value: 'id' },
       loading: false,
       formTitle: '',
       // 表单参数
@@ -52,7 +64,8 @@ export default {
         name: null,
         updateTime: null,
         createTime: null,
-        delFlag: null
+        delFlag: null,
+        departId: null
       },
       // 1增加,2修改
       formType: 1,
@@ -63,18 +76,29 @@ export default {
         ],
         name: [
           {required: true, message: '来往名称不能为空', trigger: 'blur'}
-        ]
+        ],
+        deptId: [{
+            required: true,
+            message: '部门不能为空',
+            trigger: 'blur'
+          }],
       }
     }
   },
   filters: {},
   created() {
+    this.getTreeselect()
   },
   computed: {},
   watch: {},
   mounted() {
   },
   methods: {
+    getTreeselect () {
+      treeselect().then(response => {
+        this.deptOptions = response.data
+      })
+    },
     onClose() {
       this.open = false
     },
@@ -93,7 +117,8 @@ export default {
         name: null,
         updateTime: null,
         createTime: null,
-        delFlag: null
+        delFlag: null,
+        deptId: null
       }
     },
     /** 新增按钮操作 */

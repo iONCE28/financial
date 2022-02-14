@@ -5,12 +5,12 @@ import { UserLayout } from '@/layouts'
  * 首页
  */
 export const indexRouterMap = [
-  {
-    path: '/index',
-    name: 'index',
-    component: 'Index',
-    meta: { title: '首页', keepAlive: true, icon: 'dashboard' }
-  },
+  // {
+  //   path: '/index',
+  //   name: 'index',
+  //   component: 'Index',
+  //   meta: { title: '首页', keepAlive: true, icon: 'dashboard' }
+  // },
   {
     path: '/account/center',
     name: 'center',

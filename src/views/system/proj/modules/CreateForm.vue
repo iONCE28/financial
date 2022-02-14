@@ -59,9 +59,9 @@
       <a-form-model-item label="承接单位：乙方" prop="undertakor">
         <a-input v-model="form.undertakor" placeholder="请输入承接单位：乙方" />
       </a-form-model-item>
-      <a-form-model-item label="部门" prop="depart">
+      <a-form-model-item label="部门" prop="departId">
         <a-tree-select
-          v-model="form.depart"
+          v-model="form.departId"
           style="width: 100%"
           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
           :tree-data="deptOptions"
@@ -194,6 +194,11 @@ import { uploadCover } from '@/api/system/upload'
           dutior: [{
             required: true,
             message: '负责人不能为空',
+            trigger: 'blur'
+          }],
+          departId: [{
+            required: true,
+            message: '部门不能为空',
             trigger: 'blur'
           }],
           dutiorPhone: [

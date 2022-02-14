@@ -28,15 +28,6 @@
       <a-form-model-item label="影像标签" prop="label">
         <a-input v-model="form.label" placeholder="请输入影像标签"/>
       </a-form-model-item>
-<!--      <a-form-model-item label="操作人" prop="operator">-->
-      <!--        <a-input v-model="form.operator" placeholder="请输入操作人"/>-->
-      <!--      </a-form-model-item>-->
-      <!--      <a-form-model-item label="操作人员ID" prop="operatorId">-->
-      <!--        <a-input v-model="form.operatorId" placeholder="请输入操作人员ID"/>-->
-      <!--      </a-form-model-item>-->
-<!--      <a-form-model-item label="文件上传时间" prop="uploadTime">-->
-<!--        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
-<!--      </a-form-model-item>-->
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
