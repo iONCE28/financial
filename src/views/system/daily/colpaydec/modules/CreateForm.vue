@@ -4,20 +4,28 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="合同id" prop="contractId">
-        <a-input v-model="form.contractId" placeholder="请输入合同id"/>
+
+      <a-form-model-item label="项目" prop="closeProj" >
+        <a-select placeholder="请选择项目"  v-model="form.projId">
+          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="项目id" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入项目id"/>
+
+      <a-form-model-item label="合同" prop="contractId" >
+        <a-select placeholder="请选择合同类别" v-model="form.contractName">
+          <a-select-option :value="item.constractName" @click="selected(item.id)" v-for="item in contracts" :key="item.id">
+            {{ item.constractName }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同名称" prop="contractName">
-        <a-input v-model="form.contractName" placeholder="请输入合同名称"/>
-      </a-form-model-item>
+
       <a-form-model-item label="资金流水号" prop="colpayNo">
         <a-input v-model="form.colpayNo" placeholder="请输入资金流水号"/>
       </a-form-model-item>
       <a-form-model-item label="收款时间" prop="colpayTime">
-        <a-date-picker style="width: 100%" v-model="form.colpayTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.colpayTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="收款金额" prop="colpayAmt">
         <a-input v-model="form.colpayAmt" placeholder="请输入收款金额"/>
@@ -29,10 +37,28 @@
         <a-input v-model="form.colpaySource" placeholder="请输入收款来源"/>
       </a-form-model-item>
       <a-form-model-item label="经办人" prop="handler">
-        <a-input v-model="form.handler" placeholder="请输入经办人"/>
+        <a-input v-model="form.handler" @click="selectHandler(form.handler)" placeholder="请输入经办人"/>
       </a-form-model-item>
-      <a-form-model-item label="经办人id" prop="handlerId">
-        <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>
+
+
+      <a-form-model-item label="收款类型" prop="contractId" >
+        <a-select placeholder="请选择收款类型" v-model="form.colpayType">
+          <a-select-option :value="item.id" v-for="item in colpayTypes" :key="item.id">
+            {{ item.val }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+
+      <a-form-model-item label="收款方式" prop="contractId" >
+        <a-select placeholder="请选择收款方式" v-model="form.colpayWay" style="width: 100%" allow-clear>
+          <a-select-option :value="item.id" v-for="item in colpayWays" :key="item.id">
+            {{ item.val }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+
+      <a-form-model-item label="收款账户名称" prop="handler">
+        <a-input v-model="form.colpayName" @click="selectcolpayName(form.colpayName)" placeholder="请输入经办人"/>
       </a-form-model-item>
 
       <div class="bottom-control">
@@ -50,7 +76,9 @@
 </template>
 
 <script>
-import {addColpaydec, getColpaydec, updateColpaydec} from '@/api/system/colpaydec'
+import {addColpaydec, getColpaydec, updateColpaydec,queryColpayName,queryColpayHandler} from '@/api/system/colpaydec'
+import { projsByUser } from '@/api/system/proj'
+import { contractSByProj } from '@/api/system/contract'
 
 export default {
   name: 'CreateForm',
@@ -58,11 +86,25 @@ export default {
   components: {},
   data() {
     return {
+      colpayTypes: [
+        {id:"0",val:"合同收款"},
+        {id:"1",val:"其它收款"}],
+      colpayWays: [
+        {id:"0",val:"现金"},
+        {id:"1",val:"银行"}],
+      contracts: [],
+      projs: [],
       loading: false,
       formTitle: '',
       // 表单参数
       form: {
         id: null,
+        colpayType: null,
+        colpayWay: null,
+        colpayAccountId: null,
+        colpayName: null,
+        colpayBank: null,
+        colpayPhone: null,
         contractId: null,
         projId: null,
         contractName: null,
@@ -98,12 +140,31 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projs = response;
+    })
   },
   computed: {},
   watch: {},
   mounted() {
   },
   methods: {
+    selectcolpayName(data){
+      contractSByProj(data).then(response => {
+        this.form.colpayAccountId = response.data.userId;
+      })
+    },
+    selectHandler(data){
+      contractSByProj(data).then(response => {
+        this.form.handlerId = response.data.userId;
+      })
+    },
+    selected(data){
+      this.form.contractId = data;
+      contractSByProj(data).then(response => {
+        this.contracts = response;
+      })
+    },
     onClose() {
       this.open = false
     },

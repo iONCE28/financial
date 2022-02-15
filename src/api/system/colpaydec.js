@@ -9,6 +9,23 @@ export function listColpaydec (query) {
   })
 }
 
+//查询收款账户
+export function queryColpayName (query) {
+  return request({
+    url: '/system/queryColpayName/',
+    method: 'get',
+    params: query
+  })
+}
+//查询经办人
+export function queryColpayHandler (query) {
+  return request({
+    url: '/system/queryColpayHandler/',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询收入记账信息详细
 export function getColpaydec (id) {
   return request({

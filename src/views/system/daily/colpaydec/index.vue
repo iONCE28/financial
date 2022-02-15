@@ -5,17 +5,6 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="合同id" prop="contractId">
-                <a-input v-model="queryParam.contractId" placeholder="请输入合同id" allow-clear/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="项目id" prop="projId">
-                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
-              </a-form-item>
-            </a-col>
-            <template v-if="advanced">
               <a-col :md="8" :sm="24">
                 <a-form-item label="合同名称" prop="contractName">
                   <a-input v-model="queryParam.contractName" placeholder="请输入合同名称" allow-clear/>
@@ -27,36 +16,38 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="收款时间" prop="colpayTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.colpayTime" format="YYYY-MM-DD HH:mm:ss"
+                <a-form-item label="收款开始时间" prop="colpayTime">
+                  <a-date-picker style="width: 100%" v-model="queryParam.colpayStartTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss"
                                  allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="收款金额" prop="colpayAmt">
-                  <a-input v-model="queryParam.colpayAmt" placeholder="请输入收款金额" allow-clear/>
+                <a-form-item label="收款开始时间" prop="colpayTime">
+                  <a-date-picker style="width: 100%" v-model="queryParam.colpayEndTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss"
+                                 allow-clear/>
+                </a-form-item>
+              </a-col>
+            <template v-if="advanced">
+
+              <a-col :md="8" :sm="24">
+                <a-form-item label="收款类型" prop="type">
+                  <a-select placeholder="请选择收款类型" v-model="queryParam.colpayType" style="width: 100%" allow-clear>
+                    <a-select-option :value="item.id" v-for="item in colpayTypes" :key="item.id">
+                      {{ item.val }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="收款说明" prop="colpayDec">
-                  <a-input v-model="queryParam.colpayDec" placeholder="请输入收款说明" allow-clear/>
+                <a-form-item label="收款方式" prop="type">
+                  <a-select placeholder="请选择收款方式" v-model="queryParam.colpayWay" style="width: 100%" allow-clear>
+                    <a-select-option :value="item.id" v-for="item in colpayWays" :key="item.id">
+                      {{ item.val }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款来源" prop="colpaySource">
-                  <a-input v-model="queryParam.colpaySource" placeholder="请输入收款来源" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="经办人" prop="handler">
-                  <a-input v-model="queryParam.handler" placeholder="请输入经办人" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="经办人id" prop="handlerId">
-                  <a-input v-model="queryParam.handlerId" placeholder="请输入经办人id" allow-clear/>
-                </a-form-item>
-              </a-col>
+
 
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
@@ -156,6 +147,12 @@ export default {
   },
   data() {
     return {
+      colpayTypes: [
+        {id:"0",val:"合同收款"},
+        {id:"1",val:"其它收款"}],
+      colpayWays: [
+        {id:"0",val:"现金"},
+        {id:"1",val:"银行"}],
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -170,14 +167,13 @@ export default {
       total: 0,
       // 查询参数
       queryParam: {
-        contractId: null,
-        projId: null,
         contractName: null,
         colpayNo: null,
-        colpayTime: null,
-        colpayAmt: null,
-        colpayDec: null,
-        colpaySource: null,
+        colpayStartTime: null,
+        colpayEndTime: null,
+        colpayType: null,
+        colpayWay: null,
+        colpayName: null,
         handler: null,
         handlerId: null,
         reserveOne: null,
