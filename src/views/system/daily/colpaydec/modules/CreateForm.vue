@@ -7,7 +7,7 @@
 
       <a-form-model-item label="项目" prop="closeProj" >
         <a-select placeholder="请选择项目"  v-model="form.projId">
-          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+          <a-select-option :value="item.id" @click="selected(item.id)" v-for="item in projs" :key="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>
@@ -15,7 +15,7 @@
 
       <a-form-model-item label="合同" prop="contractId" >
         <a-select placeholder="请选择合同类别" v-model="form.contractName">
-          <a-select-option :value="item.constractName" @click="selected(item.id)" v-for="item in contracts" :key="item.id">
+          <a-select-option :value="item.constractName" @click="selectCid(item.id)" v-for="item in contracts" :key="item.id">
             {{ item.constractName }}
           </a-select-option>
         </a-select>
@@ -164,6 +164,9 @@ export default {
       contractSByProj(data).then(response => {
         this.contracts = response;
       })
+    },
+    selectCid(data){
+      this.form.contractId = data;
     },
     onClose() {
       this.open = false
