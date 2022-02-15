@@ -80,12 +80,10 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="经办人" prop="handler">
-                  <a-input v-model="queryParam.handler" placeholder="请输入经办人" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="经办人id" prop="handlerId">
-                  <a-input v-model="queryParam.handlerId" placeholder="请输入经办人id" allow-clear/>
+                  <a-select v-model="queryParam.depHandler" placeholder="请选择押金经办人" style="width: 100%" allow-clear>
+                    <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+                    <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
 

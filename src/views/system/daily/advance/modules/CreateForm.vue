@@ -4,11 +4,17 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="项目id" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入项目id"/>
+      <a-form-model-item label="项目" prop="projId">
+        <a-select v-model="form.advancePayer" placeholder="请选择项目" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接项目接口</a-select-option>
+          <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同id" prop="contractId">
-        <a-input v-model="form.contractId" placeholder="请输入合同id"/>
+      <a-form-model-item label="合同" prop="contractId">
+        <a-select v-model="form.advancePayer" placeholder="请选择合同" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接合同接口</a-select-option>
+          <a-select-option value="1"> #todo 对接合同接口</a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="结算项目id" prop="resultProjId">
         <a-input v-model="form.resultProjId" placeholder="请输入结算项目id"/>
@@ -16,46 +22,87 @@
       <a-form-model-item label="预付账款单据编号" prop="advanceNo">
         <a-input v-model="form.advanceNo" placeholder="请输入预付账款单据编号"/>
       </a-form-model-item>
-      <a-form-model-item label="预付账款类别0：协议支付，1：预付退回" prop="advanceType">
-        <a-select placeholder="请选择预付账款类别0：协议支付，1：预付退回" v-model="form.advanceType">
-          <a-select-option value="">请选择字典生成</a-select-option>
-        </a-select>
+      <a-form-model-item label="预付账款类别" prop="advanceType">
+        <a-radio-group v-model="form.advanceType" button-style="solid">
+          <a-radio-button value="0">协议支付</a-radio-button>
+          <a-radio-button value="1">预付退回</a-radio-button>
+        </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="预付账款付款方" prop="advancePayer">
-        <a-input v-model="form.advancePayer" placeholder="请输入预付账款付款方"/>
+        <a-select v-model="form.advancePayer" placeholder="请选择预付账款收款方" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
+          <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="预付账款付款方id" prop="advancePayId">
-        <a-input v-model="form.advancePayId" placeholder="请输入预付账款付款方id"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="预付账款付款方id" prop="advancePayId">-->
+      <!--        <a-input v-model="form.advancePayId" placeholder="请输入预付账款付款方id"/>-->
+      <!--      </a-form-model-item>-->
       <a-form-model-item label="预付账款收款方" prop="advanceColer">
-        <a-input v-model="form.advanceColer" placeholder="请输入预付账款收款方"/>
+        <a-select v-model="form.advanceColer" placeholder="请选择预付账款收款方" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
+          <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="预付账款收款方id" prop="advanceColId">
-        <a-input v-model="form.advanceColId" placeholder="请输入预付账款收款方id"/>
-      </a-form-model-item>
-      <a-form-model-item label="预付账款发生金额" prop="advanceAmt">
-        <a-input v-model="form.advanceAmt" placeholder="请输入预付账款发生金额"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="预付账款收款方id" prop="advanceColId">-->
+      <!--        <a-input v-model="form.advanceColId" placeholder="请输入预付账款收款方id"/>-->
+      <!--      </a-form-model-item>-->
+
+      <a-row>
+        <a-col :span="12">
+          <a-form-model-item label="预付账款发生金额" prop="advanceAmt">
+            <a-input v-model="form.advanceAmt" placeholder="请输入预付账款发生金额"/>
+
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="余额大写" prop="advanceAmtCheck">
+            <a-input disabled v-model="form.advanceAmtCheck" placeholder="请输入预付账款发生金额"/>
+
+          </a-form-model-item>
+        </a-col>
+      </a-row>
+
       <a-form-model-item label="预付账款发生日期" prop="advanceOpenTime">
         <a-date-picker style="width: 100%" v-model="form.advanceOpenTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="支付账户" prop="payAccount">
-        <a-input v-model="form.payAccount" placeholder="请输入支付账户"/>
+        <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
+          <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="冲销状态0：未冲销；1：已冲销" prop="writeoffStatus">
+      <a-row>
+        <a-col :span="12">
+          <a-form-model-item label="账户开户行" prop="depAmt">
+            <a-input disabled v-model="form.depAmt" placeholder="请选择支付账户"/>
+
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="账户号码" prop="depAmtCheck">
+            <a-input disabled v-model="form.depAmtCheck" placeholder="请选择支付账户"/>
+
+          </a-form-model-item>
+        </a-col>
+      </a-row>
+
+
+      <a-form-model-item label="冲销状态" prop="writeoffStatus">
         <a-radio-group v-model="form.writeoffStatus" button-style="solid">
-          <a-radio-button value="">请选择字典生成</a-radio-button>
+          <a-radio-button value="0">未冲销</a-radio-button>
+          <a-radio-button value="1">已冲销</a-radio-button>
         </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="备注" prop="remark">
         <a-input v-model="form.remark" placeholder="请输入备注"/>
       </a-form-model-item>
       <a-form-model-item label="经办人" prop="handler">
-        <a-input v-model="form.handler" placeholder="请输入经办人"/>
+        <a-select v-model="form.handler" placeholder="请选择押金经办人" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+          <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="经办人id" prop="handlerId">
-        <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>
-      </a-form-model-item>
+
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -72,6 +119,7 @@
 
 <script>
 import {addAdvance, getAdvance, updateAdvance} from '@/api/system/advance'
+import {capitalAmount} from "@/utils/util";
 
 export default {
   name: 'CreateForm',
@@ -94,6 +142,7 @@ export default {
         advanceColer: null,
         advanceColId: null,
         advanceAmt: null,
+        advanceAmtCheck: null,
         advanceOpenTime: null,
         payAccount: null,
         writeoffStatus: 0,
@@ -163,7 +212,17 @@ export default {
   created() {
   },
   computed: {},
-  watch: {},
+  watch: {
+    "form.advanceAmt": {
+      handler(newVal, oldVal) {
+        if (newVal != oldVal) {
+          this.form.advanceAmtCheck = capitalAmount(newVal)
+        }
+      },
+      immediate: true
+    }
+
+  },
   mounted() {
   },
   methods: {

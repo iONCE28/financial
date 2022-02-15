@@ -25,15 +25,32 @@
       <a-form-model-item label="押金内容" prop="depContent">
         <div id="depContent" name="depContent"></div>
       </a-form-model-item>
-      <a-form-model-item label="押金金额" prop="depAmt">
-        <a-input v-model="form.depAmt" placeholder="请输入押金金额"/>
-      </a-form-model-item>
+
+      <a-row>
+        <a-col :span="12">
+          <a-form-model-item label="押金金额" prop="depAmt">
+            <a-input v-model="form.depAmt" placeholder="请输入押金金额"/>
+
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="押金余额大写" prop="depAmtCheck">
+            <a-input disabled v-model="form.depAmtCheck" placeholder="请输入押金金额"/>
+
+          </a-form-model-item>
+        </a-col>
+      </a-row>
+
+
       <a-form-model-item label="押金经办人" prop="depHandler">
-        <a-input v-model="form.depHandler" placeholder="请输入押金经办人"/>
+        <a-select v-model="form.depHandler" placeholder="请选择押金经办人" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+          <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="经办人id" prop="depHandlerId">
-        <a-input v-model="form.depHandlerId" placeholder="请输入经办人id"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="经办人id" prop="depHandlerId">-->
+      <!--        <a-input v-model="form.depHandlerId" placeholder="请输入经办人id"/>-->
+      <!--      </a-form-model-item>-->
       <a-form-model-item label="押金收款账户" prop="depColAccount">
         <a-input v-model="form.depColAccount" placeholder="请输入押金收款账户"/>
       </a-form-model-item>
@@ -44,7 +61,18 @@
         <a-input v-model="form.depColNo" placeholder="请输入押金收据编号"/>
       </a-form-model-item>
       <a-form-model-item label="押金收据影像" prop="depColImg">
-        <a-input v-model="form.depColImg" placeholder="请输入押金收据影像"/>
+        <a-upload
+          :file-list="fileList"
+          :customRequest="handleUploadone"
+          :before-upload="beforeUploadone"
+          @change="handleChange"
+          :multiple="true">
+          <a-button type="primary">
+            <a-icon type="upload"/>
+            文件上传
+          </a-button>
+          <a-icon :type="loading"/>
+        </a-upload>
       </a-form-model-item>
 
       <div class="bottom-control">
@@ -62,9 +90,11 @@
 </template>
 
 <script>
-import {getDeposit, addDeposit, updateDeposit} from '@/api/system/deposit'
+import {addDeposit, getDeposit, updateDeposit} from '@/api/system/deposit'
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
+import {uploadCover} from "@/api/system/upload";
+import {capitalAmount} from "@/utils/util";
 
 export default {
   name: 'CreateForm',
@@ -72,6 +102,7 @@ export default {
   components: {},
   data() {
     return {
+      fileList: [],
       loading: false,
       formTitle: '',
       depContentEditor: '',
@@ -86,6 +117,7 @@ export default {
         depPaior: null,
         depContent: null,
         depAmt: null,
+        depAmtCheck: null,
         depHandler: null,
         depHandlerId: null,
         depColAccount: null,
@@ -146,10 +178,73 @@ export default {
   created() {
   },
   computed: {},
-  watch: {},
+  watch: {
+    "form.depAmt": {
+      handler(newVal, oldVal) {
+        if (newVal != oldVal) {
+          this.form.depAmtCheck = capitalAmount(newVal)
+        }
+      },
+      immediate: true
+    }
+  },
   mounted() {
   },
   methods: {
+
+    beforeUploadone() {
+
+    },
+    handleChange(info) {
+      let fileList = [...info.fileList]
+      fileList = fileList.slice(-1)
+      this.fileList = fileList
+      if (info.file.status === 'uploading') {
+        this.loading = true
+        return
+      }
+      if (info.file.status === 'done') {
+        this.loading = false
+      }
+    },
+    // 文件上传相关
+    handleUploadone(file) {
+      this.formData = file.file
+      const progress = {percent: 1}
+      const speed = 100 / (file.file.size / 65000)// 上传速度
+      const intervalId = setInterval(() => {
+        // 控制进度条防止在未上传成功时进度条达到100
+        if (progress.percent < 100) {
+          progress.percent += speed// 控制进度条速度
+
+          file.onProgress(progress)// onProgress接收一个对象{ percent: 进度 }在进度条上显示
+        } else if ((progress.percent === 99)) {
+          progress.percent++
+        } else if (progress.percent > 100) {
+          file.onSuccess(file)
+          clearInterval(intervalId)
+        }
+      }, 100)
+      const formData = new FormData()
+      formData.append('file', file.file)
+      // formData.append('noticeId', this.id)
+      uploadCover(formData).then(res => {
+        console.log('进入了方法')
+        this.$notification.success({
+          message: '上传成功'
+        })
+        setTimeout(() => {
+          this.form.depColImg = res.data.url
+          // this.form.noticeId = this.id
+          // this.imagesUrl = res.data.url
+        }, 0)
+        file.onSuccess(res, file.file)
+      }).catch(function (error) {
+        // 由网络或者服务器抛出的错误
+        console.log(error.toString())
+        // alert(error.toString())
+      })
+    },
     openEditor() {
       this.$nextTick(() => {
         this.depContentEditor = new Vditor('depContent', {

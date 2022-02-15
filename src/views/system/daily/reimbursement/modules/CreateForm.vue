@@ -4,14 +4,23 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="项目id" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入项目id"/>
+      <a-form-model-item label="项目" prop="projId">
+        <a-select v-model="form.projId" placeholder="请选择项目" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接项目接口</a-select-option>
+          <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同ID" prop="contractId">
-        <a-input v-model="form.contractId" placeholder="请输入合同ID"/>
+      <a-form-model-item label="合同" prop="contractId">
+        <a-select v-model="form.contractId" placeholder="请选择合同" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接合同接口</a-select-option>
+          <a-select-option value="1"> #todo 对接合同接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="结算项目id" prop="resultProjId">
-        <a-input v-model="form.resultProjId" placeholder="请输入结算项目id"/>
+      <a-form-model-item label="结算项目" prop="resultProjId">
+        <a-select v-model="form.resultProjId" placeholder="请选择项目" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接项目接口</a-select-option>
+          <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="费用报销单据编号" prop="reimbursementNo">
         <a-input v-model="form.reimbursementNo" placeholder="请输入费用报销单据编号"/>
@@ -22,27 +31,31 @@
       <a-form-model-item label="关联单位" prop="affiliatedUnit">
         <a-input v-model="form.affiliatedUnit" placeholder="请输入关联单位"/>
       </a-form-model-item>
-      <a-form-model-item label="关联单位id" prop="affiliatedUnitId">
-        <a-input v-model="form.affiliatedUnitId" placeholder="请输入关联单位id"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="关联单位id" prop="affiliatedUnitId">-->
+      <!--        <a-input v-model="form.affiliatedUnitId" placeholder="请输入关联单位id"/>-->
+      <!--      </a-form-model-item>-->
       <a-form-model-item label="关联个人" prop="affiliatedPerson">
         <a-input v-model="form.affiliatedPerson" placeholder="请输入关联个人"/>
       </a-form-model-item>
-      <a-form-model-item label="关联个人id" prop="affiliatedPersonId">
-        <a-input v-model="form.affiliatedPersonId" placeholder="请输入关联个人id"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="关联个人id" prop="affiliatedPersonId">-->
+      <!--        <a-input v-model="form.affiliatedPersonId" placeholder="请输入关联个人id"/>-->
+      <!--      </a-form-model-item>-->
       <a-form-model-item label="备注" prop="remark">
         <a-input v-model="form.remark" placeholder="请输入备注"/>
       </a-form-model-item>
       <a-form-model-item label="经办人" prop="handler">
         <a-input v-model="form.handler" placeholder="请输入经办人"/>
       </a-form-model-item>
-      <a-form-model-item label="经办人id" prop="handlerId">
-        <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="经办人id" prop="handlerId">-->
+      <!--        <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>-->
+      <!--      </a-form-model-item>-->
 
-      <a-form-model-item label="代办标识0：无代办；1：代办。默认0" prop="agencyLogo">
-        <a-input v-model="form.agencyLogo" placeholder="请输入代办标识0：无代办；1：代办。默认0"/>
+      <a-form-model-item label="代办标识" prop="agencyLogo">
+
+        <a-radio-group v-model="form.agencyLogo" default-value="0" button-style="solid">
+          <a-radio-button :value="0" default>无代办</a-radio-button>
+          <a-radio-button :value="1">代办</a-radio-button>
+        </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="费用部门" prop="expenseDept">
         <a-input v-model="form.expenseDept" placeholder="请输入费用部门"/>
@@ -122,7 +135,7 @@ export default {
         createTime: null,
         updateTime: null,
         delFlag: null,
-        agencyLogo: null,
+        agencyLogo: 0,
         expenseDept: null,
         abstract: null,
         reimbAmt: null,
@@ -231,7 +244,7 @@ export default {
         createTime: null,
         updateTime: null,
         delFlag: null,
-        agencyLogo: null,
+        agencyLogo: 0,
         expenseDept: null,
         abstract: null,
         reimbAmt: null,

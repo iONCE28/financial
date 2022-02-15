@@ -165,12 +165,12 @@ export default {
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '账户ID',
-        //   dataIndex: 'accountId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '账户类型',
+          dataIndex: 'accountType',
+          ellipsis: true,
+          align: 'center'
+        },
         {
           title: '账户名称',
           dataIndex: 'accountName',
@@ -186,6 +186,12 @@ export default {
         {
           title: '开户行信息',
           dataIndex: 'accountBank',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户余额',
+          dataIndex: 'accountBalance',
           ellipsis: true,
           align: 'center'
         },
