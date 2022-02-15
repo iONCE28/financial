@@ -34,18 +34,7 @@
       <a-form-model-item label="经办人id" prop="handlerId">
         <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>
       </a-form-model-item>
-      <a-form-model-item label="预留字段1" prop="reserveOne">
-        <a-input v-model="form.reserveOne" placeholder="请输入预留字段1"/>
-      </a-form-model-item>
-      <a-form-model-item label="预留字段2" prop="reserveTwo">
-        <a-input v-model="form.reserveTwo" placeholder="请输入预留字段2"/>
-      </a-form-model-item>
-      <a-form-model-item label="预留字段3" prop="reserveThree">
-        <a-input v-model="form.reserveThree" placeholder="请输入预留字段3"/>
-      </a-form-model-item>
-      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">
-        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除"/>
-      </a-form-model-item>
+
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -61,7 +50,7 @@
 </template>
 
 <script>
-import {getColpaydec, addColpaydec, updateColpaydec} from '@/api/system/colpaydec'
+import {addColpaydec, getColpaydec, updateColpaydec} from '@/api/system/colpaydec'
 
 export default {
   name: 'CreateForm',

@@ -61,21 +61,7 @@
                   <a-input v-model="queryParam.handlerId" placeholder="请输入经办人id" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预留字段1" prop="reserveOne">
-                  <a-input v-model="queryParam.reserveOne" placeholder="请输入预留字段1" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预留字段2" prop="reserveTwo">
-                  <a-input v-model="queryParam.reserveTwo" placeholder="请输入预留字段2" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预留字段3" prop="reserveThree">
-                  <a-input v-model="queryParam.reserveThree" placeholder="请输入预留字段3" allow-clear/>
-                </a-form-item>
-              </a-col>
+
               <a-col :md="8" :sm="24">
                 <a-form-item label="代办标识0：无代办；1：代办。默认0" prop="agencyLogo">
                   <a-input v-model="queryParam.agencyLogo" placeholder="请输入代办标识0：无代办；1：代办。默认0" allow-clear/>
@@ -98,12 +84,14 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="上传时间" prop="uploadTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss"
+                                 allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付" prop="payType">
-                  <a-select placeholder="请选择支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付" v-model="queryParam.payType" style="width: 100%" allow-clear>
+                  <a-select placeholder="请选择支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付" v-model="queryParam.payType"
+                            style="width: 100%" allow-clear>
                     <a-select-option>请选择字典生成</a-select-option>
                   </a-select>
                 </a-form-item>
@@ -125,9 +113,10 @@
               </a-col>
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
-                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo" />重置</a-button>
+              <span class="table-page-search-submitButtons"
+                    :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                <a-button type="primary" @click="handleQuery"><a-icon type="search"/>查询</a-button>
+                <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo"/>重置</a-button>
                 <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
@@ -140,16 +129,21 @@
       <!-- 操作 -->
       <div class="table-operations">
         <a-button type="primary" @click="$refs.createForm.handleAdd()" v-hasPermi="['system:reimbursement:add']">
-          <a-icon type="plus" />新增
+          <a-icon type="plus"/>
+          新增
         </a-button>
-        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)" v-hasPermi="['system:reimbursement:edit']">
-          <a-icon type="edit" />修改
+        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
+                  v-hasPermi="['system:reimbursement:edit']">
+          <a-icon type="edit"/>
+          修改
         </a-button>
         <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:reimbursement:remove']">
-          <a-icon type="delete" />删除
+          <a-icon type="delete"/>
+          删除
         </a-button>
         <a-button type="primary" @click="handleExport" v-hasPermi="['system:reimbursement:export']">
-          <a-icon type="download" />导出
+          <a-icon type="download"/>
+          导出
         </a-button>
         <a-button
           type="dashed"
@@ -157,7 +151,7 @@
           :loading="loading"
           :style="{float: 'right'}"
           icon="reload"
-          @click="getList" />
+          @click="getList"/>
       </div>
       <!-- 增加修改 -->
       <create-form
@@ -169,6 +163,7 @@
         :loading="loading"
         :size="tableSize"
         rowKey="id"
+        :scroll="{x: 'max-content' }"
         :columns="columns"
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -177,13 +172,13 @@
           {{ parseTime(record.uploadTime) }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:reimbursement:edit']" />
+          <a-divider type="vertical" v-hasPermi="['system:reimbursement:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:reimbursement:edit']">
-            <a-icon type="edit" />修改
+            <a-icon type="edit"/>修改
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:reimbursement:remove']" />
+          <a-divider type="vertical" v-hasPermi="['system:reimbursement:remove']"/>
           <a @click="handleDelete(record)" v-hasPermi="['system:reimbursement:remove']">
-            <a-icon type="delete" />删除
+            <a-icon type="delete"/>删除
           </a>
         </span>
       </a-table>
@@ -204,7 +199,7 @@
 </template>
 
 <script>
-import { listReimbursement, delReimbursement, exportReimbursement } from '@/api/system/reimbursement'
+import {delReimbursement, exportReimbursement, listReimbursement} from '@/api/system/reimbursement'
 import CreateForm from './modules/CreateForm'
 
 export default {
@@ -212,7 +207,7 @@ export default {
   components: {
     CreateForm
   },
-  data () {
+  data() {
     return {
       list: [],
       selectedRowKeys: [],
@@ -336,24 +331,6 @@ export default {
           align: 'center'
         },
         {
-          title: '预留字段1',
-          dataIndex: 'reserveOne',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '预留字段2',
-          dataIndex: 'reserveTwo',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '预留字段3',
-          dataIndex: 'reserveThree',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
           title: '代办标识0：无代办；1：代办。默认0',
           dataIndex: 'agencyLogo',
           ellipsis: true,
@@ -392,7 +369,7 @@ export default {
         {
           title: '上传时间',
           dataIndex: 'uploadTime',
-          scopedSlots: { customRender: 'uploadTime' },
+          scopedSlots: {customRender: 'uploadTime'},
           ellipsis: true,
           align: 'center'
         },
@@ -424,24 +401,21 @@ export default {
           title: '操作',
           dataIndex: 'operation',
           width: '18%',
-          scopedSlots: { customRender: 'operation' },
+          scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
       ]
     }
   },
-  filters: {
-  },
-  created () {
+  filters: {},
+  created() {
     this.getList()
   },
-  computed: {
-  },
-  watch: {
-  },
+  computed: {},
+  watch: {},
   methods: {
     /** 查询费用报销信息列表 */
-    getList () {
+    getList() {
       this.loading = true
       listReimbursement(this.queryParam).then(response => {
         this.list = response.rows
@@ -450,12 +424,12 @@ export default {
       })
     },
     /** 搜索按钮操作 */
-    handleQuery () {
+    handleQuery() {
       this.queryParam.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery () {
+    resetQuery() {
       this.queryParam = {
         projId: undefined,
         contractId: undefined,
@@ -487,33 +461,33 @@ export default {
       }
       this.handleQuery()
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    changeSize (current, pageSize) {
+    changeSize(current, pageSize) {
       this.queryParam.pageNum = current
       this.queryParam.pageSize = pageSize
       this.getList()
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
       this.ids = this.selectedRows.map(item => item.id)
       this.single = selectedRowKeys.length !== 1
       this.multiple = !selectedRowKeys.length
     },
-    toggleAdvanced () {
+    toggleAdvanced() {
       this.advanced = !this.advanced
     },
     /** 删除按钮操作 */
-    handleDelete (row) {
+    handleDelete(row) {
       var that = this
       const ids = row.id || this.ids
       this.$confirm({
         title: '确认删除所选中数据?',
         content: '当前选中编号为' + ids + '的数据',
-        onOk () {
+        onOk() {
           return delReimbursement(ids)
             .then(() => {
               that.onSelectChange([], [])
@@ -522,18 +496,19 @@ export default {
                 '删除成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     },
     /** 导出按钮操作 */
-    handleExport () {
+    handleExport() {
       var that = this
       this.$confirm({
         title: '是否确认导出?',
         content: '此操作将导出当前条件下所有数据而非选中数据',
-        onOk () {
+        onOk() {
           return exportReimbursement(that.queryParam)
             .then(response => {
               that.download(response.msg)
@@ -541,9 +516,10 @@ export default {
                 '导出成功',
                 3
               )
-          })
+            })
         },
-        onCancel () {}
+        onCancel() {
+        }
       })
     }
   }

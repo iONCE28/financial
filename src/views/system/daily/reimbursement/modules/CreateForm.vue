@@ -40,18 +40,7 @@
       <a-form-model-item label="经办人id" prop="handlerId">
         <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>
       </a-form-model-item>
-      <a-form-model-item label="预留字段1" prop="reserveOne">
-        <a-input v-model="form.reserveOne" placeholder="请输入预留字段1"/>
-      </a-form-model-item>
-      <a-form-model-item label="预留字段2" prop="reserveTwo">
-        <a-input v-model="form.reserveTwo" placeholder="请输入预留字段2"/>
-      </a-form-model-item>
-      <a-form-model-item label="预留字段3" prop="reserveThree">
-        <a-input v-model="form.reserveThree" placeholder="请输入预留字段3"/>
-      </a-form-model-item>
-      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">
-        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除"/>
-      </a-form-model-item>
+
       <a-form-model-item label="代办标识0：无代办；1：代办。默认0" prop="agencyLogo">
         <a-input v-model="form.agencyLogo" placeholder="请输入代办标识0：无代办；1：代办。默认0"/>
       </a-form-model-item>
@@ -102,7 +91,7 @@
 </template>
 
 <script>
-import {getReimbursement, addReimbursement, updateReimbursement} from '@/api/system/reimbursement'
+import {addReimbursement, getReimbursement, updateReimbursement} from '@/api/system/reimbursement'
 
 export default {
   name: 'CreateForm',
