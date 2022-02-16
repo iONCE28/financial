@@ -37,9 +37,9 @@
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
-    <template v-slot:footerRender>
-      <global-footer />
-    </template>
+    <!--    <template v-slot:footerRender>-->
+    <!--      <global-footer />-->
+    <!--    </template>-->
     <router-view />
   </pro-layout>
 </template>

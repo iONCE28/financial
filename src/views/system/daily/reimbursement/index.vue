@@ -6,19 +6,31 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="项目id" prop="projId">
-                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
+              <a-form-item label="项目" prop="projId">
+                <a-select placeholder="请选择项目" v-model="queryParam.projId" @select="handleProj">
+                  <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="合同ID" prop="contractId">
-                <a-input v-model="queryParam.contractId" placeholder="请输入合同ID" allow-clear/>
+              <a-form-item label="合同" prop="contractId">
+                <a-select placeholder="请选择合同" v-model="queryParam.contractId">
+                  <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+                    {{ item.constractName }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
-                <a-form-item label="结算项目id" prop="resultProjId">
-                  <a-input v-model="queryParam.resultProjId" placeholder="请输入结算项目id" allow-clear/>
+                <a-form-item label="结算项目" prop="resultProjId">
+                  <a-select placeholder="请选择项目" v-model="queryParam.resultContractId" @select="handleProj">
+                    <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -201,6 +213,8 @@
 <script>
 import {delReimbursement, exportReimbursement, listReimbursement} from '@/api/system/reimbursement'
 import CreateForm from './modules/CreateForm'
+import {contractSByProj} from "@/api/system/contract";
+import {projsByUser} from "@/api/system/proj";
 
 export default {
   name: 'Reimbursement',
@@ -209,6 +223,8 @@ export default {
   },
   data() {
     return {
+      contractsList: [],
+      projsList: [],
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -259,19 +275,19 @@ export default {
           align: 'center'
         },
         {
-          title: '项目id',
+          title: '项目',
           dataIndex: 'projId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '合同ID',
+          title: '合同',
           dataIndex: 'contractId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算项目id',
+          title: '结算项目',
           dataIndex: 'resultProjId',
           ellipsis: true,
           align: 'center'
@@ -283,7 +299,7 @@ export default {
           align: 'center'
         },
         {
-          title: '预算科目ID',
+          title: '预算科目',
           dataIndex: 'budgetId',
           ellipsis: true,
           align: 'center'
@@ -294,24 +310,24 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '关联单位id',
-          dataIndex: 'affiliatedUnitId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '关联单位id',
+        //   dataIndex: 'affiliatedUnitId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '关联个人',
           dataIndex: 'affiliatedPerson',
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '关联个人id',
-          dataIndex: 'affiliatedPersonId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '关联个人id',
+        //   dataIndex: 'affiliatedPersonId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '备注',
           dataIndex: 'remark',
@@ -324,14 +340,14 @@ export default {
           ellipsis: true,
           align: 'center'
         },
+        // {
+        //   title: '经办人id',
+        //   dataIndex: 'handlerId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
-          title: '经办人id',
-          dataIndex: 'handlerId',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '代办标识0：无代办；1：代办。默认0',
+          title: '代办标识',
           dataIndex: 'agencyLogo',
           ellipsis: true,
           align: 'center'
@@ -361,7 +377,7 @@ export default {
           align: 'center'
         },
         {
-          title: '发票影像：存文件路径',
+          title: '发票影像',
           dataIndex: 'image',
           ellipsis: true,
           align: 'center'
@@ -374,7 +390,7 @@ export default {
           align: 'center'
         },
         {
-          title: '支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付',
+          title: '支付类别',
           dataIndex: 'payType',
           ellipsis: true,
           align: 'center'
@@ -409,11 +425,20 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projsList = response;
+    })
     this.getList()
   },
   computed: {},
   watch: {},
   methods: {
+    handleProj(value) {
+      this.queryParam.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     /** 查询费用报销信息列表 */
     getList() {
       this.loading = true

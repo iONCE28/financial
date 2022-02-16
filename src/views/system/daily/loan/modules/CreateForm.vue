@@ -4,56 +4,86 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="项目ID" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入项目ID"/>
+      <a-form-model-item label="项目" prop="projId">
+        <a-select placeholder="请选择项目" v-model="form.projId" @select="handleProj">
+          <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同ID" prop="contractId">
-        <a-input v-model="form.contractId" placeholder="请输入合同ID"/>
+      <a-form-model-item label="合同" prop="contractId">
+        <a-select placeholder="请选择合同" v-model="form.contractId">
+          <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+            {{ item.constractName }}
+          </a-select-option>
+        </a-select>
+
       </a-form-model-item>
-      <a-form-model-item label="结算项目ID" prop="resultContractId">
-        <a-input v-model="form.resultContractId" placeholder="请输入结算项目ID"/>
+      <a-form-model-item label="结算项目" prop="resultContractId">
+        <a-select placeholder="请选择项目" v-model="form.resultContractId" @select="handleProj">
+          <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="个人借款单据编号" prop="resultContractNo">
         <a-input v-model="form.resultContractNo" placeholder="请输入个人借款单据编号"/>
       </a-form-model-item>
-      <a-form-model-item label="0：支付借款，2：报销借款，3：归还借款" prop="loanType">
-        <a-select placeholder="请选择0：支付借款，2：报销借款，3：归还借款" v-model="form.loanType">
-          <a-select-option value="">请选择字典生成</a-select-option>
+      <a-form-model-item label="个人借款类别" prop="loanType">
+        <a-select placeholder="请选择个人借款类别" v-model="form.loanType">
+          <a-select-option :value="0" :key="0">支付借款</a-select-option>
+          <a-select-option :value="2" :key="2">报销借款</a-select-option>
+          <a-select-option :value="3" :key="3">归还借款</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="借款人:对内借款，借款人从内部人员中取" prop="borrower">
-        <a-input v-model="form.borrower" placeholder="请输入借款人:对内借款，借款人从内部人员中取"/>
+      <a-form-model-item label="借款人" prop="borrower">
+        <a-select v-model="form.borrower" placeholder="请选择借款人" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+          <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="借款人id：关联个人ID支持费用报销的联查预付款~" prop="borrowerId">
-        <a-input v-model="form.borrowerId" placeholder="请输入借款人id：关联个人ID支持费用报销的联查预付款~"/>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="借款人id：关联个人ID支持费用报销的联查预付款~" prop="borrowerId">-->
+      <!--        <a-input v-model="form.borrowerId" placeholder="请输入借款人id：关联个人ID支持费用报销的联查预付款~"/>-->
+      <!--      </a-form-model-item>-->
       <a-form-model-item label="个人借款事由摘要" prop="abstracted">
         <a-input v-model="form.abstracted" placeholder="请输入内容" type="textarea" allow-clear/>
       </a-form-model-item>
-      <a-form-model-item label="个人借款发生金额" prop="amount">
-        <a-input v-model="form.amount" placeholder="请输入个人借款发生金额"/>
-      </a-form-model-item>
+
+      <a-row>
+        <a-col :span="12">
+          <a-form-model-item label="个人借款发生金额" prop="amount">
+            <a-input v-model="form.amount" type="number" placeholder="请输入个人借款发生金额"/>
+
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="金额大写" prop="amountCheck">
+            <a-input disabled v-model="form.amountCheck" placeholder="请输入个人借款发生金额"/>
+          </a-form-model-item>
+        </a-col>
+      </a-row>
       <a-form-model-item label="支付账户" prop="payAccount">
-        <a-input v-model="form.payAccount" placeholder="请输入支付账户"/>
+        <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
+          <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="冲销状态0：未冲销；1：已冲销" prop="writeoffStatus">
+      <a-form-model-item label="冲销状态" prop="writeoffStatus">
         <a-radio-group v-model="form.writeoffStatus" button-style="solid">
-          <a-radio-button value="">请选择字典生成</a-radio-button>
+          <a-radio-button value="0">未冲销</a-radio-button>
+          <a-radio-button value="1">已冲销</a-radio-button>
         </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="备注" prop="remark">
         <a-input v-model="form.remark" placeholder="请输入备注"/>
       </a-form-model-item>
       <a-form-model-item label="经办人" prop="handler">
-        <a-input v-model="form.handler" placeholder="请输入经办人"/>
-      </a-form-model-item>
-      <a-form-model-item label="经办人id" prop="handlerId">
-        <a-input v-model="form.handlerId" placeholder="请输入经办人id"/>
+        <a-select v-model="form.handler" placeholder="请选择经办人" style="width: 100%" allow-clear>
+          <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+          <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+        </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="删除状态 0. 正常 1. 删除" prop="delFlag" v-if="formType === 1">
-        <a-input v-model="form.delFlag" placeholder="请输入删除状态 0. 正常 1. 删除"/>
-      </a-form-model-item>
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -70,6 +100,9 @@
 
 <script>
 import {addLoan, getLoan, updateLoan} from '@/api/system/loan'
+import {capitalAmount} from "@/utils/util";
+import {projsByUser} from "@/api/system/proj";
+import {contractSByProj} from "@/api/system/contract";
 
 export default {
   name: 'CreateForm',
@@ -77,6 +110,8 @@ export default {
   components: {},
   data() {
     return {
+      contractsList: [],
+      projsList: [],
       loading: false,
       formTitle: '',
       // 表单参数
@@ -91,6 +126,7 @@ export default {
         borrowerId: null,
         abstracted: null,
         amount: null,
+        amountCheck: null,
         payAccount: null,
         writeoffStatus: 0,
         remark: null,
@@ -136,12 +172,30 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projsList = response;
+    })
   },
   computed: {},
-  watch: {},
+  watch: {
+    "form.amount": {
+      handler(newVal, oldVal) {
+        if (newVal != oldVal) {
+          this.form.amountCheck = capitalAmount(newVal)
+        }
+      },
+      immediate: true
+    },
+  },
   mounted() {
   },
   methods: {
+    handleProj(value) {
+      this.queryParam.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     onClose() {
       this.open = false
     },

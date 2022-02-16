@@ -28,7 +28,7 @@
         <a-date-picker style="width: 100%" v-model="form.colpayTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="收款金额" prop="colpayAmt">
-        <a-input v-model="form.colpayAmt" placeholder="请输入收款金额"/>
+        <a-input v-model="form.colpayAmt" type="number" placeholder="请输入收款金额"/>
       </a-form-model-item>
       <a-form-model-item label="收款说明" prop="colpayDec">
         <a-input v-model="form.colpayDec" placeholder="请输入收款说明"/>

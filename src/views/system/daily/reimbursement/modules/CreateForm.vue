@@ -5,21 +5,24 @@
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
       <a-form-model-item label="项目" prop="projId">
-        <a-select v-model="form.projId" placeholder="请选择项目" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接项目接口</a-select-option>
-          <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+        <a-select placeholder="请选择项目" v-model="form.projId" @select="handleProj">
+          <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="合同" prop="contractId">
-        <a-select v-model="form.contractId" placeholder="请选择合同" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接合同接口</a-select-option>
-          <a-select-option value="1"> #todo 对接合同接口</a-select-option>
+        <a-select placeholder="请选择合同" v-model="form.contractId">
+          <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+            {{ item.constractName }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="结算项目" prop="resultProjId">
-        <a-select v-model="form.resultProjId" placeholder="请选择项目" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接项目接口</a-select-option>
-          <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+        <a-select placeholder="请选择项目" v-model="form.resultProjId" @select="handleProj">
+          <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="费用报销单据编号" prop="reimbursementNo">
@@ -64,20 +67,23 @@
         <a-input v-model="form.abstract" placeholder="请输入内容" type="textarea" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="报销金额" prop="reimbAmt">
-        <a-input v-model="form.reimbAmt" placeholder="请输入报销金额"/>
+        <a-input v-model="form.reimbAmt" type="number" placeholder="请输入报销金额"/>
       </a-form-model-item>
       <a-form-model-item label="发票张树" prop="invoiceNum">
         <a-input v-model="form.invoiceNum" placeholder="请输入发票张树"/>
       </a-form-model-item>
-      <a-form-model-item label="发票影像：存文件路径" prop="image">
+      <a-form-model-item label="发票影像" prop="image">
         <file-upload v-model="form.image" type="image"></file-upload>
       </a-form-model-item>
       <a-form-model-item label="上传时间" prop="uploadTime">
         <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
-      <a-form-model-item label="支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付" prop="payType">
-        <a-select placeholder="请选择支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付" v-model="form.payType">
-          <a-select-option value="">请选择字典生成</a-select-option>
+      <a-form-model-item label="支付类别" prop="payType">
+        <a-select placeholder="请选择支付类别" v-model="form.payType">
+          <a-select-option :value="0">支付账户</a-select-option>
+          <a-select-option :value="1">支付报销</a-select-option>
+          <a-select-option :value="2">冲销借款</a-select-option>
+          <a-select-option :value="3">冲销预付</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="报销支付账户名称" prop="reimbPayName">
@@ -105,6 +111,8 @@
 
 <script>
 import {addReimbursement, getReimbursement, updateReimbursement} from '@/api/system/reimbursement'
+import {projsByUser} from "@/api/system/proj";
+import {contractSByProj} from "@/api/system/contract";
 
 export default {
   name: 'CreateForm',
@@ -112,6 +120,8 @@ export default {
   components: {},
   data() {
     return {
+      contractsList: [],
+      projsList: [],
       loading: false,
       formTitle: '',
       // 表单参数
@@ -152,13 +162,13 @@ export default {
       open: false,
       rules: {
         projId: [
-          {required: true, message: '项目id不能为空', trigger: 'blur'}
+          {required: true, message: '项目不能为空', trigger: 'blur'}
         ],
         contractId: [
-          {required: true, message: '合同ID不能为空', trigger: 'blur'}
+          {required: true, message: '合同不能为空', trigger: 'blur'}
         ],
         resultProjId: [
-          {required: true, message: '结算项目id不能为空', trigger: 'blur'}
+          {required: true, message: '结算项目不能为空', trigger: 'blur'}
         ],
         reimbursementNo: [
           {required: true, message: '费用报销单据编号不能为空', trigger: 'blur'}
@@ -191,7 +201,7 @@ export default {
           {required: true, message: '上传时间不能为空', trigger: 'blur'}
         ],
         payType: [
-          {required: true, message: '支付类别:0：支付账户，1：支付报销，2：冲销借款，3：冲销预付不能为空', trigger: 'change'}
+          {required: true, message: '支付类别不能为空', trigger: 'change'}
         ],
         reimbPayName: [
           {required: true, message: '报销支付账户名称不能为空', trigger: 'blur'}
@@ -207,12 +217,21 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projsList = response;
+    })
   },
   computed: {},
   watch: {},
   mounted() {
   },
   methods: {
+    handleProj(value) {
+      this.queryParam.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     onClose() {
       this.open = false
     },

@@ -6,19 +6,30 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="项目id" prop="projId">
-                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
+              <a-form-item label="项目" prop="projId">
+                <a-select placeholder="请选择项目" v-model="queryParam.projId" @select="handleProj">
+                  <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="合同id" prop="contractId">
-                <a-input v-model="queryParam.contractId" placeholder="请输入合同id" allow-clear/>
+              <a-form-item label="合同" prop="contractId">
+                <a-select placeholder="请选择合同" v-model="queryParam.contractId">
+                  <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+                    {{ item.constractName }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
                 <a-form-item label="结算项目id" prop="resultProjId">
-                  <a-input v-model="queryParam.resultProjId" placeholder="请输入结算项目id" allow-clear/>
+                  <a-select v-model="queryParam.resultProjId" placeholder="请选择项目" style="width: 100%" allow-clear>
+                    <a-select-option value="0"> #todo 对接项目接口</a-select-option>
+                    <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -27,10 +38,11 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="预付账款类别0：协议支付，1：预付退回" prop="advanceType">
-                  <a-select placeholder="请选择预付账款类别0：协议支付，1：预付退回" v-model="queryParam.advanceType" style="width: 100%"
+                <a-form-item label="预付账款类别" prop="advanceType">
+                  <a-select placeholder="请选择预付账款类别" v-model="queryParam.advanceType" style="width: 100%"
                             allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
+                    <a-select-option :value="0">协议支付</a-select-option>
+                    <a-select-option :value="1">预付退回</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -39,21 +51,21 @@
                   <a-input v-model="queryParam.advancePayer" placeholder="请输入预付账款付款方" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预付账款付款方id" prop="advancePayId">
-                  <a-input v-model="queryParam.advancePayId" placeholder="请输入预付账款付款方id" allow-clear/>
-                </a-form-item>
-              </a-col>
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="预付账款付款方id" prop="advancePayId">-->
+              <!--                  <a-input v-model="queryParam.advancePayId" placeholder="请输入预付账款付款方id" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="预付账款收款方" prop="advanceColer">
                   <a-input v-model="queryParam.advanceColer" placeholder="请输入预付账款收款方" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预付账款收款方id" prop="advanceColId">
-                  <a-input v-model="queryParam.advanceColId" placeholder="请输入预付账款收款方id" allow-clear/>
-                </a-form-item>
-              </a-col>
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="预付账款收款方id" prop="advanceColId">-->
+              <!--                  <a-input v-model="queryParam.advanceColId" placeholder="请输入预付账款收款方id" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="预付账款发生金额" prop="advanceAmt">
                   <a-input v-model="queryParam.advanceAmt" placeholder="请输入预付账款发生金额" allow-clear/>
@@ -71,10 +83,11 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="冲销状态0：未冲销；1：已冲销" prop="writeoffStatus">
-                  <a-select placeholder="请选择冲销状态0：未冲销；1：已冲销" v-model="queryParam.writeoffStatus" style="width: 100%"
+                <a-form-item label="冲销状态" prop="writeoffStatus">
+                  <a-select placeholder="请选择冲销状态" v-model="queryParam.writeoffStatus" style="width: 100%"
                             allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
+                    <a-select-option :value="0">未冲销</a-select-option>
+                    <a-select-option :value="1">已冲销</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -180,6 +193,8 @@
 <script>
 import {delAdvance, exportAdvance, listAdvance} from '@/api/system/advance'
 import CreateForm from './modules/CreateForm'
+import {contractSByProj} from "@/api/system/contract";
+import {projsByUser} from "@/api/system/proj";
 
 export default {
   name: 'Advance',
@@ -188,6 +203,8 @@ export default {
   },
   data() {
     return {
+      contractsList: [],
+      projs: [],
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -231,59 +248,59 @@ export default {
           align: 'center'
         },
         {
-          title: '项目id',
+          title: '项目',
           dataIndex: 'projId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '合同id',
+          title: '合同',
           dataIndex: 'contractId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算项目id',
+          title: '结算项目',
           dataIndex: 'resultProjId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '预付账款单据编号',
+          title: '单据编号',
           dataIndex: 'advanceNo',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '预付账款类别0：协议支付，1：预付退回',
+          title: '账款类别',
           dataIndex: 'advanceType',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '预付账款付款方',
+          title: '付款方',
           dataIndex: 'advancePayer',
           ellipsis: true,
           align: 'center'
         },
+        // {
+        //   title: '预付账款付款方id',
+        //   dataIndex: 'advancePayId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
-          title: '预付账款付款方id',
-          dataIndex: 'advancePayId',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '预付账款收款方',
+          title: '收款方',
           dataIndex: 'advanceColer',
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '预付账款收款方id',
-          dataIndex: 'advanceColId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '预付账款收款方id',
+        //   dataIndex: 'advanceColId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '预付账款发生金额',
           dataIndex: 'advanceAmt',
@@ -304,7 +321,7 @@ export default {
           align: 'center'
         },
         {
-          title: '冲销状态0：未冲销；1：已冲销',
+          title: '冲销状态',
           dataIndex: 'writeoffStatus',
           ellipsis: true,
           align: 'center'
@@ -321,12 +338,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '经办人id',
-          dataIndex: 'handlerId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '经办人id',
+        //   dataIndex: 'handlerId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '操作',
           dataIndex: 'operation',
@@ -339,11 +356,20 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projs = response;
+    })
     this.getList()
   },
   computed: {},
   watch: {},
   methods: {
+    handleProj(value) {
+      this.queryParam.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     /** 查询预付账款信息列表 */
     getList() {
       this.loading = true

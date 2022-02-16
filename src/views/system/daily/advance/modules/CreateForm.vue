@@ -5,19 +5,25 @@
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
       <a-form-model-item label="项目" prop="projId">
-        <a-select v-model="form.advancePayer" placeholder="请选择项目" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接项目接口</a-select-option>
-          <a-select-option value="1"> #todo 对接项目接口</a-select-option>
+        <a-select placeholder="请选择项目" v-model="form.projId" @select="handleProj">
+          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="合同" prop="contractId">
-        <a-select v-model="form.advancePayer" placeholder="请选择合同" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接合同接口</a-select-option>
-          <a-select-option value="1"> #todo 对接合同接口</a-select-option>
+        <a-select placeholder="请选择合同" v-model="form.contractId">
+          <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+            {{ item.constractName }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="结算项目id" prop="resultProjId">
-        <a-input v-model="form.resultProjId" placeholder="请输入结算项目id"/>
+      <a-form-model-item label="结算项目" prop="resultProjId">
+        <a-select placeholder="请选择项目" v-model="form.resultProjId">
+          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="预付账款单据编号" prop="advanceNo">
         <a-input v-model="form.advanceNo" placeholder="请输入预付账款单据编号"/>
@@ -50,12 +56,12 @@
       <a-row>
         <a-col :span="12">
           <a-form-model-item label="预付账款发生金额" prop="advanceAmt">
-            <a-input v-model="form.advanceAmt" placeholder="请输入预付账款发生金额"/>
+            <a-input v-model="form.advanceAmt" type="number" placeholder="请输入预付账款发生金额"/>
 
           </a-form-model-item>
         </a-col>
         <a-col :span="12">
-          <a-form-model-item label="余额大写" prop="advanceAmtCheck">
+          <a-form-model-item label="金额大写" prop="advanceAmtCheck">
             <a-input disabled v-model="form.advanceAmtCheck" placeholder="请输入预付账款发生金额"/>
 
           </a-form-model-item>
@@ -120,6 +126,8 @@
 <script>
 import {addAdvance, getAdvance, updateAdvance} from '@/api/system/advance'
 import {capitalAmount} from "@/utils/util";
+import {projsByUser} from "@/api/system/proj";
+import {contractSByProj} from "@/api/system/contract";
 
 export default {
   name: 'CreateForm',
@@ -127,6 +135,8 @@ export default {
   components: {},
   data() {
     return {
+      contractsList: [],
+      projsList: [],
       loading: false,
       formTitle: '',
       // 表单参数
@@ -161,19 +171,19 @@ export default {
       open: false,
       rules: {
         projId: [
-          {required: true, message: '项目id不能为空', trigger: 'blur'}
+          {required: true, message: '项目不能为空', trigger: 'blur'}
         ],
         contractId: [
-          {required: true, message: '合同id不能为空', trigger: 'blur'}
+          {required: true, message: '合同不能为空', trigger: 'blur'}
         ],
         resultProjId: [
-          {required: true, message: '结算项目id不能为空', trigger: 'blur'}
+          {required: true, message: '结算项目不能为空', trigger: 'blur'}
         ],
         advanceNo: [
           {required: true, message: '预付账款单据编号不能为空', trigger: 'blur'}
         ],
         advanceType: [
-          {required: true, message: '预付账款类别0：协议支付，1：预付退回不能为空', trigger: 'change'}
+          {required: true, message: '预付账款类别不能为空', trigger: 'change'}
         ],
         advancePayer: [
           {required: true, message: '预付账款付款方不能为空', trigger: 'blur'}
@@ -210,6 +220,9 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projs = response;
+    })
   },
   computed: {},
   watch: {
@@ -226,6 +239,12 @@ export default {
   mounted() {
   },
   methods: {
+    handleProj(value) {
+      this.form.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     onClose() {
       this.open = false
     },

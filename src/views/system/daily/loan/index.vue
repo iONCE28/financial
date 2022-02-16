@@ -6,19 +6,34 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="项目ID" prop="projId">
-                <a-input v-model="queryParam.projId" placeholder="请输入项目ID" allow-clear/>
+              <a-form-item label="项目" prop="projId">
+                <a-select placeholder="请选择项目" v-model="queryParam.projId" @select="handleProj">
+                  <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
+
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="合同ID" prop="contractId">
-                <a-input v-model="queryParam.contractId" placeholder="请输入合同ID" allow-clear/>
+              <a-form-item label="合同" prop="contractId">
+                <a-select placeholder="请选择合同" v-model="queryParam.contractId">
+                  <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+                    {{ item.constractName }}
+                  </a-select-option>
+                </a-select>
+
               </a-form-item>
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
-                <a-form-item label="结算项目ID" prop="resultContractId">
-                  <a-input v-model="queryParam.resultContractId" placeholder="请输入结算项目ID" allow-clear/>
+
+                <a-form-item label="结算项目" prop="resultContractId">
+                  <a-select placeholder="请选择项目" v-model="queryParam.resultContractId" @select="handleProj">
+                    <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -42,8 +57,11 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="借款人id：关联个人ID支持费用报销的联查预付款~" prop="borrowerId">
-                  <a-input v-model="queryParam.borrowerId" placeholder="请输入借款人id：关联个人ID支持费用报销的联查预付款~" allow-clear/>
+                <a-form-item label="借款人" prop="borrowerId">
+                  <a-select v-model="queryParam.borrowerId" placeholder="请选择借款人" style="width: 100%" allow-clear>
+                    <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+                    <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -57,24 +75,22 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="冲销状态0：未冲销；1：已冲销" prop="writeoffStatus">
-                  <a-select placeholder="请选择冲销状态0：未冲销；1：已冲销" v-model="queryParam.writeoffStatus" style="width: 100%"
+                <a-form-item label="冲销状态" prop="writeoffStatus">
+                  <a-select placeholder="请选择冲销状态" v-model="queryParam.writeoffStatus" style="width: 100%"
                             allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
+                    <a-select-option :value="0">未冲销</a-select-option>
+                    <a-select-option :value="1">已冲销</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="经办人" prop="handler">
-                  <a-input v-model="queryParam.handler" placeholder="请输入经办人" allow-clear/>
+                  <a-select v-model="queryParam.handler" placeholder="请选择经办人" style="width: 100%" allow-clear>
+                    <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+                    <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="经办人id" prop="handlerId">
-                  <a-input v-model="queryParam.handlerId" placeholder="请输入经办人id" allow-clear/>
-                </a-form-item>
-              </a-col>
-
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
@@ -162,6 +178,8 @@
 <script>
 import {delLoan, exportLoan, listLoan} from '@/api/system/loan'
 import CreateForm from './modules/CreateForm'
+import {projsByUser} from "@/api/system/proj";
+import {contractSByProj} from "@/api/system/contract";
 
 export default {
   name: 'Loan',
@@ -170,6 +188,8 @@ export default {
   },
   data() {
     return {
+      contractsList: [],
+      projsList: [],
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -211,19 +231,19 @@ export default {
           align: 'center'
         },
         {
-          title: '项目ID',
+          title: '项目',
           dataIndex: 'projId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '合同ID',
+          title: '合同',
           dataIndex: 'contractId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算项目ID',
+          title: '结算项目',
           dataIndex: 'resultContractId',
           ellipsis: true,
           align: 'center'
@@ -241,17 +261,17 @@ export default {
           align: 'center'
         },
         {
-          title: '借款人:对内借款，借款人从内部人员中取',
+          title: '借款人',
           dataIndex: 'borrower',
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '借款人id：关联个人ID支持费用报销的联查预付款~',
-          dataIndex: 'borrowerId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '借款人id：关联个人ID支持费用报销的联查预付款~',
+        //   dataIndex: 'borrowerId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '个人借款事由摘要',
           dataIndex: 'abstracted',
@@ -271,7 +291,7 @@ export default {
           align: 'center'
         },
         {
-          title: '冲销状态0：未冲销；1：已冲销',
+          title: '冲销状态',
           dataIndex: 'writeoffStatus',
           ellipsis: true,
           align: 'center'
@@ -288,12 +308,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '经办人id',
-          dataIndex: 'handlerId',
-          ellipsis: true,
-          align: 'center'
-        },
+        // {
+        //   title: '经办人id',
+        //   dataIndex: 'handlerId',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
         {
           title: '操作',
           dataIndex: 'operation',
@@ -306,11 +326,20 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projsList = response;
+    })
     this.getList()
   },
   computed: {},
   watch: {},
   methods: {
+    handleProj(value) {
+      this.queryParam.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     /** 查询个人借款信息列表 */
     getList() {
       this.loading = true

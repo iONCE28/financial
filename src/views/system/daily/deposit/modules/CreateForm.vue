@@ -4,14 +4,26 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="项目id" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入项目id"/>
+      <a-form-model-item label="项目" prop="projId">
+        <a-select placeholder="请选择项目" v-model="form.projId" @select="handleProj">
+          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同id" prop="contractId">
-        <a-input v-model="form.contractId" placeholder="请输入合同id"/>
+      <a-form-model-item label="合同" prop="contractId">
+        <a-select placeholder="请选择合同" v-model="form.contractId">
+          <a-select-option :value="item.id" v-for="item in contractsList" :key="item.id">
+            {{ item.constractName }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="结算项目id" prop="resultProjId">
-        <a-input v-model="form.resultProjId" placeholder="请输入结算项目id"/>
+      <a-form-model-item label="结算项目" prop="resultProjId">
+        <a-select placeholder="请输入结算项目" v-model="form.resultProjId">
+          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="押金单据编号" prop="depNo">
         <a-input v-model="form.depNo" placeholder="请输入押金单据编号"/>
@@ -29,12 +41,12 @@
       <a-row>
         <a-col :span="12">
           <a-form-model-item label="押金金额" prop="depAmt">
-            <a-input v-model="form.depAmt" placeholder="请输入押金金额"/>
+            <a-input v-model="form.depAmt" type="number" placeholder="请输入押金金额"/>
 
           </a-form-model-item>
         </a-col>
         <a-col :span="12">
-          <a-form-model-item label="押金余额大写" prop="depAmtCheck">
+          <a-form-model-item label="押金金额大写" prop="depAmtCheck">
             <a-input disabled v-model="form.depAmtCheck" placeholder="请输入押金金额"/>
 
           </a-form-model-item>
@@ -95,6 +107,8 @@ import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import {uploadCover} from "@/api/system/upload";
 import {capitalAmount} from "@/utils/util";
+import {projsByUser} from "@/api/system/proj";
+import {contractSByProj} from "@/api/system/contract";
 
 export default {
   name: 'CreateForm',
@@ -102,6 +116,8 @@ export default {
   components: {},
   data() {
     return {
+      contractsList: [],
+      projs: [],
       fileList: [],
       loading: false,
       formTitle: '',
@@ -136,7 +152,7 @@ export default {
       open: false,
       rules: {
         projId: [
-          {required: true, message: '项目id不能为空', trigger: 'blur'}
+          {required: true, message: '项目不能为空', trigger: 'blur'}
         ],
         depNo: [
           {required: true, message: '押金单据编号不能为空', trigger: 'blur'}
@@ -157,7 +173,7 @@ export default {
           {required: true, message: '押金经办人不能为空', trigger: 'blur'}
         ],
         depHandlerId: [
-          {required: true, message: '经办人id不能为空', trigger: 'blur'}
+          {required: true, message: '经办人不能为空', trigger: 'blur'}
         ],
         depColAccount: [
           {required: true, message: '押金收款账户不能为空', trigger: 'blur'}
@@ -176,6 +192,9 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projs = response;
+    })
   },
   computed: {},
   watch: {
@@ -191,7 +210,12 @@ export default {
   mounted() {
   },
   methods: {
-
+    handleProj(value) {
+      this.form.projId = value;
+      contractSByProj(value).then(response => {
+        this.contractsList = response;
+      })
+    },
     beforeUploadone() {
 
     },

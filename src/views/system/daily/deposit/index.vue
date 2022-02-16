@@ -6,19 +6,31 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="项目id" prop="projId">
-                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
+              <a-form-item label="项目" prop="projId">
+                <a-select placeholder="请选择项目" v-model="queryParam.projId" @select="handleProj">
+                  <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="合同id" prop="contractId">
-                <a-input v-model="queryParam.contractId" placeholder="请输入合同id" allow-clear/>
+              <a-form-item label="合同" prop="contractId">
+                <a-select placeholder="请选择合同" v-model="queryParam.contractId">
+                  <a-select-option :value="item.id" v-for="item in contracts" :key="item.id">
+                    {{ item.constractName }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
-                <a-form-item label="结算项目id" prop="resultProjId">
-                  <a-input v-model="queryParam.resultProjId" placeholder="请输入结算项目id" allow-clear/>
+                <a-form-item label="结算项目" prop="resultProjId">
+                  <a-select placeholder="请输入结算项目" v-model="queryParam.resultProjId">
+                    <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -46,11 +58,11 @@
                   <a-input v-model="queryParam.depHandler" placeholder="请输入押金经办人" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="经办人id" prop="depHandlerId">
-                  <a-input v-model="queryParam.depHandlerId" placeholder="请输入经办人id" allow-clear/>
-                </a-form-item>
-              </a-col>
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="经办人id" prop="depHandlerId">-->
+              <!--                  <a-input v-model="queryParam.depHandlerId" placeholder="请输入经办人id" allow-clear/>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="押金收款账户" prop="depColAccount">
                   <a-input v-model="queryParam.depColAccount" placeholder="请输入押金收款账户" allow-clear/>
@@ -71,21 +83,7 @@
                   <a-input v-model="queryParam.depColImg" placeholder="请输入押金收据影像" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预留字段1" prop="reserveOne">
-                  <a-input v-model="queryParam.reserveOne" placeholder="请输入预留字段1" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预留字段2" prop="reserveTwo">
-                  <a-input v-model="queryParam.reserveTwo" placeholder="请输入预留字段2" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="预留字段3" prop="reserveThree">
-                  <a-input v-model="queryParam.reserveThree" placeholder="请输入预留字段3" allow-clear/>
-                </a-form-item>
-              </a-col>
+
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
@@ -176,6 +174,8 @@
 <script>
 import {delDeposit, exportDeposit, listDeposit} from '@/api/system/deposit'
 import CreateForm from './modules/CreateForm'
+import {projsByUser} from "@/api/system/proj";
+import {contractSByProj} from "@/api/system/contract";
 
 export default {
   name: 'Deposit',
@@ -184,6 +184,8 @@ export default {
   },
   data() {
     return {
+      contracts: [],
+      projs: [],
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -335,11 +337,20 @@ export default {
   },
   filters: {},
   created() {
+    projsByUser().then(response => {
+      this.projs = response;
+    })
     this.getList()
   },
   computed: {},
   watch: {},
   methods: {
+    handleProj(value) {
+      this.queryParam.projId = value;
+      contractSByProj(value).then(response => {
+        this.contracts = response;
+      })
+    },
     /** 查询押金基础信息列表 */
     getList() {
       this.loading = true
