@@ -48,18 +48,19 @@
         <a-date-picker style="width: 100%" v-model="form.onTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear />
       </a-form-model-item>
       <a-form-model-item label="关机时间" prop="offTime">
-        <a-date-picker style="width: 100%" v-model="form.offTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear />
+        <a-date-picker style="width: 100%" v-model="form.offTime" format="YYYY-MM-DD HH:mm:ss"
+                       valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item>
-      <a-form-model-item label="项目周期数：比如：三月、半年、一年" prop="cycle">
-        <a-input v-model="form.cycle" placeholder="请输入项目周期数：比如：三月、半年、一年" />
+      <a-form-model-item label="项目周期数" prop="cycle">
+        <a-input v-model="form.cycle" placeholder="请输入项目周期数：比如：三月、半年、一年"/>
       </a-form-model-item>
-      <a-form-model-item label="投资方：甲方" prop="investor">
-        <a-input v-model="form.investor" placeholder="请输入投资方：甲方" />
+      <a-form-model-item label="投资方" prop="investor">
+        <a-input v-model="form.investor" placeholder="请输入投资方：甲方"/>
       </a-form-model-item>
-      <a-form-model-item label="承接单位：乙方" prop="undertakor">
-        <a-input v-model="form.undertakor" placeholder="请输入承接单位：乙方" />
+      <a-form-model-item label="承接方" prop="undertakor">
+        <a-input v-model="form.undertakor" placeholder="请输入承接方：乙方"/>
       </a-form-model-item>
-      <a-form-model-item label="部门" prop="departId">
+      <a-form-model-item label="立项部门" prop="departId">
         <a-tree-select
           v-model="form.departId"
           style="width: 100%"
@@ -198,7 +199,7 @@ import { uploadCover } from '@/api/system/upload'
           }],
           departId: [{
             required: true,
-            message: '部门不能为空',
+            message: '立项部门不能为空',
             trigger: 'blur'
           }],
           dutiorPhone: [
