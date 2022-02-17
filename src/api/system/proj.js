@@ -9,6 +9,14 @@ export function listProj (query) {
   })
 }
 
+export function listAll (query) {
+  return request({
+    url: '/system/proj/listAll',
+    method: 'get',
+    params: query
+  })
+}
+
 // 根据用户查询项目
 export function projsByUser () {
   return request({

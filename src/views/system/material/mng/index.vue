@@ -11,16 +11,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="物料状态" prop="type">
-
-
-                <a-select placeholder="请选择物料状态" v-model="queryParam.type" style="width: 100%" allow-clear>
-
-                  <a-select-option :value="item.id" v-for="item in typeList" :key="item.id">
-                    {{ item.name }}
-                  </a-select-option>
-
-                </a-select>
+              <a-form-item label="项目名称" prop="projName">
+                <a-input v-model="queryParam.projName" placeholder="请输入物料名称" allow-clear/>
               </a-form-item>
             </a-col>
             <template v-if="advanced">
@@ -177,8 +169,10 @@ export default {
         reserveOne: null,
         reserveTwo: null,
         reserveThree: null,
+        startAmt: null,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        projName: null
       },
       columns: [
         {
@@ -188,12 +182,12 @@ export default {
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
-        // {
-        //   title: '项目id',
-        //   dataIndex: 'projId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '项目名称',
+          dataIndex: 'projName',
+          ellipsis: true,
+          align: 'center'
+        },
         {
           title: '采购的单据单号',
           dataIndex: 'materialNo',
@@ -219,11 +213,18 @@ export default {
           align: 'center'
         },
         {
-          title: '物料初期余额',
+          title: '物料期初余额',
+          dataIndex: 'startAmt',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '物料期末余额',
           dataIndex: 'initAmt',
           ellipsis: true,
           align: 'center'
         },
+
         // {
         //   title: '预留字段1',
         //   dataIndex: 'reserveOne',
@@ -292,7 +293,9 @@ export default {
         reserveTwo: undefined,
         reserveThree: undefined,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        startAmt: null,
+        projName: null
       }
       this.handleQuery()
     },
@@ -323,7 +326,8 @@ export default {
       this.$router.push({
         path: '/material/update',
         query: {
-          id: ids,
+          materialId: row.id,
+         projName : row.projName
         }
       })
 

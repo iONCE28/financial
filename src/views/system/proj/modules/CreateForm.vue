@@ -60,9 +60,9 @@
       <a-form-model-item label="承接方" prop="undertakor">
         <a-input v-model="form.undertakor" placeholder="请输入承接方：乙方"/>
       </a-form-model-item>
-      <a-form-model-item label="立项部门" prop="departId">
+      <a-form-model-item label="部门" prop="depart">
         <a-tree-select
-          v-model="form.departId"
+          v-model="form.depart"
           style="width: 100%"
           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
           :tree-data="deptOptions"

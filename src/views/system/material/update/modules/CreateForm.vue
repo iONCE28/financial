@@ -4,8 +4,11 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="项目id" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入"/>
+      <a-form-model-item label="物料id" prop="materialId">
+        <a-input v-model="form.materialId" placeholder="请输入"/>
+      </a-form-model-item>
+      <a-form-model-item label="项目名称" prop="projName">
+        <a-input v-model="form.projName" placeholder="请输入"/>
       </a-form-model-item>
       <a-form-model-item label="变更单号" prop="materialNo">
         <a-input v-model="form.materialNo" placeholder="请输入"/>
@@ -22,29 +25,32 @@
       <a-form-model-item label="变更数量" prop="num">
         <a-input v-model="form.num" placeholder="请输入"/>
       </a-form-model-item>
-      <a-form-model-item label="修改时间" prop="updateTime">
-        <a-input v-model="form.updateTime" placeholder="请输入"/>
+      <a-form-model-item label="部门" prop="deptId">
+        <a-tree-select
+          v-model="form.deptId"
+          style="width: 100%"
+          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          :tree-data="deptOptions"
+          placeholder="请选择"
+          :replaceFields="replaceFields"
+          tree-default-expand-all
+          @change="change"
+        >
+        </a-tree-select>
+        </a-form-model-item>
+       <a-form-model-item label="经办人" prop="handlerId">
+            <a-select placeholder="经办人" v-model="form.handlerId" style="width: 100%">
+          <a-select-option :value="item.staffId" v-for="item in depts" :key="item.staffId">
+            {{ item.staffName }}
+          </a-select-option>
+
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="经办人电话" prop="handlerPhone">
+        <a-input v-model="form.handlerPhone" placeholder="请输入"/>
       </a-form-model-item>
       <a-form-model-item label="说明" prop="remark">
-        <a-input v-model="form.remark" placeholder="请输入简单的摘要信息，如：因物料老化报损"/>
-      </a-form-model-item>
-      <a-form-model-item label="经办人" prop="handler">
-        <a-input v-model="form.handler" placeholder="请输入"/>
-      </a-form-model-item>
-      <a-form-model-item label="经办人id" prop="handlerId">
-        <a-input v-model="form.handlerId" placeholder="请输入"/>
-      </a-form-model-item>
-      <!--            <a-form-model-item label="预留字段1" prop="reserveOne">
-                    <a-input v-model="form.reserveOne" placeholder="请输入" />
-                  </a-form-model-item>
-                  <a-form-model-item label="预留字段2" prop="reserveTwo">
-                    <a-input v-model="form.reserveTwo" placeholder="请输入" />
-                  </a-form-model-item>
-                  <a-form-model-item label="预留字段3" prop="reserveThree">
-                    <a-input v-model="form.reserveThree" placeholder="请输入" />
-                  </a-form-model-item>-->
-      <a-form-model-item label="费用报销日期" prop="createTime">
-        <a-input v-model="form.createTime" placeholder="请输入"/>
+        <a-textarea v-model="form.remark" placeholder="请输入简单的摘要信息，如：因物料老化报损"/>
       </a-form-model-item>
       <div class="bottom-control">
         <a-space>
@@ -63,7 +69,9 @@
 <script>
 import {addUpdate, getUpdate, updateUpdate} from '@/api/material/update'
 import {listStatus} from "@/api/material/status";
-
+import { treeselect } from '@/api/system/dept'
+import { listStaffdept } from '@/api/system/staff'
+import { Modal } from 'ant-design-vue'
 export default {
   name: 'CreateForm',
   props: {},
@@ -72,13 +80,20 @@ export default {
     return {
       loading: false,
       formTitle: '',
+      replaceFields: { children: 'children', title: 'label', key: 'id', value: 'id' },
+      deptOptions: [{
+        id: 0,
+        label: '',
+        children: []
+      }],
+      depts: [],
       // 表单参数
       form: {
         id: null,
         projId: null,
         materialId: null,
         materialNo: null,
-        materialStatus: '0',
+        materialStatus: null,
         num: null,
         updateTime: null,
         remark: null,
@@ -88,7 +103,10 @@ export default {
         reserveTwo: null,
         reserveThree: null,
         createTime: null,
-        delFlag: null
+        delFlag: '0',
+        startAmt: null,
+        handlerPhone: null,
+        projName: null,
       },
       // 1增加,2修改
       formType: 1,
@@ -112,21 +130,20 @@ export default {
         remark: [
           {required: true, message: '说明:简单的摘要信息，如：因物料老化报损不能为空', trigger: 'blur'}
         ],
-        handler: [
-          {required: true, message: '经办人不能为空', trigger: 'blur'}
+        deptId: [
+          {required: true, message: '部门不能为空', trigger: 'blur'}
         ],
         handlerId: [
-          {required: true, message: '经办人id不能为空', trigger: 'blur'}
+          {required: true, message: '经办人不能为空', trigger: 'blur'}
         ],
-        /*   reserveOne: [
-             { required: true, message: '预留字段1不能为空', trigger: 'blur' }
-           ],
-           reserveTwo: [
-             { required: true, message: '预留字段2不能为空', trigger: 'blur' }
-           ],
-           reserveThree: [
-             { required: true, message: '预留字段3不能为空', trigger: 'blur' }
-           ],*/
+        handlerPhone: [
+          { required: true, message: '经办人电话不能为空', trigger: 'blur' },
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: '请正确填写手机号',
+            trigger: 'blur'
+          }
+        ],
       },
       typeList: []
     }
@@ -137,12 +154,23 @@ export default {
     listStatus().then(response => {
       this.typeList = response.rows
     })
+    this.getTreeselect()
   },
   computed: {},
   watch: {},
   mounted() {
   },
   methods: {
+    change(value) {
+      listStaffdept({deptId:value}).then(res => {
+          this.depts = res
+      })
+    },
+    getTreeselect () {
+      treeselect().then(response => {
+        this.deptOptions = response.data
+      })
+    },
     onClose() {
       this.open = false
     },
@@ -152,15 +180,14 @@ export default {
       this.reset()
     },
     // 表单重置
-    reset() {
+    reset(row,rows) {
       this.formType = 1
-      const materialId = this.form.materialId
       this.form = {
         id: null,
         projId: null,
-        materialId: materialId,
+        materialId: row,
         materialNo: null,
-        materialStatus: '0',
+        materialStatus: null,
         num: null,
         updateTime: null,
         remark: null,
@@ -170,12 +197,16 @@ export default {
         reserveTwo: null,
         reserveThree: null,
         createTime: null,
-        delFlag: null
+        delFlag: '0',
+        startAmt: null,
+        handlerPhone: null,
+        projName: rows
       }
     },
     /** 新增按钮操作 */
-    handleAdd(row) {
-      this.reset()
+    handleAdd(row,rows) {
+      console.log(row,rows)
+      this.reset(row,rows)
       this.formType = 1
       this.open = true
       this.formTitle = '添加'
@@ -193,7 +224,11 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$refs.form.validate(valid => {
+       Modal.confirm({
+        title: '提示',
+        content: '',
+        onOk: () => {
+          return this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.id !== undefined && this.form.id !== null) {
             updateUpdate(this.form).then(response => {
@@ -217,6 +252,9 @@ export default {
         } else {
           return false
         }
+      })
+        },
+        onCancel () {}
       })
     }
   }
