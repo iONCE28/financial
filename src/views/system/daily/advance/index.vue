@@ -161,7 +161,7 @@
           {{ index + 1 }}
         </span>
         <span slot="advanceOpenTime" slot-scope="text, record">
-          {{ parseTime(record.advanceOpenTime) }}
+          {{ record.advanceOpenTime }}
         </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:advance:edit']"/>
@@ -195,7 +195,7 @@ import {delAdvance, exportAdvance, listAdvance} from '@/api/system/advance'
 import CreateForm from './modules/CreateForm'
 import {contractSByProj} from "@/api/system/contract";
 import {projsByUser} from "@/api/system/proj";
-
+import {parseTime} from "@/utils/ruoyi";
 export default {
   name: 'Advance',
   components: {
@@ -302,13 +302,13 @@ export default {
         //   align: 'center'
         // },
         {
-          title: '预付账款发生金额',
+          title: '发生金额',
           dataIndex: 'advanceAmt',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '预付账款发生日期',
+          title: '发生日期',
           dataIndex: 'advanceOpenTime',
           scopedSlots: {customRender: 'advanceOpenTime'},
           ellipsis: true,

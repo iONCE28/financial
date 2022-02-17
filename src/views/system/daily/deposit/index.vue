@@ -114,6 +114,11 @@
           <a-icon type="delete"/>
           删除
         </a-button>
+        <a-button type="primary" :disabled="multiple" @click="handleMultiple"
+                  v-hasPermi="['system:SysDepositUpdate:remove']">
+          <a-icon type="pic-center"/>
+          批量清退/退回
+        </a-button>
         <a-button type="primary" @click="handleExport" v-hasPermi="['system:deposit:export']">
           <a-icon type="download"/>
           导出
@@ -131,13 +136,18 @@
         ref="createForm"
         @ok="getList"
       />
+      <!-- 增加修改 -->
+      <update-form
+        ref="updateForm"
+        @ok="getList"
+      />
       <!-- 数据展示 -->
       <a-table
         :loading="loading"
         :size="tableSize"
         rowKey="id"
         :columns="columns"
-        :scroll="{x: 1500 }"
+        :scroll="{x: 1800 }"
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
@@ -145,13 +155,17 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
+<!--          <a-divider type="vertical" v-hasPermi="['system:deposit:edit']"/>-->
+          <!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:deposit:edit']">-->
+          <!--            <a-icon type="edit"/>修改-->
+          <!--          </a>-->
           <a-divider type="vertical" v-hasPermi="['system:deposit:edit']"/>
-          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:deposit:edit']">
-            <a-icon type="edit"/>修改
+           <a @click="handleDetails(record)" v-hasPermi="['system:deposit:remove']">
+            <a-icon type="edit"/>查看详情
           </a>
           <a-divider type="vertical" v-hasPermi="['system:deposit:remove']"/>
-          <a @click="handleDelete(record)" v-hasPermi="['system:deposit:remove']">
-            <a-icon type="delete"/>删除
+          <a @click="$refs.updateForm.handleAdd(record)" v-hasPermi="['system:deposit:remove']">
+            <a-icon type="lock"/>{{ record.depMaxType == 1 ? "清退" : "退回" }}
           </a>
         </span>
       </a-table>
@@ -176,11 +190,13 @@ import {delDeposit, exportDeposit, listDeposit} from '@/api/system/deposit'
 import CreateForm from './modules/CreateForm'
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
+import UpdateForm from '../SysDepositUpdate/modules/UpdateForm'
 
 export default {
   name: 'Deposit',
   components: {
-    CreateForm
+    CreateForm,
+    UpdateForm
   },
   data() {
     return {
@@ -224,7 +240,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          width: '4%',
+          width: '200',
+          fixed: 'left',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
@@ -234,51 +251,63 @@ export default {
         //   ellipsis: true,
         //   align: 'center'
         // },
-        // {
-        //   title: '项目id',
-        //   dataIndex: 'projId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '合同id',
-        //   dataIndex: 'contractId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '结算项目id',
-        //   dataIndex: 'resultProjId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
-          title: '押金单据编号',
+          title: '项目名称',
+          dataIndex: 'projId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '合同名称',
+          dataIndex: 'contractId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '结算项目',
+          dataIndex: 'resultProjId',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '单据编号',
           dataIndex: 'depNo',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '押金收取方',
+          title: '押金大类',
+          dataIndex: 'depMaxType',
+          ellipsis: true,
+          align: 'center'
+        },
+        // {
+        //   title: '押金小类',
+        //   dataIndex: 'depNo',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        {
+          title: '收取方',
           dataIndex: 'depCollecor',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '押金支付方',
+          title: '支付方',
           dataIndex: 'depPaior',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '押金金额',
+          title: '发生金额',
           dataIndex: 'depAmt',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '押金内容',
-          dataIndex: 'depContent',
+          title: '发生日期',
+          dataIndex: 'depTime',
           ellipsis: true,
           align: 'center'
         },
@@ -289,36 +318,32 @@ export default {
           ellipsis: true,
           align: 'center'
         },
+
         // {
-        //   title: '经办人id',
-        //   dataIndex: 'depHandlerId',
+        //   title: '押金收款账户',
+        //   dataIndex: 'depColAccount',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '押金支付账户',
+        //   dataIndex: 'depPayAccount',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '押金收据编号',
+        //   dataIndex: 'depColNo',
+        //   ellipsis: true,
+        //   align: 'center'
+        // },
+        // {
+        //   title: '押金收据影像',
+        //   dataIndex: 'depColImg',
         //   ellipsis: true,
         //   align: 'center'
         // },
         {
-          title: '押金收款账户',
-          dataIndex: 'depColAccount',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '押金支付账户',
-          dataIndex: 'depPayAccount',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '押金收据编号',
-          dataIndex: 'depColNo',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '押金收据影像',
-          dataIndex: 'depColImg',
-          ellipsis: true,
-          align: 'center'
-        }, {
           title: '押金条状态',
           dataIndex: 'depStatus',
           ellipsis: true,
@@ -328,7 +353,8 @@ export default {
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '18%',
+          width: '188',
+          fixed: 'right',
           scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
@@ -345,6 +371,24 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    /*
+    *批量操作
+    * */
+    handleMultiple(row) {
+      var that = this
+      const ids = row.id || this.ids
+      console.log("handleMultiple", ids)
+    },
+    handleDetails(row) {
+      const ids = row.id || this.ids
+
+      this.$router.push({
+        path: '/finance/SysDepositUpdate',
+        query: {
+          id: ids,
+        }
+      })
+    },
     handleProj(value) {
       this.queryParam.projId = value;
       contractSByProj(value).then(response => {
@@ -355,7 +399,7 @@ export default {
     getList() {
       this.loading = true
       listDeposit(this.queryParam).then(response => {
-        this.list = response.rows
+        this.list = response.list
         this.total = response.total
         this.loading = false
       })

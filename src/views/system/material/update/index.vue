@@ -345,7 +345,6 @@ export default {
   //监听路由变化
   watch: {
     $route(to, from) {
-      console.log(to.query.id,"ccc")
       if (to.query.id != from.query.id) {
 
 
@@ -361,8 +360,6 @@ export default {
     this.getList()
   },
   created() {
-    console.log("ccc")
-    console.log(this.$router,"ccc")
     listStatus().then(response => {
       this.typeList = response.rows
     })

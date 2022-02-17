@@ -69,7 +69,7 @@
       </a-row>
 
       <a-form-model-item label="预付账款发生日期" prop="advanceOpenTime">
-        <a-date-picker style="width: 100%" v-model="form.advanceOpenTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.advanceOpenTime" format="YYYY-MM-DD" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="支付账户" prop="payAccount">
         <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear>

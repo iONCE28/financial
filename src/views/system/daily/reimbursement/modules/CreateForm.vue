@@ -76,7 +76,7 @@
         <file-upload v-model="form.image" type="image"></file-upload>
       </a-form-model-item>
       <a-form-model-item label="上传时间" prop="uploadTime">
-        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>
+        <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="支付类别" prop="payType">
         <a-select placeholder="请选择支付类别" v-model="form.payType">

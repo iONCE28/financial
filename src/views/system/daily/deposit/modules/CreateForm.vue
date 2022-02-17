@@ -4,6 +4,9 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
+      <a-form-model-item label="发生日期" prop="depTime">
+        <a-date-picker style="width: 100%" v-model="form.depTime" format="YYYY-MM-DD" allow-clear/>
+      </a-form-model-item>
       <a-form-model-item label="项目" prop="projId">
         <a-select placeholder="请选择项目" v-model="form.projId" @select="handleProj">
           <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
@@ -53,9 +56,8 @@
         </a-col>
       </a-row>
 
-
-      <a-form-model-item label="押金经办人" prop="depHandler">
-        <a-select v-model="form.depHandler" placeholder="请选择押金经办人" style="width: 100%" allow-clear>
+      <a-form-model-item label="押金经办人" prop="depHandlerId">
+        <a-select v-model="form.depHandlerId" placeholder="请选择押金经办人" style="width: 100%" allow-clear>
           <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
           <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
         </a-select>
@@ -71,6 +73,18 @@
       </a-form-model-item>
       <a-form-model-item label="押金收据编号" prop="depColNo">
         <a-input v-model="form.depColNo" placeholder="请输入押金收据编号"/>
+      </a-form-model-item>
+      <a-form-model-item label="押金大类" prop="depMaxType">
+        <a-input v-model="form.depMaxType" placeholder="请输入押金收据编号"/>
+      </a-form-model-item>
+      <a-form-model-item label="押金小类" prop="depMinType">
+        <a-input v-model="form.depMinType" placeholder="请输入押金收据编号"/>
+      </a-form-model-item>
+      <a-form-model-item label="押金条状态" prop="depStatus">
+        <a-radio-group v-model="form.depStatus" button-style="solid">
+          <a-radio-button value="0">收回</a-radio-button>
+          <a-radio-button value="1">退还</a-radio-button>
+        </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="押金收据影像" prop="depColImg">
         <a-upload
@@ -129,6 +143,8 @@ export default {
         contractId: null,
         resultProjId: null,
         depNo: null,
+        depMaxType: null,
+        depMinType: null,
         depCollecor: null,
         depPaior: null,
         depContent: null,
@@ -139,6 +155,8 @@ export default {
         depColAccount: null,
         depPayAccount: null,
         depColNo: null,
+        depTime: null,
+        depStatus: null,
         depColImg: null,
         reserveOne: null,
         reserveTwo: null,
@@ -351,7 +369,11 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+
+
       this.form.depContent = this.depContentEditor.getValue()
+      this.form.depHandler = "测试"
+      this.form.depTime = this.form.depTime.format("YYYY-MM-DD")
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.id !== undefined && this.form.id !== null) {
