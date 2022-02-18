@@ -180,12 +180,12 @@ export default {
       this.reset()
     },
     // 表单重置
-    reset(row,rows) {
+    reset() {
       this.formType = 1
       this.form = {
         id: null,
         projId: null,
-        materialId: row,
+        materialId: localStorage.getItem("materialId"),
         materialNo: null,
         materialStatus: null,
         num: null,
@@ -200,13 +200,12 @@ export default {
         delFlag: '0',
         startAmt: null,
         handlerPhone: null,
-        projName: rows
+        projName: localStorage.getItem("projName")
       }
     },
     /** 新增按钮操作 */
-    handleAdd(row,rows) {
-      console.log(row,rows)
-      this.reset(row,rows)
+    handleAdd() {
+      this.reset()
       this.formType = 1
       this.open = true
       this.formTitle = '添加'

@@ -70,7 +70,8 @@
         :columns="columns"
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        :pagination="false">
+        :pagination="false"
+        :scroll="{ x: 1800 }">
         <span slot="files" slot-scope="text, record" v-if="record.voucher !== ''">
           <a @click="preview(record.voucher)">
             <a-icon type="eye"/>预览
@@ -101,7 +102,6 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:contract:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:contract:edit']">
             <a-icon type="edit"/>修改
           </a>
@@ -196,12 +196,6 @@ export default {
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
-        // {
-        //   title: '合同类型',
-        //   dataIndex: 'type',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '甲方名称',
           dataIndex: 'nailName',
@@ -214,102 +208,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '合同内容',
-        //   dataIndex: 'content',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '结算金额',
           dataIndex: 'closeAmount',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '结算项目',
-        //   dataIndex: 'closeProj',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '投资方',
-        //   dataIndex: 'investor',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '合同凭证',
-        //   dataIndex: 'voucher',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '结算账户',
-        //   dataIndex: 'account',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '开户银行',
-        //   dataIndex: 'openBank',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '付款周期数：年月日',
-        //   dataIndex: 'payCycle',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '付款条件',
-        //   dataIndex: 'payCondition',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '付款金额',
-        //   dataIndex: 'payAmount',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '付款提醒方式：短信，邮箱等',
-        //   dataIndex: 'payCallType',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收款周期数:',
-        //   dataIndex: 'harvestCycle',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收款条件',
-        //   dataIndex: 'harvestCondition',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收款金额',
-        //   dataIndex: 'harvestAmount',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '收款提醒方式：短信，邮箱等',
-        //   dataIndex: 'harvestCallType',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '项目id',
-        //   dataIndex: 'projId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '合同名称',
           dataIndex: 'constractName',
@@ -382,9 +286,10 @@ export default {
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '18%',
+          width: 180,
           scopedSlots: {customRender: 'operation'},
-          align: 'center'
+          align: 'center',
+          fixed: 'right',
         }
       ]
     }
