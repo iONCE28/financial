@@ -78,11 +78,7 @@
                   <a-input v-model="queryParam.depColNo" placeholder="请输入押金收据编号" allow-clear/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="押金收据影像" prop="depColImg">
-                  <a-input v-model="queryParam.depColImg" placeholder="请输入押金收据影像" allow-clear/>
-                </a-form-item>
-              </a-col>
+
 
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
@@ -119,10 +115,7 @@
           <a-icon type="pic-center"/>
           批量清退/退回
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:deposit:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button>
+
         <a-button
           type="dashed"
           shape="circle"
@@ -147,12 +140,15 @@
         :size="tableSize"
         rowKey="id"
         :columns="columns"
-        :scroll="{x: 1800 }"
+        :scroll="{x: 'max-content' }"
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
          <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
+        </span>
+        <span slot="formatDepMaxType" slot-scope="text, record, index">
+          {{ formatDepMaxType(record) }}
         </span>
         <span slot="operation" slot-scope="text, record">
 <!--          <a-divider type="vertical" v-hasPermi="['system:deposit:edit']"/>-->
@@ -200,6 +196,10 @@ export default {
   },
   data() {
     return {
+      depMaxTypeList: [
+        {value: 0, label: "收取"},
+        {value: 1, label: "支付"}
+      ],
       contracts: [],
       projs: [],
       list: [],
@@ -240,17 +240,11 @@ export default {
         {
           title: '序号',
           key: 'number',
-          width: '200',
+          ellipsis: true,
           fixed: 'left',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
-        // {
-        //   title: '押金ID',
-        //   dataIndex: 'id',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '项目名称',
           dataIndex: 'projId',
@@ -276,17 +270,12 @@ export default {
           align: 'center'
         },
         {
-          title: '押金大类',
+          title: '押金类别',
           dataIndex: 'depMaxType',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: {customRender: 'formatDepMaxType'},
         },
-        // {
-        //   title: '押金小类',
-        //   dataIndex: 'depNo',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '收取方',
           dataIndex: 'depCollecor',
@@ -311,49 +300,70 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-
         {
-          title: '押金经办人',
+          title: '押金内容',
           dataIndex: 'depHandler',
           ellipsis: true,
           align: 'center'
         },
-
-        // {
-        //   title: '押金收款账户',
-        //   dataIndex: 'depColAccount',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '押金支付账户',
-        //   dataIndex: 'depPayAccount',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '押金收据编号',
-        //   dataIndex: 'depColNo',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '押金收据影像',
-        //   dataIndex: 'depColImg',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '收付方式',
+          dataIndex: 'depHandler',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户名称',
+          dataIndex: 'depHandler',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户开户行',
+          dataIndex: 'depHandler',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户号码',
+          dataIndex: 'depColAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '收据编号',
+          dataIndex: 'depColNo',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '收据影像',
+          dataIndex: 'depColImg',
+          ellipsis: true,
+          align: 'center'
+        },
         {
           title: '押金条状态',
           dataIndex: 'depStatus',
           ellipsis: true,
           align: 'center'
         },
-
+        {
+          title: '清退状态',
+          dataIndex: 'depStatus',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '金额',
+          dataIndex: 'depStatus',
+          ellipsis: true,
+          align: 'center'
+        },
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '188',
+          width: 188,
           fixed: 'right',
           scopedSlots: {customRender: 'operation'},
           align: 'center'
@@ -371,6 +381,14 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    formatDepMaxType(row) {
+      for (let i = 0; i < this.depMaxTypeList.length; i++) {
+        if (row.depMaxType == this.depMaxTypeList[i].value) {
+          return this.depMaxTypeList[i].label
+        }
+      }
+      return "/"
+    },
     /*
     *批量操作
     * */
@@ -380,12 +398,14 @@ export default {
       console.log("handleMultiple", ids)
     },
     handleDetails(row) {
-      const ids = row.id || this.ids
+      const ids = row.id
+      const depNo = row.depNo
 
       this.$router.push({
         path: '/finance/SysDepositUpdate',
         query: {
           id: ids,
+          depNo: depNo,
         }
       })
     },

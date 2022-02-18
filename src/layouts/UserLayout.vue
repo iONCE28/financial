@@ -4,8 +4,8 @@
       <div class="top">
         <div class="header">
           <a href="/">
-            <img src="~@/assets/logo.png" class="logo" alt="logo">
-            <span class="title">后台管理</span>
+            <!--            <img src="~@/assets/logo.png" class="logo" alt="logo">-->
+            <span class="title">影视现场账务管理系统</span>
           </a>
         </div>
         <div class="desc">

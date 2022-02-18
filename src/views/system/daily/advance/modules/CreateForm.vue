@@ -92,13 +92,6 @@
         </a-col>
       </a-row>
 
-
-      <a-form-model-item label="冲销状态" prop="writeoffStatus">
-        <a-radio-group v-model="form.writeoffStatus" button-style="solid">
-          <a-radio-button value="0">未冲销</a-radio-button>
-          <a-radio-button value="1">已冲销</a-radio-button>
-        </a-radio-group>
-      </a-form-model-item>
       <a-form-model-item label="备注" prop="remark">
         <a-input v-model="form.remark" placeholder="请输入备注"/>
       </a-form-model-item>
@@ -128,6 +121,7 @@ import {addAdvance, getAdvance, updateAdvance} from '@/api/system/advance'
 import {capitalAmount} from "@/utils/util";
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
+import moment from "moment";
 
 export default {
   name: 'CreateForm',
@@ -302,6 +296,12 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      if (this.form.advanceOpenTime instanceof moment) {
+        this.form.advanceOpenTime = this.form.advanceOpenTime.format("YYYY-MM-DD")
+      }
+      this.form.handlerId = 1;
+      this.form.advancePayId = 1;
+      this.form.advanceColId = 1;
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.id !== undefined && this.form.id !== null) {

@@ -5,28 +5,30 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="合同名称" prop="contractName">
-                  <a-input v-model="queryParam.contractName" placeholder="请输入合同名称" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="资金流水号" prop="colpayNo">
-                  <a-input v-model="queryParam.colpayNo" placeholder="请输入资金流水号" allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款开始时间" prop="colpayTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.colpayStartTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss"
-                                 allow-clear/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="收款开始时间" prop="colpayTime">
-                  <a-date-picker style="width: 100%" v-model="queryParam.colpayEndTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss"
-                                 allow-clear/>
-                </a-form-item>
-              </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="合同名称" prop="contractName">
+                <a-input v-model="queryParam.contractName" placeholder="请输入合同名称" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="资金流水号" prop="colpayNo">
+                <a-input v-model="queryParam.colpayNo" placeholder="请输入资金流水号" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="收款开始时间" prop="colpayTime">
+                <a-date-picker style="width: 100%" v-model="queryParam.colpayStartTime" format="YYYY-MM-DD HH:mm:ss"
+                               valueFormat="YYYY-MM-DD HH:mm:ss"
+                               allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="收款开始时间" prop="colpayTime">
+                <a-date-picker style="width: 100%" v-model="queryParam.colpayEndTime" format="YYYY-MM-DD HH:mm:ss"
+                               valueFormat="YYYY-MM-DD HH:mm:ss"
+                               allow-clear/>
+              </a-form-item>
+            </a-col>
             <template v-if="advanced">
 
               <a-col :md="8" :sm="24">
@@ -79,10 +81,10 @@
           <a-icon type="delete"/>
           删除
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:colpaydec:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button>
+        <!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:colpaydec:export']">
+                  <a-icon type="download"/>
+                  导出
+                </a-button>-->
         <a-button
           type="dashed"
           shape="circle"
@@ -148,11 +150,11 @@ export default {
   data() {
     return {
       colpayTypes: [
-        {id:"0",val:"合同收款"},
-        {id:"1",val:"其它收款"}],
+        {id: "0", val: "合同收款"},
+        {id: "1", val: "其它收款"}],
       colpayWays: [
-        {id:"0",val:"现金"},
-        {id:"1",val:"银行"}],
+        {id: "0", val: "现金"},
+        {id: "1", val: "银行"}],
       list: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -184,19 +186,13 @@ export default {
       },
       columns: [
         {
-          title: '收款记录ID',
+          title: '序号',
           dataIndex: 'id',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '合同id',
-          dataIndex: 'contractId',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '项目id',
+          title: '项目名称',
           dataIndex: 'projId',
           ellipsis: true,
           align: 'center'
@@ -208,27 +204,14 @@ export default {
           align: 'center'
         },
         {
-          title: '资金流水号',
+          title: '收款类型',
+          dataIndex: 'colpaySource',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '单据编号',
           dataIndex: 'colpayNo',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '收款时间',
-          dataIndex: 'colpayTime',
-          scopedSlots: {customRender: 'colpayTime'},
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '收款金额',
-          dataIndex: 'colpayAmt',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '收款说明',
-          dataIndex: 'colpayDec',
           ellipsis: true,
           align: 'center'
         },
@@ -239,14 +222,46 @@ export default {
           align: 'center'
         },
         {
-          title: '经办人',
+          title: '发生金额',
+          dataIndex: 'colpayAmt',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '发生日期',
+          dataIndex: 'colpayTime',
+          scopedSlots: {customRender: 'colpayTime'},
+          ellipsis: true,
+          align: 'center'
+        },
+
+        {
+          title: '收款说明',
+          dataIndex: 'colpayDec',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '收款方式',
+          dataIndex: 'colpayDec',
+          ellipsis: true,
+          align: 'center'
+        },
+
+        {
+          title: '账户名称',
           dataIndex: 'handler',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '经办人id',
-          dataIndex: 'handlerId',
+          title: '账户开户行',
+          dataIndex: 'handler',
+          ellipsis: true,
+          align: 'center'
+        }, {
+          title: '账户号码',
+          dataIndex: 'handler',
           ellipsis: true,
           align: 'center'
         },

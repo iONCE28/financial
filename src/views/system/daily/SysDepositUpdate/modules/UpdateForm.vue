@@ -42,6 +42,7 @@
 <script>
 import {getSysDepositUpdate, addSysDepositUpdate, updateSysDepositUpdate} from '@/api/system/SysDepositUpdate'
 import {capitalAmount} from "@/utils/util";
+import moment from "moment";
 
 export default {
   name: 'CreateForm',
@@ -65,7 +66,13 @@ export default {
       // 1增加,2修改
       formType: 1,
       open: false,
-      rules: {}
+      rules: {
+        depAmt: [
+          {required: true, message: '押金金额不能为空', trigger: 'blur'}
+        ], depTime: [
+          {required: true, message: '发生日期不能为空', trigger: 'blur'}
+        ],
+      }
     }
   },
   filters: {},
@@ -130,7 +137,9 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.form.depTime = this.form.depTime.format("YYYY-MM-DD")
+      if (this.form.depTime instanceof moment) {
+        this.form.depTime = this.form.depTime.format("YYYY-MM-DD")
+      }
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.id !== undefined && this.form.id !== null) {

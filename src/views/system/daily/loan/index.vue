@@ -45,9 +45,11 @@
                 <a-form-item label="个人借款类别" prop="loanType">
                   <a-select placeholder="请选择个人借款类别" v-model="queryParam.loanType" style="width: 100%"
                             allow-clear>
-                    <a-select-option :value="0" :key="0">支付借款</a-select-option>
-                    <a-select-option :value="2" :key="2">报销借款</a-select-option>
-                    <a-select-option :value="3" :key="3">归还借款</a-select-option>
+                    <a-select-option :value="item.value" :key="item.value" v-for="(item) in loanTypeList ">{{
+                        item.label
+                      }}
+                    </a-select-option>
+
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -121,10 +123,7 @@
           <a-icon type="delete"/>
           删除
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:loan:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button>
+
         <a-button
           type="dashed"
           shape="circle"
@@ -148,6 +147,15 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+         <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
+        <span slot="formatLoanType" slot-scope="text, record, index">
+          {{ formatLoanType(record) }}
+        </span>
+        <span slot="formatWriteoffStatus" slot-scope="text, record, index">
+          {{ formatWriteoffStatus(record) }}
+        </span>
         <span slot="operation" slot-scope="text, record">
           <a-divider type="vertical" v-hasPermi="['system:loan:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:loan:edit']">
@@ -188,6 +196,11 @@ export default {
   },
   data() {
     return {
+      loanTypeList: [
+        {value: 0, label: "支付借款"},
+        {value: 2, label: "报销借款"},
+        {value: 3, label: "归还借款"},
+      ],
       contractsList: [],
       projsList: [],
       list: [],
@@ -225,19 +238,21 @@ export default {
       },
       columns: [
         {
-          title: '个人借款ID',
-          dataIndex: 'id',
+          title: '序号',
+          key: 'number',
+          ellipsis: true,
+          fixed: "left",
+          scopedSlots: {customRender: 'serial'},
+          align: 'center'
+        },
+        {
+          title: '项目名称',
+          dataIndex: 'projName',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '项目',
-          dataIndex: 'projId',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '合同',
+          title: '合同名称',
           dataIndex: 'contractId',
           ellipsis: true,
           align: 'center'
@@ -249,16 +264,17 @@ export default {
           align: 'center'
         },
         {
-          title: '个人借款单据编号',
+          title: '单据编号',
           dataIndex: 'resultContractNo',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '个人借款类别',
+          title: '借款类别',
           dataIndex: 'loanType',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: {customRender: 'formatLoanType'},
         },
         {
           title: '借款人',
@@ -266,26 +282,32 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '借款人id：关联个人ID支持费用报销的联查预付款~',
-        //   dataIndex: 'borrowerId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
-          title: '个人借款事由摘要',
-          dataIndex: 'abstracted',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '个人借款发生金额',
+          title: '发生金额',
           dataIndex: 'amount',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '支付账户',
+          title: '收款方式',
+          dataIndex: 'amount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户名称',
+          dataIndex: 'payAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户开户行',
+          dataIndex: 'payAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户号码',
           dataIndex: 'payAccount',
           ellipsis: true,
           align: 'center'
@@ -294,7 +316,8 @@ export default {
           title: '冲销状态',
           dataIndex: 'writeoffStatus',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: {customRender: 'formatWriteoffStatus'},
         },
         {
           title: '备注',
@@ -302,22 +325,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
-          title: '经办人',
-          dataIndex: 'handler',
-          ellipsis: true,
-          align: 'center'
-        },
-        // {
-        //   title: '经办人id',
-        //   dataIndex: 'handlerId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '18%',
+          width: 160,
+          fixed: "right",
           scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
@@ -334,6 +347,22 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    formatWriteoffStatus(record) {
+      //退回
+      if (record.loanType == 1) {
+        return ""
+      }
+      return record.writeoffStatus == 0 ? "未冲销" : "已冲销"
+
+    },
+    formatLoanType(row) {
+      for (let i = 0; i < this.loanTypeList.length; i++) {
+        if (row.loanType == this.loanTypeList[i].value) {
+          return this.loanTypeList[i].label
+        }
+      }
+      return "/"
+    },
     handleProj(value) {
       this.queryParam.projId = value;
       contractSByProj(value).then(response => {

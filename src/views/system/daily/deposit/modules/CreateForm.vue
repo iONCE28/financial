@@ -62,29 +62,24 @@
           <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
         </a-select>
       </a-form-model-item>
-      <!--      <a-form-model-item label="经办人id" prop="depHandlerId">-->
-      <!--        <a-input v-model="form.depHandlerId" placeholder="请输入经办人id"/>-->
-      <!--      </a-form-model-item>-->
       <a-form-model-item label="押金收款账户" prop="depColAccount">
         <a-input v-model="form.depColAccount" placeholder="请输入押金收款账户"/>
       </a-form-model-item>
       <a-form-model-item label="押金支付账户" prop="depPayAccount">
         <a-input v-model="form.depPayAccount" placeholder="请输入押金支付账户"/>
       </a-form-model-item>
+
+      <a-form-model-item label="押金类别" prop="depMaxType">
+        <a-select v-model="form.depMaxType" placeholder="请选择押金类别" :default-value="0" style="width: 100%" allow-clear>
+          <a-select-option :value="item.value" v-for="(item,index ) in depMaxTypeList" :key="item.value">{{
+              item.label
+            }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+
       <a-form-model-item label="押金收据编号" prop="depColNo">
         <a-input v-model="form.depColNo" placeholder="请输入押金收据编号"/>
-      </a-form-model-item>
-      <a-form-model-item label="押金大类" prop="depMaxType">
-        <a-input v-model="form.depMaxType" placeholder="请输入押金收据编号"/>
-      </a-form-model-item>
-      <a-form-model-item label="押金小类" prop="depMinType">
-        <a-input v-model="form.depMinType" placeholder="请输入押金收据编号"/>
-      </a-form-model-item>
-      <a-form-model-item label="押金条状态" prop="depStatus">
-        <a-radio-group v-model="form.depStatus" button-style="solid">
-          <a-radio-button value="0">收回</a-radio-button>
-          <a-radio-button value="1">退还</a-radio-button>
-        </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="押金收据影像" prop="depColImg">
         <a-upload
@@ -100,7 +95,12 @@
           <a-icon :type="loading"/>
         </a-upload>
       </a-form-model-item>
-
+      <a-form-model-item label="押金条状态" prop="depStatus">
+        <a-radio-group v-model="form.depStatus" button-style="solid">
+          <a-radio-button value="0">收回</a-radio-button>
+          <a-radio-button value="1">退还</a-radio-button>
+        </a-radio-group>
+      </a-form-model-item>
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -123,6 +123,7 @@ import {uploadCover} from "@/api/system/upload";
 import {capitalAmount} from "@/utils/util";
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
+import moment from "moment";
 
 export default {
   name: 'CreateForm',
@@ -130,6 +131,10 @@ export default {
   components: {},
   data() {
     return {
+      depMaxTypeList: [
+        {value: 0, label: "收取"},
+        {value: 1, label: "支付"}
+      ],
       contractsList: [],
       projs: [],
       fileList: [],
@@ -169,8 +174,13 @@ export default {
       formType: 1,
       open: false,
       rules: {
+        depMaxType: [
+          {required: true, message: '押金类别不能为空', trigger: 'blur'}
+        ],
         projId: [
           {required: true, message: '项目不能为空', trigger: 'blur'}
+        ], depTime: [
+          {required: true, message: '发生日期不能为空', trigger: 'blur'}
         ],
         depNo: [
           {required: true, message: '押金单据编号不能为空', trigger: 'blur'}
@@ -370,10 +380,11 @@ export default {
     /** 提交按钮 */
     submitForm: function () {
 
-
       this.form.depContent = this.depContentEditor.getValue()
       this.form.depHandler = "测试"
-      this.form.depTime = this.form.depTime.format("YYYY-MM-DD")
+      if (this.form.depTime instanceof moment) {
+        this.form.depTime = this.form.depTime.format("YYYY-MM-DD")
+      }
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.id !== undefined && this.form.id !== null) {

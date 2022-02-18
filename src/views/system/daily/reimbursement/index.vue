@@ -153,10 +153,10 @@
           <a-icon type="delete"/>
           删除
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:reimbursement:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button>
+        <!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:reimbursement:export']">
+                  <a-icon type="download"/>
+                  导出
+                </a-button>-->
         <a-button
           type="dashed"
           shape="circle"
@@ -180,6 +180,9 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
+           <span slot="serial" slot-scope="text, record, index">
+          {{ index + 1 }}
+        </span>
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
         </span>
@@ -269,19 +272,21 @@ export default {
       },
       columns: [
         {
-          title: '费用报销ID',
-          dataIndex: 'id',
+          title: '序号',
+          key: 'number',
+          fixed: "left",
           ellipsis: true,
+          scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         {
-          title: '项目',
+          title: '项目名称',
           dataIndex: 'projId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '合同',
+          title: '合同名称',
           dataIndex: 'contractId',
           ellipsis: true,
           align: 'center'
@@ -293,7 +298,7 @@ export default {
           align: 'center'
         },
         {
-          title: '费用报销单据编号',
+          title: '单据编号',
           dataIndex: 'reimbursementNo',
           ellipsis: true,
           align: 'center'
@@ -310,12 +315,6 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '关联单位id',
-        //   dataIndex: 'affiliatedUnitId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '关联个人',
           dataIndex: 'affiliatedPerson',
@@ -323,29 +322,17 @@ export default {
           align: 'center'
         },
         // {
-        //   title: '关联个人id',
-        //   dataIndex: 'affiliatedPersonId',
+        //   title: '备注',
+        //   dataIndex: 'remark',
         //   ellipsis: true,
         //   align: 'center'
         // },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-          ellipsis: true,
-          align: 'center'
-        },
         {
           title: '经办人',
           dataIndex: 'handler',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '经办人id',
-        //   dataIndex: 'handlerId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '代办标识',
           dataIndex: 'agencyLogo',
@@ -359,7 +346,7 @@ export default {
           align: 'center'
         },
         {
-          title: '摘要',
+          title: '费用摘要',
           dataIndex: 'abstract',
           ellipsis: true,
           align: 'center'
@@ -371,7 +358,7 @@ export default {
           align: 'center'
         },
         {
-          title: '发票张树',
+          title: '发票张数',
           dataIndex: 'invoiceNum',
           ellipsis: true,
           align: 'center'
@@ -383,40 +370,53 @@ export default {
           align: 'center'
         },
         {
-          title: '上传时间',
-          dataIndex: 'uploadTime',
-          scopedSlots: {customRender: 'uploadTime'},
-          ellipsis: true,
-          align: 'center'
-        },
-        {
           title: '支付类别',
           dataIndex: 'payType',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '报销支付账户名称',
+          title: '关联单号',
+          dataIndex: 'payType',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '支付方式',
+          dataIndex: 'payType',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户名称',
           dataIndex: 'reimbPayName',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '报销支付账户开户行',
+          title: '账户开户行',
           dataIndex: 'reimbPayBank',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '报销支付账户号码',
+          title: '账户号码',
           dataIndex: 'reimbPayNo',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '报销日期',
+          dataIndex: 'uploadTime',
+          scopedSlots: {customRender: 'uploadTime'},
           ellipsis: true,
           align: 'center'
         },
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '18%',
+          width: 160,
+          fixed: "right",
           scopedSlots: {customRender: 'operation'},
           align: 'center'
         }

@@ -24,7 +24,7 @@ export default {
   menu: {
     locale: true
   },
-  title: '管理系统',
+  title: '影视现场账务管理系统',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true',

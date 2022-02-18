@@ -5,26 +5,26 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="押金id" prop="depId">
-                <a-input v-model="queryParam.depId" placeholder="请输入押金id" allow-clear/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="押金大类" prop="depMaxType">
-                <a-select placeholder="请选择押金大类" v-model="queryParam.depMaxType" style="width: 100%" allow-clear>
-                  <a-select-option>请选择字典生成</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+            <!--        <a-col :md="8" :sm="24">
+                   <a-form-item label="押金id" prop="depId">
+                     <a-input v-model="queryParam.depId" placeholder="请输入押金id" allow-clear/>
+                   </a-form-item>
+                 </a-col>
+                 <a-col :md="8" :sm="24">
+                   <a-form-item label="押金大类" prop="depMaxType">
+                     <a-select placeholder="请选择押金大类" v-model="queryParam.depMaxType" style="width: 100%" allow-clear>
+                       <a-select-option>请选择字典生成</a-select-option>
+                     </a-select>
+                   </a-form-item>
+                 </a-col>-->
             <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="押金小类" prop="depMinType">
-                  <a-select placeholder="请选择押金小类" v-model="queryParam.depMinType" style="width: 100%" allow-clear>
-                    <a-select-option>请选择字典生成</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
+              <!--              <a-col :md="8" :sm="24">-->
+              <!--                <a-form-item label="押金小类" prop="depMinType">-->
+              <!--                  <a-select placeholder="请选择押金小类" v-model="queryParam.depMinType" style="width: 100%" allow-clear>-->
+              <!--                    <a-select-option>请选择字典生成</a-select-option>-->
+              <!--                  </a-select>-->
+              <!--                </a-form-item>-->
+              <!--              </a-col>-->
               <a-col :md="8" :sm="24">
                 <a-form-item label="押金金额" prop="depAmt">
                   <a-input v-model="queryParam.depAmt" placeholder="请输入押金金额" allow-clear/>
@@ -75,10 +75,7 @@
           删除
         </a-button>
 
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:SysDepositUpdate:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button>
+
         <a-button
           type="dashed"
           shape="circle"
@@ -179,18 +176,6 @@ export default {
         //   align: 'center'
         // },
         {
-          title: '押金大类',
-          dataIndex: 'depMaxType',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '押金小类',
-          dataIndex: 'depMinType',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
           title: '押金金额',
           dataIndex: 'depAmt',
           ellipsis: true,
@@ -204,7 +189,7 @@ export default {
           align: 'center'
         },
         {
-          title: '押金状态',
+          title: '押金条状态',
           dataIndex: 'depStatus',
           ellipsis: true,
           align: 'center'
@@ -233,8 +218,9 @@ export default {
   //监听路由变化
   watch: {
     $route(to, from) {
-      if (to.query.id != from.query.id) {
+      if ((to.query.id != from.query.id) && (to.query.depNo != from.query.depNo)) {
         this.queryParam.depId = to.query.id
+        this.queryParam.de = to.query.id
         this.$refs.updateForm.form.depId = this.queryParam.depId
         //加载数据
         this.getList()

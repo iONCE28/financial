@@ -51,21 +51,13 @@
                   <a-input v-model="queryParam.advancePayer" placeholder="请输入预付账款付款方" allow-clear/>
                 </a-form-item>
               </a-col>
-              <!--              <a-col :md="8" :sm="24">-->
-              <!--                <a-form-item label="预付账款付款方id" prop="advancePayId">-->
-              <!--                  <a-input v-model="queryParam.advancePayId" placeholder="请输入预付账款付款方id" allow-clear/>-->
-              <!--                </a-form-item>-->
-              <!--              </a-col>-->
+
               <a-col :md="8" :sm="24">
                 <a-form-item label="预付账款收款方" prop="advanceColer">
                   <a-input v-model="queryParam.advanceColer" placeholder="请输入预付账款收款方" allow-clear/>
                 </a-form-item>
               </a-col>
-              <!--              <a-col :md="8" :sm="24">-->
-              <!--                <a-form-item label="预付账款收款方id" prop="advanceColId">-->
-              <!--                  <a-input v-model="queryParam.advanceColId" placeholder="请输入预付账款收款方id" allow-clear/>-->
-              <!--                </a-form-item>-->
-              <!--              </a-col>-->
+
               <a-col :md="8" :sm="24">
                 <a-form-item label="预付账款发生金额" prop="advanceAmt">
                   <a-input v-model="queryParam.advanceAmt" placeholder="请输入预付账款发生金额" allow-clear/>
@@ -130,10 +122,10 @@
           <a-icon type="delete"/>
           删除
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:advance:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button>
+        <!--        <a-button type="primary" @click="handleExport" v-hasPermi="['system:advance:export']">
+                  <a-icon type="download"/>
+                  导出
+                </a-button>-->
         <a-button
           type="dashed"
           shape="circle"
@@ -159,6 +151,11 @@
         :pagination="false">
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
+        </span>
+        <span slot="formatAdvanceType" slot-scope="text, record, index">
+          {{ record.advanceType == 0 ? "协议支付" : "预付退回" }}
+        </span> <span slot="formatWriteoffStatus" slot-scope="text, record, index">
+          {{ formatWriteoffStatus(record) }}
         </span>
         <span slot="advanceOpenTime" slot-scope="text, record">
           {{ record.advanceOpenTime }}
@@ -196,6 +193,7 @@ import CreateForm from './modules/CreateForm'
 import {contractSByProj} from "@/api/system/contract";
 import {projsByUser} from "@/api/system/proj";
 import {parseTime} from "@/utils/ruoyi";
+
 export default {
   name: 'Advance',
   components: {
@@ -244,17 +242,19 @@ export default {
         {
           title: '序号',
           key: 'number',
+          ellipsis: true,
+          fixed: 'left',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
         {
-          title: '项目',
+          title: '项目名称',
           dataIndex: 'projId',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '合同',
+          title: '合同名称',
           dataIndex: 'contractId',
           ellipsis: true,
           align: 'center'
@@ -272,35 +272,24 @@ export default {
           align: 'center'
         },
         {
-          title: '账款类别',
+          title: '预付类别',
           dataIndex: 'advanceType',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: {customRender: 'formatAdvanceType'},
         },
         {
-          title: '付款方',
+          title: '收取方',
           dataIndex: 'advancePayer',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '预付账款付款方id',
-        //   dataIndex: 'advancePayId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
-          title: '收款方',
+          title: '支付方',
           dataIndex: 'advanceColer',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '预付账款收款方id',
-        //   dataIndex: 'advanceColId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '发生金额',
           dataIndex: 'advanceAmt',
@@ -315,7 +304,25 @@ export default {
           align: 'center'
         },
         {
-          title: '支付账户',
+          title: '收取方式',
+          dataIndex: 'payAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户名称',
+          dataIndex: 'payAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户开户行',
+          dataIndex: 'payAccount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '账户号码',
           dataIndex: 'payAccount',
           ellipsis: true,
           align: 'center'
@@ -324,7 +331,8 @@ export default {
           title: '冲销状态',
           dataIndex: 'writeoffStatus',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: {customRender: 'formatWriteoffStatus'},
         },
         {
           title: '备注',
@@ -332,22 +340,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
+
         {
-          title: '经办人',
-          dataIndex: 'handler',
-          ellipsis: true,
-          align: 'center'
-        },
-        // {
-        //   title: '经办人id',
-        //   dataIndex: 'handlerId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        {
+          fixed: 'right',
           title: '操作',
           dataIndex: 'operation',
-          width: '18%',
+          width: 150,
           scopedSlots: {customRender: 'operation'},
           align: 'center'
         }
@@ -364,6 +362,14 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    formatWriteoffStatus(record) {
+      //退回
+      if (record.advanceType == 1) {
+        return ""
+      }
+      return record.writeoffStatus == 0 ? "未冲销" : "已冲销"
+
+    },
     handleProj(value) {
       this.queryParam.projId = value;
       contractSByProj(value).then(response => {
