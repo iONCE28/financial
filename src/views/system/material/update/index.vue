@@ -283,10 +283,21 @@ export default {
   filters: {},
   //监听路由变化
   watch: {
+    $route(to, from) {
+      console.log(to.query.materialNo,"ccc")
+      if (to.query.materialId != from.query.materialId) {
+        this.queryParam.materialId = to.query.materialId
+        this.queryParam.projName= to.query.projName
+        localStorage.setItem("materialId", to.query.materialId)
+        localStorage.setItem("projName",to.query.projName)
+        //加载数据
+        this.getList()
+      }
+    }
   },
   mounted() {
     //加载数据
-        this.queryParam.materialId = this.$route.query.materialId
+       this.queryParam.materialId = this.$route.query.materialId
         this.queryParam.projName= this.$route.query.projName
         localStorage.setItem("materialId", this.$route.query.materialId)
         localStorage.setItem("projName",this.$route.query.projName)
