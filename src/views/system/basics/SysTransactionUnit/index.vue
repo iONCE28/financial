@@ -83,8 +83,8 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false">
-         <span slot="typeRender" slot-scope="text, record, index">
-        {{ record.type == 0 ? "公司" : type == 1 ? "个人" : "/" }}
+         <span slot="typeRender" slot-scope="text, record">
+        {{ record.type == 0 ? "公司" : "个人" }}
       </span>
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
