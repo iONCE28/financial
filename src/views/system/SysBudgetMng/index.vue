@@ -7,31 +7,20 @@
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
               <a-form-item label="科目名称" prop="name">
-                <a-select placeholder="请选择科目名称" v-model="queryParam.name" style="width: 100%" allow-clear>
-                  <a-select-option>请选择字典生成</a-select-option>
-                </a-select>
+               <a-input v-model="queryParam.name" placeholder="请输入科目名称" allow-clear/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="预算属性" prop="attribute">
-                <a-select placeholder="请选择预算属性" v-model="queryParam.attribute" style="width: 100%" allow-clear>
-                  <a-select-option value="0">收入科目</a-select-option>
-                  <a-select-option value="1">支出科目</a-select-option>
-
-                </a-select>
+                <a-input v-model="queryParam.attribute" placeholder="请输入预算属性" allow-clear/>
               </a-form-item>
             </a-col>
-            <!--            <a-col :md="8" :sm="24">
-                          <a-form-item label="预算金额" prop="amount">
-                            <a-input v-model="queryParam.amount" placeholder="请输入预算金额" allow-clear/>
-                          </a-form-item>
-                        </a-col>-->
             <template v-if="advanced">
-              <!--              <a-col :md="8" :sm="24">
-                              <a-form-item label="项目id" prop="projId">
-                                <a-input v-model="queryParam.projId" placeholder="请输入项目id" allow-clear/>
-                              </a-form-item>
-                            </a-col>-->
+               <a-col :md="8" :sm="24">
+              <a-form-item label="项目名称" prop="projName">
+                <a-input v-model="queryParam.projName" placeholder="请输入项目名称" allow-clear/>
+              </a-form-item>
+            </a-col>
 
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
@@ -95,7 +84,6 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:SysBudgetMng:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysBudgetMng:edit']">
             <a-icon type="edit"/>修改
           </a>
@@ -152,7 +140,8 @@ export default {
         projId: null,
         attribute: null,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        projName:''
       },
       columns: [
         {
@@ -165,6 +154,12 @@ export default {
         {
           title: '科目名称',
           dataIndex: 'name',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '项目名称',
+          dataIndex: 'projName',
           ellipsis: true,
           align: 'center'
         },
@@ -187,13 +182,12 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        /*   {
-             title: '项目id',
-             dataIndex: 'projId',
+         {
+             title: '创建时间',
+             dataIndex: 'updateTime',
              ellipsis: true,
              align: 'center'
            },
-         */
         {
           title: '操作',
           dataIndex: 'operation',
@@ -237,7 +231,8 @@ export default {
         projId: undefined,
         attribute: undefined,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        projName:''
       }
       this.handleQuery()
     },
@@ -270,7 +265,6 @@ export default {
         onOk() {
           return delSysBudgetMng(ids)
             .then(() => {
-              that.onSelectChange([], [])
               that.getList()
               that.$message.success(
                 '删除成功',
