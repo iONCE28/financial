@@ -297,8 +297,6 @@ export default {
   },
   mounted() {
     //加载数据
-       this.queryParam.materialId = this.$route.query.materialId
-        this.queryParam.projName= this.$route.query.projName
         localStorage.setItem("materialId", this.$route.query.materialId)
         localStorage.setItem("projName",this.$route.query.projName)
     this.getList()
@@ -332,7 +330,7 @@ export default {
       this.queryParam = {
         id: undefined,
         projId: undefined,
-        materialId: undefined,
+        materialId: localStorage.getItem("materialId"),
         materialNo: undefined,
         materialStatus: undefined,
         num: undefined,
