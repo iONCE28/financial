@@ -13,7 +13,7 @@
       <a-form-model-item label="来往名称" prop="name">
         <a-input v-model="form.name" placeholder="请输入来往名称"/>
       </a-form-model-item>
-      <a-form-model-item label="所属部门" prop="departId">
+      <a-form-model-item label="往来部门" prop="deptId">
         <a-tree-select
           v-model="form.deptId"
           style="width: 100%"
@@ -65,7 +65,7 @@ export default {
         updateTime: null,
         createTime: null,
         delFlag: null,
-        departId: null
+        deptId: null
       },
       // 1增加,2修改
       formType: 1,

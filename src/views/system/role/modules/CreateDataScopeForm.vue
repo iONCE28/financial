@@ -39,6 +39,7 @@
           :tree-data="deptOptions"
           @expand="onExpandDept"
           :replaceFields="defaultProps"
+          @check="onCheck"
         />
       </a-form-model-item>
       <div class="bottom-control">
