@@ -143,10 +143,12 @@ export default {
     },
     onClose() {
       this.open = false
+      this.$refs['form'].resetFields()
     },
     // 取消按钮
     cancel() {
       this.open = false
+      this.$refs['form'].resetFields()
       this.reset()
     },
     // 表单重置
@@ -196,12 +198,14 @@ export default {
             updateStaff(this.form).then((response) => {
               this.$message.success('修改成功', 3)
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           } else {
             addStaff(this.form).then((response) => {
               this.$message.success('新增成功', 3)
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           }

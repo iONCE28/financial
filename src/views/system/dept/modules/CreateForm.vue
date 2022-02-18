@@ -114,10 +114,12 @@ export default {
   methods: {
     onClose () {
       this.open = false
+      this.$refs['form'].resetFields()
     },
     // 取消按钮
     cancel () {
       this.open = false
+      this.$refs['form'].resetFields()
       this.reset()
     },
     // 表单重置
@@ -165,6 +167,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           } else {
@@ -174,6 +177,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           }

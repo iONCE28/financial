@@ -50,7 +50,7 @@ export default {
           {required: true, message: '类型编号不能为空', trigger: 'blur'}
         ],
         name: [
-          {required: true, message: '影像类别编号:0，1，2……不能为空', trigger: 'blur'}
+          {required: true, message: '影像类别编号不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -65,10 +65,12 @@ export default {
   methods: {
     onClose() {
       this.open = false
+      this.$refs['form'].resetFields()
     },
     // 取消按钮
     cancel() {
       this.open = false
+      this.$refs['form'].resetFields()
       this.reset()
     },
     // 表单重置
@@ -110,6 +112,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           } else {
@@ -119,6 +122,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           }

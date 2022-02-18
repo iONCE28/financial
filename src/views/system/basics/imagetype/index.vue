@@ -69,7 +69,6 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:imagetype:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:imagetype:edit']">
             <a-icon type="edit"/>修改
           </a>

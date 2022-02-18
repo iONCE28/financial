@@ -6,8 +6,11 @@
     <a-form-model ref="form" :model="form" :rules="rules">
       <a-form-model-item label="大类" prop="maxType" >
         <a-select placeholder="请选择合同类别" v-model="form.maxType">
-          <a-select-option :value="item.maxType" v-for="item in maxTypes" :key="item.id">
-            {{ item.maxType }}
+          <a-select-option value="0">
+            收入合同
+          </a-select-option>
+          <a-select-option value="1">
+            收入合同
           </a-select-option>
         </a-select>
       </a-form-model-item>
@@ -68,10 +71,10 @@ export default {
   filters: {
   },
   created () {
-    listType().then(response => {
-      this.maxTypes = response.maxTypes;
-      this.minTypes = response.minTypes;
-    })
+    // listType().then(response => {
+    //   this.maxTypes = response.maxTypes;
+    //   this.minTypes = response.minTypes;
+    // })
   },
   computed: {
   },

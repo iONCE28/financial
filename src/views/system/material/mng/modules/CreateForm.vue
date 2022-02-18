@@ -133,12 +133,14 @@ export default {
     onClose () {
       this.open = false
       this.subList = []
+      this.$refs['form'].resetFields()
     },
     // 取消按钮
     cancel () {
       this.open = false
       this.reset()
       this.subList = []
+       this.$refs['form'].resetFields()
     },
     // 表单重置
     reset () {
@@ -206,6 +208,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           } else {
@@ -215,6 +218,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           }

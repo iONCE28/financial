@@ -24,7 +24,17 @@
         <a-input v-model="form.num" placeholder="请输入"/>
       </a-form-model-item>
       <a-form-model-item label="部门" prop="deptId">
-        <a-input v-model="form.deptName" placeholder="请输入"/>
+        <a-tree-select
+          v-model="form.deptId"
+          style="width: 100%"
+          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          :tree-data="deptOptions"
+          placeholder="请选择"
+          :replaceFields="replaceFields"
+          tree-default-expand-all
+          @change="change"
+        >
+        </a-tree-select>
         </a-form-model-item>
        <a-form-model-item label="经办人" prop="handler">
            <a-input v-model="form.handler" placeholder="请输入"/>
@@ -52,6 +62,7 @@
 <script>
 import {getUpdate} from '@/api/material/update'
 import {listStatus} from "@/api/material/status";
+import { treeselect } from '@/api/system/dept'
 export default {
   name: 'CreateForm',
   props: {},
@@ -87,6 +98,7 @@ export default {
         startAmt: null,
         handlerPhone: null,
         projName: null,
+        deptId:null
       },
       // 1增加,2修改
     //   formType: 1,
@@ -98,7 +110,10 @@ export default {
   created() {
     listStatus().then(response => {
       this.typeList = response.rows
-    })
+    }),
+    treeselect().then(response => {
+        this.deptOptions = response.data
+      })
   },
   computed: {},
   watch: {},

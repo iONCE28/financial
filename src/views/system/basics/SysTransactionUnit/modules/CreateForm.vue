@@ -72,7 +72,7 @@ export default {
       open: false,
       rules: {
         type: [
-          {required: true, message: '类别:0：单位，1：个人不能为空', trigger: 'change'}
+          {required: true, message: '类别不能为空', trigger: 'change'}
         ],
         name: [
           {required: true, message: '来往名称不能为空', trigger: 'blur'}
@@ -101,10 +101,12 @@ export default {
     },
     onClose() {
       this.open = false
+      this.$refs['form'].resetFields()
     },
     // 取消按钮
     cancel() {
       this.open = false
+      this.$refs['form'].resetFields()
       this.reset()
     },
     // 表单重置
@@ -150,6 +152,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           } else {
@@ -159,6 +162,7 @@ export default {
                 3
               )
               this.open = false
+              this.$refs['form'].resetFields()
               this.$emit('ok')
             })
           }

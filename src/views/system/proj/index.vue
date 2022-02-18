@@ -28,7 +28,7 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="立项部门" prop="deptName">
-                <a-input v-model="queryParam.deptName" placeholder="请输入负责人" allow-clear/>
+                <a-input v-model="queryParam.deptName" placeholder="请输入立项部门" allow-clear/>
               </a-form-item>
             </a-col>
             </template>

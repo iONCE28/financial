@@ -17,15 +17,23 @@
       :auto-size="{ minRows: 3, maxRows: 5 }"
     />
       </a-form-model-item>
+<a-form-model-item label="关联项目" prop="projId">
+       <a-select placeholder="项目" v-model="form.projId" style="width: 100%" allow-clear>
 
+          <a-select-option :value="item.id" v-for="item in projList" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
 
-      <a-form-model-item label="项目" prop="closeProj" >
+        </a-select>
+      </a-form-model-item>
+
+      <!-- <a-form-model-item label="项目" prop="closeProj" >
         <a-select placeholder="请选择项目"  v-model="form.projName">
           <a-select-option :value="item.name" @click="selected(item.id)" v-for="item in projs" :key="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>
-      </a-form-model-item>
+      </a-form-model-item> -->
 
       <a-form-model-item label="结算金额(单位: w)" prop="closeAmount" >
         <a-input v-model="form.closeAmount" placeholder="请输入结算金额" />
@@ -96,9 +104,9 @@
         </a-select>
 
       </a-form-model-item>
-      <a-form-model-item label="项目id" prop="projId" >
+      <!-- <a-form-model-item label="项目id" prop="projId" >
         <a-input v-model="form.projId" placeholder="请输入项目id" />
-      </a-form-model-item>
+      </a-form-model-item> -->
       <a-form-model-item label="合同名称" prop="constractName" >
         <a-input v-model="form.constractName" placeholder="请输入合同名称" />
       </a-form-model-item>
@@ -159,7 +167,7 @@ import 'vditor/dist/index.css'
 import {listType} from "@/api/system/type";
 import { uploadCover } from '@/api/system/upload'
 import { projsByUser } from '@/api/system/proj'
-
+import {listAll} from '@/api/system/proj'
 export default {
   name: 'CreateForm',
   props: {
@@ -168,6 +176,7 @@ export default {
   },
   data () {
     return {
+      projList: [],
       fileList: [],
       projs: [],
       payCycles: [
@@ -295,6 +304,9 @@ export default {
     projsByUser().then(response => {
       this.projs = response;
     })
+    listAll().then(res => {
+       this.projList = res.data
+      })
   },
   computed: {
   },

@@ -291,10 +291,12 @@ import { uploadCover } from '@/api/system/upload'
     },
       onClose() {
         this.open = false
+        this.$refs['form'].resetFields()
       },
       // 取消按钮
       cancel() {
         this.open = false
+        this.$refs['form'].resetFields()
         this.reset()
       },
       // 表单重置
@@ -359,6 +361,7 @@ import { uploadCover } from '@/api/system/upload'
                 )
                 this.fileList = []
                 this.open = false
+                this.$refs['form'].resetFields()
                 this.$emit('ok')
               })
             } else {
@@ -369,6 +372,7 @@ import { uploadCover } from '@/api/system/upload'
                 )
                 this.fileList = []
                 this.open = false
+                this.$refs['form'].resetFields()
                 this.$emit('ok')
               })
             }

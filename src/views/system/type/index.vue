@@ -82,7 +82,6 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:type:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:type:edit']">
             <a-icon type="edit"/>修改
           </a>
@@ -145,6 +144,7 @@ export default {
           title: '序号',
           key: 'number',
           width: '4%',
+          align: 'center',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
@@ -152,7 +152,14 @@ export default {
           title: '大类：',
           dataIndex: 'maxType',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          customRender:function (text) {
+            if(text==="0") {
+                return  "收入合同"
+            } else {
+              return "支出合同"
+            }
+          }
         },
         {
           title: '小类：',

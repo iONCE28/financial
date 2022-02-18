@@ -70,7 +70,6 @@
            {{ Typeformatter(record) }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:SysPaycolType:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysPaycolType:edit']">
             <a-icon type="edit"/>修改
           </a>
