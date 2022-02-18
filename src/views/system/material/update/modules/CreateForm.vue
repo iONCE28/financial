@@ -226,7 +226,7 @@ export default {
     submitForm: function () {
        Modal.confirm({
         title: '提示',
-        content: '',
+        content: '是否提交数据',
         onOk: () => {
           return this.$refs.form.validate(valid => {
         if (valid) {

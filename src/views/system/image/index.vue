@@ -8,20 +8,21 @@
             <a-col :md="8" :sm="24">
               <a-form-item label="影像类别" prop="type">
                 <a-select placeholder="请选择影像类别" v-model="queryParam.type" style="width: 100%" allow-clear>
-
                   <a-select-option :value="item.id" v-for="item in Imagetype" :key="item.id">
                     {{ item.name }}
                   </a-select-option>
-
                 </a-select>
-
               </a-form-item>
             </a-col>
             <template v-if="advanced">
-
               <a-col :md="8" :sm="24">
                 <a-form-item label="影像标签" prop="label">
                   <a-input v-model="queryParam.label" placeholder="请输入影像标签" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="关联项目" prop="projName">
+                  <a-input v-model="queryParam.projName" placeholder="请输入影像标签" allow-clear/>
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -29,16 +30,6 @@
                   <a-input v-model="queryParam.operator" placeholder="请输入操作人" allow-clear/>
                 </a-form-item>
               </a-col>
-              <!--              <a-col :md="8" :sm="24">-->
-              <!--                <a-form-item label="操作人员ID" prop="operatorId">-->
-              <!--                  <a-input v-model="queryParam.operatorId" placeholder="请输入操作人员ID" allow-clear/>-->
-              <!--                </a-form-item>-->
-              <!--              </a-col>-->
-              <!--              <a-col :md="8" :sm="24">-->
-              <!--                <a-form-item label="文件上传时间" prop="uploadTime">-->
-              <!--                  <a-date-picker style="width: 100%" v-model="queryParam.uploadTime" format="YYYY-MM-DD HH:mm:ss" allow-clear/>-->
-              <!--                </a-form-item>-->
-              <!--              </a-col>-->
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
@@ -171,7 +162,8 @@ export default {
         operatorId: null,
         uploadTime: null,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        projName: null
       },
       columns: [
         {
@@ -180,6 +172,12 @@ export default {
           width: '4%',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
+        },
+        {
+          title: '项目名称',
+          dataIndex: 'projName',
+          ellipsis: true,
+          align: 'center',
         },
         {
           title: '影像类别',
@@ -192,7 +190,8 @@ export default {
           title: '影像标签',
           dataIndex: 'label',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          scopedSlots: { customRender: 'tags' },
         },
         {
           title: '影像文件预览',
@@ -207,12 +206,6 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '操作人员ID',
-        //   dataIndex: 'operatorId',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '文件上传时间',
           dataIndex: 'uploadTime',
@@ -254,7 +247,6 @@ export default {
       var base1 = new Base()
       const url = value.image
       window.open('http://127.0.0.1:8012/onlinePreview?url=' + encodeURIComponent(base1.encode(url)));
-
     },
     /** 查询影像管理信息列表 */
     getList() {
@@ -281,7 +273,8 @@ export default {
         operatorId: undefined,
         uploadTime: undefined,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        projName: null
       }
       this.handleQuery()
     },

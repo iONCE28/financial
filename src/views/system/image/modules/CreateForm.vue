@@ -4,8 +4,12 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="项目id" prop="projId">
-        <a-input v-model="form.projId" placeholder="请输入项目id"/>
+      <a-form-model-item label="关联项目" prop="projId">
+       <a-select placeholder="项目" v-model="form.projId" style="width: 100%" allow-clear>
+          <a-select-option :value="item.id" v-for="item in projList" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="影像文件" prop="image">
         <a-upload
@@ -46,7 +50,7 @@
 import {addImagemng, getImagemng, updateImagemng} from '@/api/system/imagemng'
 import {listImagetype} from "@/api/system/imagetype";
 import {uploadCover} from "@/api/system/upload";
-
+import {listAll} from '@/api/system/proj'
 export default {
   name: 'CreateForm',
   props: {},
@@ -56,6 +60,7 @@ export default {
       fileList:[],
       loading: false,
       formTitle: '',
+      projList: [],
       // 表单参数
       form: {
         id: null,
@@ -66,15 +71,16 @@ export default {
         operator: null,
         operatorId: null,
         uploadTime: null,
-        updateTime: null
+        updateTime: null,
+        projName: null
       },
       // 1增加,2修改
       formType: 1,
       open: false,
       rules: {
-        // projId: [
-        //   {required: true, message: '项目id不能为空', trigger: 'blur'}
-        // ],
+        projId: [
+          {required: true, message: '关联项目不能为空', trigger: 'blur'}
+        ],
         image: [
           {required: true, message: '影像文件:存文件地址不能为空', trigger: 'blur'}
         ],
@@ -98,14 +104,19 @@ export default {
   created() {
     listImagetype().then(response => {
       this.Imagetype = response.rows
-
     })
+    this.listpro()
   },
   computed: {},
   watch: {},
   mounted() {
   },
   methods: {
+    listpro() {
+      listAll().then(res => {
+       this.projList = res.data
+      })
+    },
     handleChange (info) {
       let fileList = [...info.fileList]
       fileList = fileList.slice(-1)
@@ -177,7 +188,8 @@ export default {
         operator: null,
         operatorId: null,
         uploadTime: null,
-        updateTime: null
+        updateTime: null,
+        projName: null
       }
     },
     /** 新增按钮操作 */
