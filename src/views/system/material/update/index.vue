@@ -297,6 +297,8 @@ export default {
   },
   mounted() {
     //加载数据
+       this.queryParam.materialId = this.$route.query.materialId
+        this.queryParam.projName= this.$route.query.projName
         localStorage.setItem("materialId", this.$route.query.materialId)
         localStorage.setItem("projName",this.$route.query.projName)
     this.getList()
