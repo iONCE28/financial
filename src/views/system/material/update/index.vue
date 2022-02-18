@@ -14,21 +14,23 @@
                 </a-select>
               </a-form-item>
             </a-col>
-          <a-col :md="8" :sm="24">
-                <a-form-item label="经办人" prop="handler">
-                  <a-input v-model="queryParam.handler" placeholder="请输入经办人" allow-clear/>
-                </a-form-item>
-              </a-col>
             <a-col :md="8" :sm="24">
                     <a-form-item label="变更时间">
                       <a-range-picker style="width: 100%" v-model="dateRange" valueFormat="YYYY-MM-DD" format="YYYY-MM-DD" allow-clear />
                     </a-form-item>
                   </a-col>
+                  <template v-if="advanced">
+<a-col :md="8" :sm="24">
+                <a-form-item label="经办人" prop="handler">
+                  <a-input v-model="queryParam.handler" placeholder="请输入经办人" allow-clear/>
+                </a-form-item>
+              </a-col>
                   <a-col :md="8" :sm="24">
                     <a-form-item label="部门名称">
                       <a-input v-model="queryParam.deptName" placeholder="请输入经办人部门名称" allow-clear/>
                     </a-form-item>
                   </a-col>
+                  </template>
              <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="handleQuery"><a-icon type="search" />查询</a-button>
@@ -79,9 +81,8 @@
         rowKey="id"
         :columns="columns"
         :data-source="list"
-        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false"
-        :scroll="{ x: 1500 }">
+        :scroll="{ x: 1800 }">
         <span slot="updateTime" slot-scope="text, record">
           {{ parseTime(record.updateTime) }}
         </span>
@@ -93,7 +94,7 @@
         </span>
         <span slot="operation" slot-scope="text, record">
           <a @click="$refs.detailsfrom.handleDetail(record, undefined)" v-hasPermi="['system:update:edit']">
-            <a-icon type="edit"/>详情
+            <a-icon type="eye"/>详情
           </a>
           <!-- <a-divider type="vertical" v-hasPermi="['system:update:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:update:edit']">

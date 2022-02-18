@@ -15,15 +15,15 @@
       <router-view />
 
       <div class="footer">
-        <div class="links">
+        <!-- <div class="links">
           <a href="#" target="_blank">帮助</a>
           <a href="#" target="_blank">隐私</a>
           <a href="#" target="_blank">条款</a>
         </div>
         <div class="copyright">
           Copyright &copy; 2021
-<!--          <a href="#" target="_blank">RuoYi-Antdv</a>-->
-        </div>
+         <a href="#" target="_blank">RuoYi-Antdv</a>
+        </div> -->
       </div>
     </div>
   </div>

@@ -208,6 +208,7 @@ export default {
                 '修改成功',
                 3
               )
+              this.fileList = []
               this.open = false
               this.$emit('ok')
             })
@@ -217,6 +218,7 @@ export default {
                 '新增成功',
                 3
               )
+               this.fileList = []
               this.open = false
               this.$emit('ok')
             })

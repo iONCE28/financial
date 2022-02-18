@@ -15,6 +15,23 @@
                 <a-input v-model="queryParam.number" placeholder="请输入项目编号" allow-clear/>
               </a-form-item>
             </a-col>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+              <a-form-item label="投资方" prop="investor">
+                <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>
+              </a-form-item>
+            </a-col>
+              <a-col :md="8" :sm="24">
+              <a-form-item label="负责人" prop="dutior">
+                <a-input v-model="queryParam.dutior" placeholder="请输入负责人" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="立项部门" prop="deptName">
+                <a-input v-model="queryParam.deptName" placeholder="请输入负责人" allow-clear/>
+              </a-form-item>
+            </a-col>
+            </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
                     :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
@@ -35,15 +52,15 @@
           <a-icon type="plus"/>
           新增
         </a-button>
-        <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
+        <!-- <a-button type="primary" :disabled="single" @click="$refs.createForm.handleUpdate(undefined, ids)"
                   v-hasPermi="['system:proj:edit']">
           <a-icon type="edit"/>
           修改
-        </a-button>
-        <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:proj:remove']">
+        </a-button> -->
+        <!-- <a-button type="danger" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:proj:remove']">
           <a-icon type="delete"/>
           删除
-        </a-button>
+        </a-button> -->
         <a-button
           type="dashed"
           shape="circle"
@@ -57,6 +74,9 @@
         ref="createForm"
         @ok="getList"
       />
+       <DetailsFrom ref="detailsfrom">
+
+       </DetailsFrom>
       <!-- 数据展示 -->
       <a-table
         :loading="loading"
@@ -65,7 +85,8 @@
         :columns="columns"
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        :pagination="false">
+        :pagination="false"
+        :scroll="{ x: 1800 }">
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
@@ -99,14 +120,17 @@
         </span>
           </div>
         <span slot="operation" slot-scope="text, record">
+          <a @click="$refs.detailsfrom.handledetails(record, undefined)" v-hasPermi="['system:proj:edit']">
+            <a-icon type="eye"/>详情
+          </a>
           <a-divider type="vertical" v-hasPermi="['system:proj:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:proj:edit']">
             <a-icon type="edit"/>修改
           </a>
-          <a-divider type="vertical" v-hasPermi="['system:proj:remove']"/>
+          <!-- <a-divider type="vertical" v-hasPermi="['system:proj:remove']"/>
           <a @click="handleDelete(record)" v-hasPermi="['system:proj:remove']">
             <a-icon type="delete"/>删除
-          </a>
+          </a> -->
         </span>
       </a-table>
       <!-- 分页 -->
@@ -129,11 +153,12 @@
 import {delProj, exportProj, listProj} from '@/api/system/proj'
 import CreateForm from './modules/CreateForm'
 import Base from '@/utils/base64'
-
+import DetailsFrom from './modules/DetailsFrom'
 export default {
   name: 'Proj',
   components: {
-    CreateForm
+    CreateForm,
+    DetailsFrom
   },
   data() {
     return {
@@ -171,7 +196,9 @@ export default {
         scale: null,
         uploadTime: null,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        deptName: null,
+        createTime: null
       },
       columns: [
         {
@@ -242,24 +269,44 @@ export default {
           align: 'center'
         },
         {
+          title: '投资方',
+          dataIndex: 'investor',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '立项部门',
+          dataIndex: 'deptName',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
           title: '负责人',
           dataIndex: 'dutior',
           ellipsis: true,
           align: 'center'
         },
         {
+          title: '创建时间',
+          dataIndex: 'createTime',
+          width: 200,
+          ellipsis: true,
+          align: 'center'
+        },
+        {
           title: '项目文件',
           dataIndex: 'file',
-          width: '12%',
+          width: 200,
           scopedSlots: {customRender: 'files'},
-          align: 'center'
+          align: 'center',
         },
         {
           title: '操作',
           dataIndex: 'operation',
-          width: '12%',
+       width: 200,
           scopedSlots: {customRender: 'operation'},
-          align: 'center'
+          align: 'center',
+          fixed: 'right',
         }
       ]
     }
@@ -316,7 +363,8 @@ export default {
         scale: undefined,
         uploadTime: undefined,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        deptName: null
       }
       this.handleQuery()
     },

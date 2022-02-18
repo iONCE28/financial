@@ -168,6 +168,7 @@ export default {
   },
   data () {
     return {
+      fileList: [],
       projs: [],
       payCycles: [
         {"id":1,"val":360,"text":"年"},
@@ -462,6 +463,7 @@ export default {
                 '修改成功',
                 3
               )
+              this.fileList = []
               this.open = false
               this.closeEditor()
               this.$emit('ok')
@@ -472,6 +474,7 @@ export default {
                 '新增成功',
                 3
               )
+              this.fileList = []
               this.open = false
               this.closeEditor()
               this.$emit('ok')

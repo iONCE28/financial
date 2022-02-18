@@ -112,9 +112,8 @@
           <!--          <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:mng:edit']">-->
           <!--            <a-icon type="edit"/>修改-->
           <!--          </a>-->
-          <a-divider type="vertical" v-hasPermi="['system:mng:remove']"/>
           <a @click="handleDetails(record)" v-hasPermi="['system:mng:remove']">
-            <a-icon type="edit"/>查看详情
+            <a-icon type="eye"/>查看详情
           </a>
         </span>
       </a-table>

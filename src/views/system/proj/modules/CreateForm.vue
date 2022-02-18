@@ -60,7 +60,7 @@
       <a-form-model-item label="承接方" prop="undertakor">
         <a-input v-model="form.undertakor" placeholder="请输入承接方：乙方"/>
       </a-form-model-item>
-      <a-form-model-item label="部门" prop="depart">
+      <a-form-model-item label="立项部门" prop="depart">
         <a-tree-select
           v-model="form.depart"
           style="width: 100%"
@@ -120,6 +120,7 @@ import { uploadCover } from '@/api/system/upload'
     components: {},
     data() {
       return {
+        fileList: [],
         deptOptions: [{
         id: 0,
         label: '',
@@ -172,9 +173,19 @@ import { uploadCover } from '@/api/system/upload'
             message: '场次不能为空',
             trigger: 'blur'
           }],
+          nature: [{
+            required: true,
+            message: '项目性质不能为空',
+            trigger: 'blur'
+          }],
           pageNum: [{
             required: true,
             message: '页数不能为空',
+            trigger: 'blur'
+          }],
+          status: [{
+            required: true,
+            message: '执行状态不能为空',
             trigger: 'blur'
           }],
           setNum: [{
@@ -197,7 +208,7 @@ import { uploadCover } from '@/api/system/upload'
             message: '负责人不能为空',
             trigger: 'blur'
           }],
-          departId: [{
+          depart: [{
             required: true,
             message: '立项部门不能为空',
             trigger: 'blur'
@@ -347,7 +358,6 @@ import { uploadCover } from '@/api/system/upload'
                   3
                 )
                 this.fileList = []
-              this.fileListone = []
                 this.open = false
                 this.$emit('ok')
               })
@@ -358,7 +368,6 @@ import { uploadCover } from '@/api/system/upload'
                   3
                 )
                 this.fileList = []
-              this.fileListone = []
                 this.open = false
                 this.$emit('ok')
               })
