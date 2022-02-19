@@ -6,7 +6,7 @@
     <a-form-model ref="form" :model="form" :rules="rules">
       <a-form-model-item label="项目" prop="projId">
         <a-select placeholder="请选择项目" v-model="form.projId" @select="handleProj">
-          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+          <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>
@@ -20,21 +20,21 @@
       </a-form-model-item>
       <a-form-model-item label="结算项目" prop="resultProjId">
         <a-select placeholder="请选择项目" v-model="form.resultProjId">
-          <a-select-option :value="item.id" v-for="item in projs" :key="item.id">
+          <a-select-option :value="item.id" v-for="item in projsList" :key="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="预付账款单据编号" prop="advanceNo">
+      <a-form-model-item label="单据编号" prop="advanceNo">
         <a-input v-model="form.advanceNo" placeholder="请输入预付账款单据编号"/>
       </a-form-model-item>
-      <a-form-model-item label="预付账款类别" prop="advanceType">
+      <a-form-model-item label="预付类别" prop="advanceType">
         <a-radio-group v-model="form.advanceType" button-style="solid">
           <a-radio-button value="0">协议支付</a-radio-button>
           <a-radio-button value="1">预付退回</a-radio-button>
         </a-radio-group>
       </a-form-model-item>
-      <a-form-model-item label="预付账款付款方" prop="advancePayer">
+      <a-form-model-item label="付款方" prop="advancePayer">
         <a-select v-model="form.advancePayer" placeholder="请选择预付账款收款方" style="width: 100%" allow-clear>
           <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
           <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
@@ -43,7 +43,7 @@
       <!--      <a-form-model-item label="预付账款付款方id" prop="advancePayId">-->
       <!--        <a-input v-model="form.advancePayId" placeholder="请输入预付账款付款方id"/>-->
       <!--      </a-form-model-item>-->
-      <a-form-model-item label="预付账款收款方" prop="advanceColer">
+      <a-form-model-item label="收款方" prop="advanceColer">
         <a-select v-model="form.advanceColer" placeholder="请选择预付账款收款方" style="width: 100%" allow-clear>
           <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
           <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
@@ -55,7 +55,7 @@
 
       <a-row>
         <a-col :span="12">
-          <a-form-model-item label="预付账款发生金额" prop="advanceAmt">
+          <a-form-model-item label="发生金额" prop="advanceAmt">
             <a-input v-model="form.advanceAmt" type="number" placeholder="请输入预付账款发生金额"/>
 
           </a-form-model-item>
@@ -68,26 +68,26 @@
         </a-col>
       </a-row>
 
-      <a-form-model-item label="预付账款发生日期" prop="advanceOpenTime">
+      <a-form-model-item label="发生日期" prop="advanceOpenTime">
         <a-date-picker style="width: 100%" v-model="form.advanceOpenTime" format="YYYY-MM-DD" allow-clear/>
       </a-form-model-item>
       <a-form-model-item label="支付账户" prop="payAccount">
-        <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
-          <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
+        <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear
+                  @change="payAccountChange">
+          <a-select-option :value="item.id" :key="item.id" v-for="(item,index) in PayaccountList">
+            {{ item.accountName }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-row>
         <a-col :span="12">
-          <a-form-model-item label="账户开户行" prop="depAmt">
-            <a-input disabled v-model="form.depAmt" placeholder="请选择支付账户"/>
-
+          <a-form-model-item label="账户开户行" prop="payAccountBank">
+            <a-input disabled v-model="form.payAccountBank" placeholder="请选择支付账户"/>
           </a-form-model-item>
         </a-col>
         <a-col :span="12">
-          <a-form-model-item label="账户号码" prop="depAmtCheck">
-            <a-input disabled v-model="form.depAmtCheck" placeholder="请选择支付账户"/>
-
+          <a-form-model-item label="账户号码" prop="payAccountPhone">
+            <a-input disabled v-model="form.payAccountPhone" placeholder="请选择支付账户"/>
           </a-form-model-item>
         </a-col>
       </a-row>
@@ -122,6 +122,7 @@ import {capitalAmount} from "@/utils/util";
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
 import moment from "moment";
+import {listSysPayaccount} from "@/api/system/SysPayaccount";
 
 export default {
   name: 'CreateForm',
@@ -129,6 +130,7 @@ export default {
   components: {},
   data() {
     return {
+      PayaccountList: [],
       contractsList: [],
       projsList: [],
       loading: false,
@@ -174,13 +176,13 @@ export default {
           {required: true, message: '结算项目不能为空', trigger: 'blur'}
         ],
         advanceNo: [
-          {required: true, message: '预付账款单据编号不能为空', trigger: 'blur'}
+          {required: true, message: '单据编号不能为空', trigger: 'blur'}
         ],
         advanceType: [
-          {required: true, message: '预付账款类别不能为空', trigger: 'change'}
+          {required: true, message: '预付类别不能为空', trigger: 'change'}
         ],
         advancePayer: [
-          {required: true, message: '预付账款付款方不能为空', trigger: 'blur'}
+          {required: true, message: '付款方不能为空', trigger: 'blur'}
         ],
         advancePayId: [
           {required: true, message: '预付账款付款方id不能为空', trigger: 'blur'}
@@ -192,10 +194,10 @@ export default {
           {required: true, message: '预付账款收款方id不能为空', trigger: 'blur'}
         ],
         advanceAmt: [
-          {required: true, message: '预付账款发生金额不能为空', trigger: 'blur'}
+          {required: true, message: '发生金额不能为空', trigger: 'blur'}
         ],
         advanceOpenTime: [
-          {required: true, message: '预付账款发生日期不能为空', trigger: 'blur'}
+          {required: true, message: '发生日期不能为空', trigger: 'blur'}
         ],
         payAccount: [
           {required: true, message: '支付账户不能为空', trigger: 'blur'}
@@ -215,7 +217,10 @@ export default {
   filters: {},
   created() {
     projsByUser().then(response => {
-      this.projs = response;
+      this.projsList = response;
+    })
+    listSysPayaccount().then(response => {
+      this.PayaccountList = response.rows;
     })
   },
   computed: {},
@@ -233,6 +238,14 @@ export default {
   mounted() {
   },
   methods: {
+    payAccountChange(value) {
+      for (let i = 0; i < this.PayaccountList.length; i++) {
+        if (this.PayaccountList[i].id == value) {
+          this.form.payAccountBank = this.PayaccountList[i].accountBank
+          this.form.payAccountPhone = this.PayaccountList[i].accountPhone
+        }
+      }
+    },
     handleProj(value) {
       this.form.projId = value;
       contractSByProj(value).then(response => {

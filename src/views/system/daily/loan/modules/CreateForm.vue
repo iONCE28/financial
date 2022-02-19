@@ -26,27 +26,25 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="个人借款单据编号" prop="resultContractNo">
+      <a-form-model-item label="单据编号" prop="resultContractNo">
         <a-input v-model="form.resultContractNo" placeholder="请输入个人借款单据编号"/>
       </a-form-model-item>
-      <a-form-model-item label="个人借款类别" prop="loanType">
-        <a-select placeholder="请选择个人借款类别" v-model="form.loanType">
-          <a-select-option :value="0" :key="0">支付借款</a-select-option>
-          <a-select-option :value="2" :key="2">报销借款</a-select-option>
-          <a-select-option :value="3" :key="3">归还借款</a-select-option>
+      <a-form-model-item label="借款类别" prop="loanType">
+        <a-select placeholder="请选择借款类别" v-model="form.loanType">
+          <a-select-option :value="item.value" :key="item.value" v-for="(item) in loanTypeList ">{{
+              item.label
+            }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="借款人" prop="borrower">
-        <a-select v-model="form.borrower" placeholder="请选择借款人" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
-          <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+      <a-form-model-item label="借款人" prop="borrowerId">
+        <a-select v-model="form.borrowerId" placeholder="请选择借款人" style="width: 100%" allow-clear
+                  @change="handleBorrowerIdChange">
+          <a-select-option :value="item.staffId" :key="item.staffId" v-for="(item,index) in StaffList"> {{
+              item.staffName
+            }}
+          </a-select-option>
         </a-select>
-      </a-form-model-item>
-      <!--      <a-form-model-item label="借款人id：关联个人ID支持费用报销的联查预付款~" prop="borrowerId">-->
-      <!--        <a-input v-model="form.borrowerId" placeholder="请输入借款人id：关联个人ID支持费用报销的联查预付款~"/>-->
-      <!--      </a-form-model-item>-->
-      <a-form-model-item label="个人借款事由摘要" prop="abstracted">
-        <a-input v-model="form.abstracted" placeholder="请输入内容" type="textarea" allow-clear/>
       </a-form-model-item>
 
       <a-row>
@@ -62,27 +60,38 @@
           </a-form-model-item>
         </a-col>
       </a-row>
+      <a-form-model-item label="个人借款事由摘要" prop="abstracted">
+        <a-input v-model="form.abstracted" placeholder="请输入内容" type="textarea" allow-clear/>
+      </a-form-model-item>
       <a-form-model-item label="支付账户" prop="payAccount">
-        <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接支付账户接口</a-select-option>
-          <a-select-option value="1"> #todo 对接支付账户接口</a-select-option>
+        <a-select v-model="form.payAccount" placeholder="请选择支付账户" style="width: 100%" allow-clear
+                  @change="payAccountChange">
+          <a-select-option :value="item.id" :key="item.id" v-for="(item,index) in PayaccountList">
+            {{ item.accountName }}
+          </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="冲销状态" prop="writeoffStatus">
-        <a-radio-group v-model="form.writeoffStatus" button-style="solid">
-          <a-radio-button value="0">未冲销</a-radio-button>
-          <a-radio-button value="1">已冲销</a-radio-button>
-        </a-radio-group>
-      </a-form-model-item>
+      <a-row>
+        <a-col :span="12">
+          <a-form-model-item label="账户开户行" prop="payAccountBank">
+            <a-input disabled v-model="form.payAccountBank" placeholder="请选择支付账户"/>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="账户号码" prop="payAccountPhone">
+            <a-input disabled v-model="form.payAccountPhone" placeholder="请选择支付账户"/>
+          </a-form-model-item>
+        </a-col>
+      </a-row>
       <a-form-model-item label="备注" prop="remark">
         <a-input v-model="form.remark" placeholder="请输入备注"/>
       </a-form-model-item>
-      <a-form-model-item label="经办人" prop="handler">
-        <a-select v-model="form.handler" placeholder="请选择经办人" style="width: 100%" allow-clear>
-          <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
-          <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
-        </a-select>
-      </a-form-model-item>
+      <!--      <a-form-model-item label="经办人" prop="handler">
+              <a-select v-model="form.handler" placeholder="请选择经办人" style="width: 100%" allow-clear>
+                <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
+                <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+              </a-select>
+            </a-form-model-item>-->
 
       <div class="bottom-control">
         <a-space>
@@ -103,6 +112,8 @@ import {addLoan, getLoan, updateLoan} from '@/api/system/loan'
 import {capitalAmount} from "@/utils/util";
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
+import {listStaff} from "@/api/system/staff";
+import {listSysPayaccount} from "@/api/system/SysPayaccount";
 
 export default {
   name: 'CreateForm',
@@ -110,6 +121,13 @@ export default {
   components: {},
   data() {
     return {
+      PayaccountList: [],
+      StaffList: [],
+      loanTypeList: [
+        {value: 0, label: "支付借款"},
+        {value: 1, label: "报销借款"},
+        {value: 2, label: "归还借款"},
+      ],
       contractsList: [],
       projsList: [],
       loading: false,
@@ -144,28 +162,25 @@ export default {
       open: false,
       rules: {
         projId: [
-          {required: true, message: '项目ID不能为空', trigger: 'blur'}
+          {required: true, message: '项目不能为空', trigger: 'blur'}
         ],
         resultContractNo: [
-          {required: true, message: '个人借款单据编号不能为空', trigger: 'blur'}
+          {required: true, message: '单据编号不能为空', trigger: 'blur'}
         ],
         loanType: [
-          {required: true, message: '0：支付借款，2：报销借款，3：归还借款不能为空', trigger: 'change'}
+          {required: true, message: '借款类别', trigger: 'change'}
         ],
         borrower: [
-          {required: true, message: '借款人:对内借款，借款人从内部人员中取不能为空', trigger: 'blur'}
+          {required: true, message: '借款人', trigger: 'blur'}
         ],
         borrowerId: [
-          {required: true, message: '借款人id：关联个人ID支持费用报销的联查预付款~不能为空', trigger: 'blur'}
+          {required: true, message: '借款人不能为空', trigger: 'blur'}
         ],
         amount: [
-          {required: true, message: '个人借款发生金额不能为空', trigger: 'blur'}
+          {required: true, message: '借款发生金额不能为空', trigger: 'blur'}
         ],
         payAccount: [
           {required: true, message: '支付账户不能为空', trigger: 'blur'}
-        ],
-        writeoffStatus: [
-          {required: true, message: '冲销状态0：未冲销；1：已冲销不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -174,6 +189,13 @@ export default {
   created() {
     projsByUser().then(response => {
       this.projsList = response;
+    })
+    listSysPayaccount().then(response => {
+      this.PayaccountList = response.rows;
+    })
+    listStaff().then(response => {
+
+      this.StaffList = response.rows;
     })
   },
   computed: {},
@@ -190,8 +212,23 @@ export default {
   mounted() {
   },
   methods: {
+    payAccountChange(value) {
+      for (let i = 0; i < this.PayaccountList.length; i++) {
+        if (this.PayaccountList[i].id == value) {
+          this.form.payAccountBank = this.PayaccountList[i].accountBank
+          this.form.payAccountPhone = this.PayaccountList[i].accountPhone
+        }
+      }
+    },
+    handleBorrowerIdChange(value) {
+      for (let i = 0; i < this.StaffList.length; i++) {
+        if (this.StaffList[i].staffId == value) {
+          this.form.borrower = this.StaffList[i].staffName
+        }
+      }
+    },
     handleProj(value) {
-      this.queryParam.projId = value;
+      this.form.projId = value;
       contractSByProj(value).then(response => {
         this.contractsList = response;
       })

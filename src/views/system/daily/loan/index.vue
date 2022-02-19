@@ -61,8 +61,10 @@
               <a-col :md="8" :sm="24">
                 <a-form-item label="借款人" prop="borrowerId">
                   <a-select v-model="queryParam.borrowerId" placeholder="请选择借款人" style="width: 100%" allow-clear>
-                    <a-select-option value="0"> #todo 对接内部员工接口</a-select-option>
-                    <a-select-option value="1"> #todo 对接内部员工接口</a-select-option>
+                    <a-select-option :value="item.staffId" :key="item.staffId" v-for="(item,index) in StaffList"> {{
+                        item.staffName
+                      }}
+                    </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -188,6 +190,7 @@ import {delLoan, exportLoan, listLoan} from '@/api/system/loan'
 import CreateForm from './modules/CreateForm'
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
+import {listStaff} from "@/api/system/staff";
 
 export default {
   name: 'Loan',
@@ -196,10 +199,11 @@ export default {
   },
   data() {
     return {
+      StaffList: [],
       loanTypeList: [
         {value: 0, label: "支付借款"},
-        {value: 2, label: "报销借款"},
-        {value: 3, label: "归还借款"},
+        {value: 1, label: "报销借款"},
+        {value: 2, label: "归还借款"},
       ],
       contractsList: [],
       projsList: [],
@@ -290,25 +294,25 @@ export default {
         },
         {
           title: '收款方式',
-          dataIndex: 'amount',
+          dataIndex: 'payType',
           ellipsis: true,
           align: 'center'
         },
         {
           title: '账户名称',
-          dataIndex: 'payAccount',
+          dataIndex: 'payAccountId',
           ellipsis: true,
           align: 'center'
         },
         {
           title: '账户开户行',
-          dataIndex: 'payAccount',
+          dataIndex: 'payAccountBank',
           ellipsis: true,
           align: 'center'
         },
         {
           title: '账户号码',
-          dataIndex: 'payAccount',
+          dataIndex: 'payAccountPhone',
           ellipsis: true,
           align: 'center'
         },
@@ -342,17 +346,22 @@ export default {
     projsByUser().then(response => {
       this.projsList = response;
     })
+    listStaff().then(response => {
+      this.StaffList = response;
+    })
+
     this.getList()
   },
   computed: {},
   watch: {},
   methods: {
+
     formatWriteoffStatus(record) {
-      //退回
-      if (record.loanType == 1) {
-        return ""
+      //支付
+      if (record.loanType == 0) {
+        return record.writeoffStatus == 0 ? "未冲销" : "已冲销"
       }
-      return record.writeoffStatus == 0 ? "未冲销" : "已冲销"
+      return ""
 
     },
     formatLoanType(row) {

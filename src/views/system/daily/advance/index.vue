@@ -249,7 +249,7 @@ export default {
         },
         {
           title: '项目名称',
-          dataIndex: 'projId',
+          dataIndex: 'projNmae',
           ellipsis: true,
           align: 'center'
         },
@@ -305,7 +305,7 @@ export default {
         },
         {
           title: '收取方式',
-          dataIndex: 'payAccount',
+          dataIndex: 'payType',
           ellipsis: true,
           align: 'center'
         },
@@ -317,13 +317,13 @@ export default {
         },
         {
           title: '账户开户行',
-          dataIndex: 'payAccount',
+          dataIndex: 'payAccountBank',
           ellipsis: true,
           align: 'center'
         },
         {
           title: '账户号码',
-          dataIndex: 'payAccount',
+          dataIndex: 'payAccountPhone',
           ellipsis: true,
           align: 'center'
         },
