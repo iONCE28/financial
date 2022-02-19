@@ -87,14 +87,26 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="报销支付账户名称" prop="reimbPayName">
-        <a-input v-model="form.reimbPayName" placeholder="请输入报销支付账户名称"/>
+        <a-select v-model="form.reimbPayName" placeholder="请选择支付账户" style="width: 100%" allow-clear
+                  @change="payAccountChange">
+          <a-select-option :value="item.accountName" :key="item.id" v-for="(item,index) in PayaccountList">
+            {{ item.accountName }}
+          </a-select-option>
+        </a-select>
+        <!--        <a-input v-model="form.reimbPayName" placeholder="请输入报销支付账户名称"/>-->
       </a-form-model-item>
-      <a-form-model-item label="报销支付账户开户行" prop="reimbPayBank">
-        <a-input v-model="form.reimbPayBank" placeholder="请输入报销支付账户开户行"/>
-      </a-form-model-item>
-      <a-form-model-item label="报销支付账户号码" prop="reimbPayNo">
-        <a-input v-model="form.reimbPayNo" placeholder="请输入报销支付账户号码"/>
-      </a-form-model-item>
+      <a-row>
+        <a-col :span="12">
+          <a-form-model-item label="账户开户行" prop="reimbPayBank">
+            <a-input disabled v-model="form.reimbPayBank" placeholder="请选择支付账户"/>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-model-item label="账户号码" prop="reimbPayNo">
+            <a-input disabled v-model="form.reimbPayNo" placeholder="请选择支付账户"/>
+          </a-form-model-item>
+        </a-col>
+      </a-row>
       <div class="bottom-control">
         <a-space>
           <a-button type="primary" @click="submitForm">
@@ -113,6 +125,7 @@
 import {addReimbursement, getReimbursement, updateReimbursement} from '@/api/system/reimbursement'
 import {projsByUser} from "@/api/system/proj";
 import {contractSByProj} from "@/api/system/contract";
+import {listSysPayaccount} from "@/api/system/SysPayaccount";
 
 export default {
   name: 'CreateForm',
@@ -120,6 +133,7 @@ export default {
   components: {},
   data() {
     return {
+      PayaccountList: [],
       contractsList: [],
       projsList: [],
       loading: false,
@@ -220,12 +234,23 @@ export default {
     projsByUser().then(response => {
       this.projsList = response;
     })
+    listSysPayaccount().then(response => {
+      this.PayaccountList = response.rows;
+    })
   },
   computed: {},
   watch: {},
   mounted() {
   },
   methods: {
+    payAccountChange(value) {
+      for (let i = 0; i < this.PayaccountList.length; i++) {
+        if (this.PayaccountList[i].accountName == value) {
+          this.form.reimbPayBank = this.PayaccountList[i].accountBank
+          this.form.reimbPayNo = this.PayaccountList[i].accountPhone
+        }
+      }
+    },
     handleProj(value) {
       this.queryParam.projId = value;
       contractSByProj(value).then(response => {

@@ -193,7 +193,7 @@ export default {
         },
         {
           title: '项目名称',
-          dataIndex: 'projId',
+          dataIndex: 'projName',
           ellipsis: true,
           align: 'center'
         },
@@ -205,7 +205,7 @@ export default {
         },
         {
           title: '收款类型',
-          dataIndex: 'colpaySource',
+          dataIndex: 'colpayType',
           ellipsis: true,
           align: 'center'
         },
@@ -243,25 +243,25 @@ export default {
         },
         {
           title: '收款方式',
-          dataIndex: 'colpayDec',
+          dataIndex: 'colpayType',
           ellipsis: true,
           align: 'center'
         },
 
         {
           title: '账户名称',
-          dataIndex: 'handler',
+          dataIndex: 'colpayName',
           ellipsis: true,
           align: 'center'
         },
         {
           title: '账户开户行',
-          dataIndex: 'handler',
+          dataIndex: 'colpayBank',
           ellipsis: true,
           align: 'center'
         }, {
           title: '账户号码',
-          dataIndex: 'handler',
+          dataIndex: 'colpayPhone',
           ellipsis: true,
           align: 'center'
         },
