@@ -10,7 +10,7 @@
             收入合同
           </a-select-option>
           <a-select-option value="1">
-            收入合同
+            支出合同
           </a-select-option>
         </a-select>
       </a-form-model-item>

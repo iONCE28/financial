@@ -10,31 +10,28 @@
       <a-form-model-item label="乙方名称" prop="bname" >
         <a-input v-model="form.bname" placeholder="请输入乙方名称" />
       </a-form-model-item>
-      <a-form-model-item label="合同摘要" prop="content" >
-        <a-textarea
-      v-model="value"
-      placeholder="请输入合同摘要"
-      :auto-size="{ minRows: 3, maxRows: 5 }"
-    />
-      </a-form-model-item>
 <a-form-model-item label="关联项目" prop="projId">
-       <a-select placeholder="项目" v-model="form.projId" style="width: 100%" allow-clear>
-
-          <a-select-option :value="item.id" v-for="item in projList" :key="item.id">
+       <a-select placeholder="项目" v-model="form.projId" style="width: 100%"  @change="handleChanges"  >
+          <a-select-option :value="item.id" v-for="item in projList" :key="item.id" >
             {{ item.name }}
           </a-select-option>
-
         </a-select>
       </a-form-model-item>
-
-      <!-- <a-form-model-item label="项目" prop="closeProj" >
-        <a-select placeholder="请选择项目"  v-model="form.projName">
-          <a-select-option :value="item.name" @click="selected(item.id)" v-for="item in projs" :key="item.id">
-            {{ item.name }}
+<a-form-model-item label="结算账户" prop="account" >
+        <a-select  placeholder="结算账户" v-model="form.account" style="width: 100%">
+          <a-select-option :key="item.accountName" :value="item.accountName" v-for="item in accountpay">
+            {{ item.accountName }}
           </a-select-option>
         </a-select>
-      </a-form-model-item> -->
-
+      </a-form-model-item>
+      <a-form-model-item label="开户银行" prop="openBank" >
+        <a-select placeholder="开户银行" v-model="form.openBank" style="width: 100%">
+          <a-select-option :key="item.accountName" :value="item.accountBank" v-for="item in openBankpay">
+            {{item.accountBank}}
+          </a-select-option>
+        </a-select>
+        <!-- <a-input v-model="form.openBank" placeholder="请输入开户银行" /> -->
+      </a-form-model-item>
       <a-form-model-item label="结算金额(单位: w)" prop="closeAmount" >
         <a-input v-model="form.closeAmount" placeholder="请输入结算金额" />
       </a-form-model-item>
@@ -55,13 +52,13 @@
         <a-icon :type="loading"/>
       </a-upload>
       </a-form-model-item>
-      <a-form-model-item label="结算账户" prop="account" >
-        <a-input v-model="form.account" placeholder="请输入结算账户" />
+<a-form-model-item label="合同摘要" prop="content" >
+        <a-textarea
+      v-model="value"
+      placeholder="请输入合同摘要"
+      :auto-size="{ minRows: 3, maxRows: 5 }"
+    />
       </a-form-model-item>
-      <a-form-model-item label="开户银行" prop="openBank" >
-        <a-input v-model="form.openBank" placeholder="请输入开户银行" />
-      </a-form-model-item>
-
       <a-form-model-item label="付款周期数" prop="payCycle" >
         <a-select placeholder="请选择" v-model="form.payCycle">
           <a-select-option :value="item.val" v-for="item in payCycles" :key="item.id">
@@ -78,8 +75,8 @@
       </a-form-model-item>
       <a-form-model-item label="付款提醒方式" prop="payCallType" >
         <a-select placeholder="请选择提示方式" v-model="form.payCallType">
-          <a-select-option  :value="item.id" v-for="item in callTypes" :key="item.id">
-            {{ item.val }}
+          <a-select-option  :value="item.type" v-for="item in colTypes" :key="item.type">
+            {{ item.type }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
@@ -98,29 +95,26 @@
       </a-form-model-item>
       <a-form-model-item label="收款提醒方式" prop="harvestCallType" >
         <a-select placeholder="请选择提示方式" v-model="form.harvestCallType">
-          <a-select-option  :value="item.id" v-for="item in colTypes" :key="item.id">
-            {{ item.val }}
+          <a-select-option  :value="item.type" v-for="item in colTypes" :key="item.type">
+            {{ item.type }}
           </a-select-option>
         </a-select>
 
       </a-form-model-item>
-      <!-- <a-form-model-item label="项目id" prop="projId" >
-        <a-input v-model="form.projId" placeholder="请输入项目id" />
-      </a-form-model-item> -->
       <a-form-model-item label="合同名称" prop="constractName" >
         <a-input v-model="form.constractName" placeholder="请输入合同名称" />
       </a-form-model-item>
-<!--      <a-form-model-item label="合同编号" prop="constractNo" >-->
-<!--        <a-input v-model="form.constractNo" placeholder="请输入合同编号" />-->
-<!--      </a-form-model-item>-->
       <a-form-model-item label="签约日期" prop="signTime" >
         <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD"  valueFormat="YYYY-MM-DD" allow-clear/>
       </a-form-model-item>
 
       <a-form-model-item label="合同大类别" prop="constractBigType" >
-        <a-select placeholder="请选择合同大类别" v-model="form.constractBigType">
-          <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
-            {{ item.maxType }}
+        <a-select placeholder="请选择合同类别" v-model="form.constractBigType" @change="typelist">
+          <a-select-option value="0">
+            收入合同
+          </a-select-option>
+          <a-select-option value="1">
+            支出合同
           </a-select-option>
         </a-select>
       </a-form-model-item>
@@ -131,9 +125,9 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同上传文件时间" prop="uploadTime" >
+      <!-- <a-form-model-item label="合同上传文件时间" prop="uploadTime" >
         <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
-      </a-form-model-item>
+      </a-form-model-item> -->
       <a-form-model-item label="联系人名称" prop="contactsor" >
         <a-input v-model="form.contactsor" placeholder="请输入联系人名称" />
       </a-form-model-item>
@@ -168,6 +162,9 @@ import {listType} from "@/api/system/type";
 import { uploadCover } from '@/api/system/upload'
 import { projsByUser } from '@/api/system/proj'
 import {listAll} from '@/api/system/proj'
+import {listSysPay} from '@/api/system/SysPayaccount'
+import {listTypes} from '@/api/system/type'
+import {delSysPaycolType, exportSysPaycolType, listSysPaycolType} from '@/api/system/SysPaycolType'
 export default {
   name: 'CreateForm',
   props: {
@@ -175,7 +172,24 @@ export default {
   components: {
   },
   data () {
+      const validatePrice = (rule,value,callback) =>{
+        let reg = /^(([1-9]{1}\d*)|(0{1}))(\.\d{2})$/
+        if(!value){
+            callback(new Error('金额不能为空'))
+         }else if(!reg.test(value)){
+            callback(new Error('请输入正确格式的金额'))
+             this.$set(this.ruleForm, "price", '');
+         }else if(value.length > 10){
+            callback(new Error('最多可输入10个字符'))
+             this.$set(this.ruleForm, "price", '');
+         }else{
+          callback();
+        }
+      };
     return {
+      
+      accountpay: [],
+      openBankpay: [],
       projList: [],
       fileList: [],
       projs: [],
@@ -193,10 +207,7 @@ export default {
         {"id":0,"val":"手机"},
         {"id":1,"val":"邮箱"}
       ],
-      colTypes: [
-        {"id":0,"val":"手机"},
-        {"id":1,"val":"邮箱"}
-      ],
+      colTypes: [],
       maxTypes: [],//合同类型-大
       minTypes: [],//合同类型-小
       loading: false,
@@ -236,7 +247,7 @@ export default {
         contactsor: null,
         contactsPhone: null,
         contactsEmai: null,
-        contactsOthers: null
+        contactsOthers: null,
       },
       // 1增加,2修改
       formType: 1,
@@ -249,14 +260,14 @@ export default {
           { required: true, message: '乙方名称不能为空', trigger: 'blur' }
         ],
         closeAmount: [
-          { required: true, message: '结算金额不能为空', trigger: 'blur' }
+          { required: true,   trigger: 'blur' }
         ],
         closeProj: [
           { required: true, message: '结算项目不能为空', trigger: 'blur' }
         ],
-        // delFlag: [
-        //   { required: true, message: '删除状态 0. 正常 1. 删除不能为空', trigger: 'blur' }
-        // ],
+        closeAmount: [
+          {required: true,  trigger: 'blur',validator:validatePrice}
+        ],
         projId: [
           { required: true, message: '项目id不能为空', trigger: 'blur' }
         ],
@@ -297,9 +308,13 @@ export default {
   filters: {
   },
   created () {
+    listSysPaycolType(this.queryParam).then(response => {
+      console.log(response.rows)
+        this.colTypes = response.rows
+      })
     listType().then(response => {
-      this.maxTypes = response.maxTypes;
-      this.minTypes = response.minTypes;
+      // this.maxTypes = response.maxTypes;
+      // this.minTypes = response.minTypes;
     })
     projsByUser().then(response => {
       this.projs = response;
@@ -315,6 +330,17 @@ export default {
   mounted () {
   },
   methods: {
+    typelist(val) {
+   listTypes({maxtype:val}).then(res => {
+   this.minTypes =res
+   })
+    },
+    handleChanges(val) {
+      listSysPay({prjId:val}).then(res => {
+          this.accountpay =res
+      this.openBankpay = res
+      })
+    },
       selected(data){
         console.log("data--"+data)
         this.form.projId = data;
@@ -397,11 +423,13 @@ export default {
     },
     onClose () {
       this.open = false
+      this.$refs['form'].resetFields()
       this.closeEditor()
     },
     // 取消按钮
     cancel () {
       this.open = false
+      this.$refs['form'].resetFields()
       this.reset()
       this.closeEditor()
     },
@@ -476,8 +504,8 @@ export default {
                 3
               )
               this.fileList = []
+              this.$refs['form'].resetFields()
               this.open = false
-              this.closeEditor()
               this.$emit('ok')
             })
           } else {
@@ -487,8 +515,8 @@ export default {
                 3
               )
               this.fileList = []
+              this.$refs['form'].resetFields()
               this.open = false
-              this.closeEditor()
               this.$emit('ok')
             })
           }

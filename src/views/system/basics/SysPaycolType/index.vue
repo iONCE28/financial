@@ -66,9 +66,9 @@
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
-        <span slot="formatterType" slot-scope="text, record">
+        <!-- <span slot="formatterType" slot-scope="text, record">
            {{ Typeformatter(record) }}
-        </span>
+        </span> -->
         <span slot="operation" slot-scope="text, record">
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysPaycolType:edit']">
             <a-icon type="edit"/>修改
@@ -156,16 +156,16 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    Typeformatter(row) {
-      if (row.type == 0) {
-        return '网页消息'
-      } else if (row.type == 1) {
-        return '网页表单预警'
-      } else {
-        return '/'
-      }
+    // Typeformatter(row) {
+    //   if (row.type == 0) {
+    //     return '网页消息'
+    //   } else if (row.type == 1) {
+    //     return '网页表单预警'
+    //   } else {
+    //     return '/'
+    //   }
 
-    },
+    // },
     /** 查询收/付款到期提醒方式信息列表 */
     getList() {
       this.loading = true

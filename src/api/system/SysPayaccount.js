@@ -8,6 +8,14 @@ export function listSysPayaccount (query) {
     params: query
   })
 }
+// 查询支付账户信息列表
+export function listSysPay (query) {
+  return request({
+    url: '/system/SysPayaccount/listpay',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询支付账户信息详细
 export function getSysPayaccount (id) {

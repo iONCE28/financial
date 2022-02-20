@@ -5,10 +5,7 @@
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
       <a-form-model-item label="收/付款到期提醒方式" prop="type">
-        <a-select placeholder="请选择收/付款到期提醒方式" v-model="form.type">
-          <a-select-option value="0">网页消息</a-select-option>
-          <a-select-option value="1">网页表单预警</a-select-option>
-        </a-select>
+          <a-input v-model="form.type" placeholder="请输入收款金额" />
       </a-form-model-item>
       <div class="bottom-control">
         <a-space>
@@ -46,7 +43,7 @@ export default {
       open: false,
       rules: {
         type: [
-          {required: true, message: '网页消息，网页表单预警……不能为空', trigger: 'change'}
+          {required: true, message: '"收/付款到期提醒方式', trigger: 'change'}
         ]
       }
     }

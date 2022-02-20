@@ -8,23 +8,51 @@
             <a-col :md="8" :sm="24">
               <a-form-item label="合同类型" prop="type">
                 <a-select placeholder="请选择合同类型" v-model="queryParam.constractBigType" style="width: 100%" allow-clear>
-                  <a-select-option :value="item.id" v-for="item in maxTypes" :key="item.id">
-                    {{ item.maxType }}
+                  <a-select-option value="0">
+                      收入合同
+                  </a-select-option>
+                  <a-select-option value="1">
+                      支出合同
                   </a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-
-            <a-col :md="8" :sm="24">
+      <a-col :md="8" :sm="24">
+              <a-form-item label="项目名称" prop="projName">
+                <a-input v-model="queryParam.projName" placeholder="请输入项目名称" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+              <a-form-item label="合同名称" prop="constractName">
+                <a-input v-model="queryParam.constractName" placeholder="请输入合同名称" allow-clear/>
+              </a-form-item>
+            </a-col>
+                 <a-col :md="8" :sm="24">
               <a-form-item label="甲方名称" prop="nailName">
                 <a-input v-model="queryParam.nailName" placeholder="请输入甲方名称" allow-clear/>
               </a-form-item>
             </a-col>
+             <a-col :md="8" :sm="24">
+              <a-form-item label="乙方名称" prop="bname">
+                <a-input v-model="queryParam.bname" placeholder="请输入乙方名称" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+                    <a-form-item label="签约时间">
+                      <a-range-picker style="width: 100%" v-model="dateRange" valueFormat="YYYY-MM-DD" format="YYYY-MM-DD" allow-clear />
+                    </a-form-item>
+                  </a-col>
+            </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
                     :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="handleQuery"><a-icon type="search"/>查询</a-button>
                 <a-button style="margin-left: 8px" @click="resetQuery"><a-icon type="redo"/>重置</a-button>
+                <a @click="toggleAdvanced" style="margin-left: 8px">
+                  {{ advanced ? '收起' : '展开' }}
+                  <a-icon :type="advanced ? 'up' : 'down'"/>
+                </a>
               </span>
             </a-col>
           </a-row>
@@ -45,10 +73,10 @@
           <a-icon type="delete"/>
           删除
         </a-button>
-        <a-button type="primary" @click="handleExport" v-hasPermi="['system:contract:export']">
+        <!-- <a-button type="primary" @click="handleExport" v-hasPermi="['system:contract:export']">
           <a-icon type="download"/>
           导出
-        </a-button>
+        </a-button> -->
         <a-button
           type="dashed"
           shape="circle"
@@ -92,9 +120,9 @@
           </a>
         </span>
         </div>
-        <span slot="signTime" slot-scope="text, record">
+        <!-- <span slot="signTime" slot-scope="text, record">
           {{ parseTime(record.signTime) }}
-        </span>
+        </span> -->
         <span slot="uploadTime" slot-scope="text, record">
           {{ parseTime(record.uploadTime) }}
         </span>
@@ -132,7 +160,7 @@ import {delContract, exportContract, listContract} from '@/api/system/contract'
 import CreateForm from './modules/CreateForm'
 import {listType} from "@/api/system/type";
 import Base from '@/utils/base64'
-
+import moment from 'moment'
 export default {
   name: 'Contract',
   components: {
@@ -143,6 +171,7 @@ export default {
       maxTypes: [],//合同类型-大
       minTypes: [],//合同类型-小
       list: [],
+      dateRange: [],
       selectedRowKeys: [],
       selectedRows: [],
       // 高级搜索 展开/关闭
@@ -185,6 +214,7 @@ export default {
         contactsPhone: null,
         contactsEmai: null,
         contactsOthers: null,
+        projName: null,
         pageNum: 1,
         pageSize: 10
       },
@@ -194,6 +224,24 @@ export default {
           key: 'number',
           width: '4%',
           scopedSlots: {customRender: 'serial'},
+          align: 'center'
+        },
+        {
+          title: '项目名称',
+          dataIndex: 'projName',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '合同编号',
+          dataIndex: 'constractNo',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '合同名称',
+          dataIndex: 'constractName',
+          ellipsis: true,
           align: 'center'
         },
         {
@@ -209,73 +257,53 @@ export default {
           align: 'center'
         },
         {
-          title: '结算金额',
-          dataIndex: 'closeAmount',
+          title: '合同大类',
+          dataIndex: 'constractBigType',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          customRender: function(text, record) {   
+           if(text === "0") {
+             return "收入合同"
+           } else if(text === "1") {
+             return "支出合同"
+           }
+          }
         },
-        {
-          title: '合同名称',
-          dataIndex: 'constractName',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '合同编号',
-          dataIndex: 'constractNo',
-          ellipsis: true,
-          align: 'center'
-        },
-        {
-          title: '签约日期',
-          dataIndex: 'signTime',
-          scopedSlots: {customRender: 'signTime'},
-          ellipsis: true,
-          align: 'center'
-        },
-        // {
-        //   title: '合同大类别:0：收入合同，1：支出合同',
-        //   dataIndex: 'constractBigType',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
         {
           title: '合同小类别',
           dataIndex: 'constractSmallType',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '合同上传文件时间',
-        //   dataIndex: 'uploadTime',
-        //   scopedSlots: { customRender: 'uploadTime' },
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '结算金额',
+          dataIndex: 'closeAmount',
+          ellipsis: true,
+          align: 'center'
+        },
+        {
+          title: '签约日期',
+          dataIndex: 'signTime',
+          customRender: function(date) {   
+           return moment(date).format("YYYY-MM-DD")
+
+          },
+          ellipsis: true,
+          align: 'center',
+            width: 150,
+        },
         {
           title: '联系人名称',
           dataIndex: 'contactsor',
           ellipsis: true,
           align: 'center'
         },
-        // {
-        //   title: '联系人电话',
-        //   dataIndex: 'contactsPhone',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '联系人邮箱',
-        //   dataIndex: 'contactsEmai',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
-        // {
-        //   title: '联系人其他',
-        //   dataIndex: 'contactsOthers',
-        //   ellipsis: true,
-        //   align: 'center'
-        // },
+        {
+          title: '联系人电话',
+          dataIndex: 'contactsPhone',
+          ellipsis: true,
+          align: 'center',
+        },
         {
           title: '合同文件',
           dataIndex: 'voucher',
@@ -316,7 +344,7 @@ export default {
     /** 查询合同基本信息列表 */
     getList() {
       this.loading = true
-      listContract(this.queryParam).then(response => {
+      listContract(this.addDateRange(this.queryParam, this.dateRange)).then(response => {
         this.list = response.rows
         this.total = response.total
         this.loading = false
@@ -329,6 +357,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+       this.dateRange = []
       this.queryParam = {
         type: undefined,
         nailName: undefined,
@@ -360,7 +389,8 @@ export default {
         contactsEmai: undefined,
         contactsOthers: undefined,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        projName: null,
       }
       this.handleQuery()
     },

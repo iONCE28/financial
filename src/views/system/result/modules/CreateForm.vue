@@ -5,9 +5,9 @@
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
 
-      <a-form-model-item label="项目" prop="projName" >
-        <a-select placeholder="请选择项目"  v-model="form.projName">
-          <a-select-option :value="item.name" @click="selected(item.id)" v-for="item in projs" :key="item.id">
+      <a-form-model-item label="关联项目" prop="projId">
+       <a-select placeholder="项目" v-model="form.projId" style="width: 100%"  @change="handleChanges"  >
+          <a-select-option :value="item.id" v-for="item in projList" :key="item.id" >
             {{ item.name }}
           </a-select-option>
         </a-select>
@@ -70,9 +70,8 @@
 
 <script>
 import { getResult, addResult, updateResult } from '@/api/system/result'
-import { contractSByProj } from '@/api/system/contract'
-import { projsByUser } from '@/api/system/proj'
-
+import { ContractSByProj } from '@/api/system/contract'
+import { projsByUser,listAll } from '@/api/system/proj'
 export default {
   name: 'CreateForm',
   props: {
@@ -91,6 +90,7 @@ export default {
       contracts: [],//合同列表
       loading: false,
       formTitle: '',
+      projList: [],
       // 表单参数
       form: {
         contractId: null,
@@ -155,6 +155,9 @@ export default {
     projsByUser().then(response => {
       this.projs = response;
     })
+      listAll().then(res => {
+       this.projList = res.data
+      })
   },
   computed: {
   },
@@ -163,13 +166,18 @@ export default {
   mounted () {
   },
   methods: {
-    selected(data){
-      console.log("data--"+data)
-      this.form.projId = data;
-      contractSByProj(data).then(response => {
-        this.contracts = response;
-      })
+    handleChanges(val) {
+     ContractSByProj(val).then(res => {
+     console.log(res)
+})
     },
+    // selected(data){
+    //   console.log("data--"+data)
+    //   this.form.projId = data;
+    //   contractSByProj(data).then(response => {
+    //     this.contracts = response;
+    //   })
+    // },
     onClose () {
       this.open = false
     },

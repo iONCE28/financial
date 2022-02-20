@@ -10,9 +10,9 @@ export function listContract (query) {
 }
 
 // 根据项目查询合同
-export function contractSByProj (projId) {
+export function ContractSByProj (projId) {
   return request({
-    url: '/system/contract/contractSByProj/'+projId,
+    url: '/system/contract/contractSByProj/' + projId,
     method: 'get'
   })
 }

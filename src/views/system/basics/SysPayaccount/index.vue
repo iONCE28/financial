@@ -92,7 +92,6 @@
           {{ index + 1 }}
         </span>
         <span slot="operation" slot-scope="text, record">
-          <a-divider type="vertical" v-hasPermi="['system:SysPayaccount:edit']"/>
           <a @click="$refs.createForm.handleUpdate(record, undefined)" v-hasPermi="['system:SysPayaccount:edit']">
             <a-icon type="edit"/>修改
           </a>
@@ -149,7 +148,8 @@ export default {
         accountBank: null,
         accountPhone: null,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        accountType:null
       },
       columns: [
         {
@@ -169,7 +169,14 @@ export default {
           title: '账户类型',
           dataIndex: 'accountType',
           ellipsis: true,
-          align: 'center'
+          align: 'center',
+          customRender: function(text, record) {   
+           if(text === "0") {
+             return "现金"
+           } else if(text === "1") {
+             return "银行"
+           }
+          }
         },
         {
           title: '账户名称',
@@ -235,7 +242,9 @@ export default {
         accountBank: undefined,
         accountPhone: undefined,
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        accountType:null,
+        accountBalance: null
       }
       this.handleQuery()
     },
