@@ -111,7 +111,7 @@
 import {addLoan, getLoan, updateLoan} from '@/api/system/loan'
 import {capitalAmount} from "@/utils/util";
 import {projsByUser} from "@/api/system/proj";
-import {contractSByProj} from "@/api/system/contract";
+import {ContractSByProj} from "@/api/system/contract";
 import {listStaff} from "@/api/system/staff";
 import {listSysPayaccount} from "@/api/system/SysPayaccount";
 
@@ -229,7 +229,7 @@ export default {
     },
     handleProj(value) {
       this.form.projId = value;
-      contractSByProj(value).then(response => {
+      ContractSByProj(value).then(response => {
         this.contractsList = response;
       })
     },
