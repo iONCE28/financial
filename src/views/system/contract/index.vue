@@ -73,10 +73,10 @@
           <a-icon type="delete"/>
           删除
         </a-button>
-        <!-- <a-button type="primary" @click="handleExport" v-hasPermi="['system:contract:export']">
-          <a-icon type="download"/>
-          导出
-        </a-button> -->
+         <a-button type="primary" @click="handleExport" v-hasPermi="['system:contract:export']">
+           <a-icon type="download"/>
+           导出
+         </a-button>
         <a-button
           type="dashed"
           shape="circle"
@@ -99,7 +99,7 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false"
-        :scroll="{ x: 1800 }">
+        :scroll="{ x:  'max-content' }">
         <span slot="files" slot-scope="text, record" v-if="record.voucher !== ''">
           <a @click="preview(record.voucher)">
             <a-icon type="eye"/>预览
@@ -222,7 +222,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          width: '4%',
+          width: '80',
+          fixed: 'left',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
@@ -261,12 +262,12 @@ export default {
           dataIndex: 'constractBigType',
           ellipsis: true,
           align: 'center',
-          customRender: function(text, record) {   
-           if(text === "0") {
-             return "收入合同"
-           } else if(text === "1") {
-             return "支出合同"
-           }
+          customRender: function (text, record) {
+            if (text === "0") {
+              return "收入合同"
+            } else if (text === "1") {
+              return "支出合同"
+            }
           }
         },
         {
@@ -284,8 +285,8 @@ export default {
         {
           title: '签约日期',
           dataIndex: 'signTime',
-          customRender: function(date) {   
-           return moment(date).format("YYYY-MM-DD")
+          customRender: function (date) {
+            return moment(date).format("YYYY-MM-DD")
 
           },
           ellipsis: true,
@@ -314,7 +315,7 @@ export default {
         {
           title: '操作',
           dataIndex: 'operation',
-          width: 180,
+          width: 160,
           scopedSlots: {customRender: 'operation'},
           align: 'center',
           fixed: 'right',

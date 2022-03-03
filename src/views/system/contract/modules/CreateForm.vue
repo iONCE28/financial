@@ -4,62 +4,64 @@
       <b>{{ formTitle }}</b>
     </a-divider>
     <a-form-model ref="form" :model="form" :rules="rules">
-      <a-form-model-item label="甲方名称" prop="nailName" >
-        <a-input v-model="form.nailName" placeholder="请输入甲方名称" />
+      <a-form-model-item label="甲方名称" prop="nailName">
+        <a-input v-model="form.nailName" placeholder="请输入甲方名称"/>
       </a-form-model-item>
-      <a-form-model-item label="乙方名称" prop="bname" >
-        <a-input v-model="form.bname" placeholder="请输入乙方名称" />
+      <a-form-model-item label="乙方名称" prop="bname">
+        <a-input v-model="form.bname" placeholder="请输入乙方名称"/>
       </a-form-model-item>
-<a-form-model-item label="关联项目" prop="projId">
-       <a-select placeholder="项目" v-model="form.projId" style="width: 100%"  @change="handleChanges"  >
-          <a-select-option :value="item.id" v-for="item in projList" :key="item.id" >
+      <a-form-model-item label="关联项目" prop="projId">
+        <a-select placeholder="项目" v-model="form.projId" style="width: 100%" @change="handleChanges">
+          <a-select-option :value="item.id" v-for="item in projList" :key="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
-<a-form-model-item label="结算账户" prop="account" >
-        <a-select  placeholder="结算账户" v-model="form.account" style="width: 100%">
+      <a-form-model-item label="结算账户" prop="account">
+        <a-select placeholder="结算账户" v-model="form.account" style="width: 100%">
           <a-select-option :key="item.accountName" :value="item.accountName" v-for="item in accountpay">
             {{ item.accountName }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="开户银行" prop="openBank" >
+      <a-form-model-item label="开户银行" prop="openBank">
         <a-select placeholder="开户银行" v-model="form.openBank" style="width: 100%">
           <a-select-option :key="item.accountName" :value="item.accountBank" v-for="item in openBankpay">
-            {{item.accountBank}}
+            {{ item.accountBank }}
           </a-select-option>
         </a-select>
         <!-- <a-input v-model="form.openBank" placeholder="请输入开户银行" /> -->
       </a-form-model-item>
-      <a-form-model-item label="结算金额(单位: w)" prop="closeAmount" >
-        <a-input v-model="form.closeAmount" placeholder="请输入结算金额" />
-      </a-form-model-item>
+      <!--      <a-form-model-item label="结算金额(单位: w)" prop="closeAmount">
+              <a-input v-model="form.closeAmount" placeholder="请输入结算金额"/>
+            </a-form-model-item>-->
 
 
-
-      <a-form-model-item label="投资方" prop="investor" >
-        <a-input v-model="form.investor" placeholder="请输入投资方" />
-      </a-form-model-item>
-      <a-form-model-item label="合同文件" prop="voucher" >
-          <a-upload
-        :file-list="fileList"
+      <!--      <a-form-model-item label="投资方" prop="investor">-->
+      <!--        <a-input v-model="form.investor" placeholder="请输入投资方"/>-->
+      <!--      </a-form-model-item>-->
+      <a-form-model-item label="合同文件" prop="voucher">
+        <a-upload
+          :file-list="fileList"
           :customRequest="handleUploadone"
           :before-upload="beforeUploadone"
           @change="handleChange"
           :multiple="true">
-        <a-button type="primary"> <a-icon type="upload"/>文件上传</a-button>
-        <a-icon :type="loading"/>
-      </a-upload>
+          <a-button type="primary">
+            <a-icon type="upload"/>
+            文件上传
+          </a-button>
+          <a-icon :type="loading"/>
+        </a-upload>
       </a-form-model-item>
-<a-form-model-item label="合同摘要" prop="content" >
+      <a-form-model-item label="合同摘要" prop="content">
         <a-textarea
-      v-model="value"
-      placeholder="请输入合同摘要"
-      :auto-size="{ minRows: 3, maxRows: 5 }"
-    />
+          v-model="value"
+          placeholder="请输入合同摘要"
+          :auto-size="{ minRows: 3, maxRows: 5 }"
+        />
       </a-form-model-item>
-      <a-form-model-item label="付款周期数" prop="payCycle" >
+      <a-form-model-item label="付款周期数" prop="payCycle">
         <a-select placeholder="请选择" v-model="form.payCycle">
           <a-select-option :value="item.val" v-for="item in payCycles" :key="item.id">
             {{ item.text }}
@@ -67,48 +69,49 @@
         </a-select>
       </a-form-model-item>
 
-      <a-form-model-item label="付款条件" prop="payCondition" >
-        <a-input v-model="form.payCondition" placeholder="请输入付款条件" />
+      <a-form-model-item label="付款条件" prop="payCondition">
+        <a-input v-model="form.payCondition" placeholder="请输入付款条件"/>
       </a-form-model-item>
-      <a-form-model-item label="付款金额(单位: w)" prop="payAmount" >
-        <a-input v-model="form.payAmount" placeholder="请输入付款金额" />
+      <a-form-model-item label="付款金额(单位: w)" prop="payAmount">
+        <a-input v-model="form.payAmount" placeholder="请输入付款金额"/>
       </a-form-model-item>
-      <a-form-model-item label="付款提醒方式" prop="payCallType" >
+      <a-form-model-item label="付款提醒方式" prop="payCallType">
         <a-select placeholder="请选择提示方式" v-model="form.payCallType">
-          <a-select-option  :value="item.type" v-for="item in colTypes" :key="item.type">
+          <a-select-option :value="item.type" v-for="item in colTypes" :key="item.type">
             {{ item.type }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="收款周期数:" prop="harvestCycle" >
-          <a-select placeholder="请选择" v-model="form.harvestCycle">
+      <a-form-model-item label="收款周期数:" prop="harvestCycle">
+        <a-select placeholder="请选择" v-model="form.harvestCycle">
           <a-select-option :value="item.val" v-for="item in colCycles" :key="item.id">
             {{ item.text }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="收款条件" prop="harvestCondition" >
-        <a-input v-model="form.harvestCondition" placeholder="请输入收款条件" />
+      <a-form-model-item label="收款条件" prop="harvestCondition">
+        <a-input v-model="form.harvestCondition" placeholder="请输入收款条件"/>
       </a-form-model-item>
-      <a-form-model-item label="收款金额(单位: w)" prop="harvestAmount" >
-        <a-input v-model="form.harvestAmount" placeholder="请输入收款金额" />
+      <a-form-model-item label="收款金额(单位: w)" prop="harvestAmount">
+        <a-input v-model="form.harvestAmount" placeholder="请输入收款金额"/>
       </a-form-model-item>
-      <a-form-model-item label="收款提醒方式" prop="harvestCallType" >
+      <a-form-model-item label="收款提醒方式" prop="harvestCallType">
         <a-select placeholder="请选择提示方式" v-model="form.harvestCallType">
-          <a-select-option  :value="item.type" v-for="item in colTypes" :key="item.type">
+          <a-select-option :value="item.type" v-for="item in colTypes" :key="item.type">
             {{ item.type }}
           </a-select-option>
         </a-select>
 
       </a-form-model-item>
-      <a-form-model-item label="合同名称" prop="constractName" >
-        <a-input v-model="form.constractName" placeholder="请输入合同名称" />
+      <a-form-model-item label="合同名称" prop="constractName">
+        <a-input v-model="form.constractName" placeholder="请输入合同名称"/>
       </a-form-model-item>
-      <a-form-model-item label="签约日期" prop="signTime" >
-        <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD"  valueFormat="YYYY-MM-DD" allow-clear/>
+      <a-form-model-item label="签约日期" prop="signTime">
+        <a-date-picker style="width: 100%" v-model="form.signTime" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"
+                       allow-clear/>
       </a-form-model-item>
 
-      <a-form-model-item label="合同大类别" prop="constractBigType" >
+      <a-form-model-item label="合同大类别" prop="constractBigType">
         <a-select placeholder="请选择合同类别" v-model="form.constractBigType" @change="typelist">
           <a-select-option value="0">
             收入合同
@@ -118,7 +121,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="合同小类别" prop="constractSmallType" >
+      <a-form-model-item label="合同小类别" prop="constractSmallType">
         <a-select placeholder="请选择合同小类别" v-model="form.constractSmallType">
           <a-select-option :value="item.minType" v-for="item in minTypes" :key="item.id">
             {{ item.minType }}
@@ -128,17 +131,17 @@
       <!-- <a-form-model-item label="合同上传文件时间" prop="uploadTime" >
         <a-date-picker style="width: 100%" v-model="form.uploadTime" format="YYYY-MM-DD HH:mm:ss"  valueFormat="YYYY-MM-DD HH:mm:ss" allow-clear/>
       </a-form-model-item> -->
-      <a-form-model-item label="联系人名称" prop="contactsor" >
-        <a-input v-model="form.contactsor" placeholder="请输入联系人名称" />
+      <a-form-model-item label="联系人名称" prop="contactsor">
+        <a-input v-model="form.contactsor" placeholder="请输入联系人名称"/>
       </a-form-model-item>
-      <a-form-model-item label="联系人电话" prop="contactsPhone" >
-        <a-input v-model="form.contactsPhone" placeholder="请输入联系人电话" />
+      <a-form-model-item label="联系人电话" prop="contactsPhone">
+        <a-input v-model="form.contactsPhone" placeholder="请输入联系人电话"/>
       </a-form-model-item>
-      <a-form-model-item label="联系人邮箱" prop="contactsEmai" >
-        <a-input v-model="form.contactsEmai" placeholder="请输入联系人邮箱" />
+      <a-form-model-item label="联系人邮箱" prop="contactsEmai">
+        <a-input v-model="form.contactsEmai" placeholder="请输入联系人邮箱"/>
       </a-form-model-item>
-      <a-form-model-item label="联系人其他" prop="contactsOthers" >
-        <a-input v-model="form.contactsOthers" placeholder="请输入联系人其他" />
+      <a-form-model-item label="联系人其他" prop="contactsOthers">
+        <a-input v-model="form.contactsOthers" placeholder="请输入联系人其他"/>
       </a-form-model-item>
       <div class="bottom-control">
         <a-space>
@@ -159,53 +162,52 @@ import {getContract, addContract, updateContract, contractSByProj} from '@/api/s
 import Vditor from 'vditor'
 import 'vditor/dist/index.css'
 import {listType} from "@/api/system/type";
-import { uploadCover } from '@/api/system/upload'
-import { projsByUser } from '@/api/system/proj'
+import {uploadCover} from '@/api/system/upload'
+import {projsByUser} from '@/api/system/proj'
 import {listAll} from '@/api/system/proj'
 import {listSysPay} from '@/api/system/SysPayaccount'
 import {listTypes} from '@/api/system/type'
 import {delSysPaycolType, exportSysPaycolType, listSysPaycolType} from '@/api/system/SysPaycolType'
+
 export default {
   name: 'CreateForm',
-  props: {
-  },
-  components: {
-  },
-  data () {
-      const validatePrice = (rule,value,callback) =>{
-        let reg = /^(([1-9]{1}\d*)|(0{1}))(\.\d{2})$/
-        if(!value){
-            callback(new Error('金额不能为空'))
-         }else if(!reg.test(value)){
-            callback(new Error('请输入正确格式的金额'))
-             this.$set(this.ruleForm, "price", '');
-         }else if(value.length > 10){
-            callback(new Error('最多可输入10个字符'))
-             this.$set(this.ruleForm, "price", '');
-         }else{
-          callback();
-        }
-      };
+  props: {},
+  components: {},
+  data() {
+    const validatePrice = (rule, value, callback) => {
+      let reg = /^(([1-9]{1}\d*)|(0{1}))(\.\d{2})$/
+      if (!value) {
+        callback(new Error('金额不能为空'))
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入正确格式的金额'))
+        this.$set(this.ruleForm, "price", '');
+      } else if (value.length > 10) {
+        callback(new Error('最多可输入10个字符'))
+        this.$set(this.ruleForm, "price", '');
+      } else {
+        callback();
+      }
+    };
     return {
-      
+
       accountpay: [],
       openBankpay: [],
       projList: [],
       fileList: [],
       projs: [],
       payCycles: [
-        {"id":1,"val":360,"text":"年"},
-        {"id":2,"val":30,"text":"月"},
-        {"id":3,"val":1,"text":"日"}
+        {"id": 1, "val": 360, "text": "年"},
+        {"id": 2, "val": 30, "text": "月"},
+        {"id": 3, "val": 1, "text": "日"}
       ],
       colCycles: [
-        {"id":1,"val":360,"text":"年"},
-        {"id":2,"val":30,"text":"月"},
-        {"id":3,"val":1,"text":"日"}
+        {"id": 1, "val": 360, "text": "年"},
+        {"id": 2, "val": 30, "text": "月"},
+        {"id": 3, "val": 1, "text": "日"}
       ],
       callTypes: [
-        {"id":0,"val":"手机"},
-        {"id":1,"val":"邮箱"}
+        {"id": 0, "val": "手机"},
+        {"id": 1, "val": "邮箱"}
       ],
       colTypes: [],
       maxTypes: [],//合同类型-大
@@ -254,40 +256,40 @@ export default {
       open: false,
       rules: {
         nailName: [
-          { required: true, message: '甲方名称不能为空', trigger: 'blur' }
+          {required: true, message: '甲方名称不能为空', trigger: 'blur'}
         ],
         bname: [
-          { required: true, message: '乙方名称不能为空', trigger: 'blur' }
+          {required: true, message: '乙方名称不能为空', trigger: 'blur'}
         ],
         closeAmount: [
-          { required: true,   trigger: 'blur' }
+          {required: true, trigger: 'blur'}
         ],
         closeProj: [
-          { required: true, message: '结算项目不能为空', trigger: 'blur' }
+          {required: true, message: '结算项目不能为空', trigger: 'blur'}
         ],
         closeAmount: [
-          {required: true,  trigger: 'blur',validator:validatePrice}
+          {required: true, trigger: 'blur', validator: validatePrice}
         ],
         projId: [
-          { required: true, message: '项目id不能为空', trigger: 'blur' }
+          {required: true, message: '项目id不能为空', trigger: 'blur'}
         ],
         signTime: [
-          { required: true, message: '签约日期不能为空', trigger: 'blur' }
+          {required: true, message: '签约日期不能为空', trigger: 'blur'}
         ],
         constractBigType: [
-          { required: true, message: '合同大类别:0：收入合同，1：支出合同不能为空', trigger: 'change' }
+          {required: true, message: '合同大类别:0：收入合同，1：支出合同不能为空', trigger: 'change'}
         ],
         constractSmallType: [
-          { required: true, message: '合同小类别:投资方分类。演员合同、职员合同……不能为空', trigger: 'change' }
+          {required: true, message: '合同小类别:投资方分类。演员合同、职员合同……不能为空', trigger: 'change'}
         ],
         uploadTime: [
-          { required: true, message: '合同上传文件时间不能为空', trigger: 'blur' }
+          {required: true, message: '合同上传文件时间不能为空', trigger: 'blur'}
         ],
         contactsor: [
-          { required: true, message: '联系人名称不能为空', trigger: 'blur' }
+          {required: true, message: '联系人名称不能为空', trigger: 'blur'}
         ],
         contactsPhone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' },
+          {required: true, message: '手机号不能为空', trigger: 'blur'},
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: '请正确填写手机号',
@@ -295,7 +297,7 @@ export default {
           }
         ],
         contactsEmai: [
-          { required: true, message: '邮箱不能为空', trigger: 'blur' },
+          {required: true, message: '邮箱不能为空', trigger: 'blur'},
           {
             type: 'email',
             message: '请正确填写邮箱地址',
@@ -305,13 +307,12 @@ export default {
       }
     }
   },
-  filters: {
-  },
-  created () {
+  filters: {},
+  created() {
     listSysPaycolType(this.queryParam).then(response => {
       console.log(response.rows)
-        this.colTypes = response.rows
-      })
+      this.colTypes = response.rows
+    })
     listType().then(response => {
       // this.maxTypes = response.maxTypes;
       // this.minTypes = response.minTypes;
@@ -320,85 +321,83 @@ export default {
       this.projs = response;
     })
     listAll().then(res => {
-       this.projList = res.data
-      })
+      this.projList = res.data
+    })
   },
-  computed: {
-  },
-  watch: {
-  },
-  mounted () {
+  computed: {},
+  watch: {},
+  mounted() {
   },
   methods: {
     typelist(val) {
-   listTypes({maxtype:val}).then(res => {
-   this.minTypes =res
-   })
-    },
-    handleChanges(val) {
-      listSysPay({prjId:val}).then(res => {
-          this.accountpay =res
-      this.openBankpay = res
+      listTypes({maxtype: val}).then(res => {
+        this.minTypes = res
       })
     },
-      selected(data){
-        console.log("data--"+data)
-        this.form.projId = data;
-        contractSByProj(data).then(response => {
-          this.contracts = response;
-        })
-      },
-      // 文件上传相关
-      handleUploadone (file) {
-        this.formData = file.file
-        const progress = { percent: 1 }
-        const speed = 100 / (file.file.size / 65000)// 上传速度
-        const intervalId = setInterval(() => {
-          // 控制进度条防止在未上传成功时进度条达到100
-          if (progress.percent < 100) {
-            progress.percent += speed// 控制进度条速度
+    handleChanges(val) {
+      listSysPay({prjId: val}).then(res => {
+        this.accountpay = res
+        this.openBankpay = res
+      })
+    },
+    selected(data) {
+      console.log("data--" + data)
+      this.form.projId = data;
+      contractSByProj(data).then(response => {
+        this.contracts = response;
+      })
+    },
+    // 文件上传相关
+    handleUploadone(file) {
+      this.formData = file.file
+      const progress = {percent: 1}
+      const speed = 100 / (file.file.size / 65000)// 上传速度
+      const intervalId = setInterval(() => {
+        // 控制进度条防止在未上传成功时进度条达到100
+        if (progress.percent < 100) {
+          progress.percent += speed// 控制进度条速度
 
-            file.onProgress(progress)// onProgress接收一个对象{ percent: 进度 }在进度条上显示
-          } else if ((progress.percent === 99)) {
-            progress.percent++
-          } else if (progress.percent > 100) {
-            file.onSuccess(file)
-            clearInterval(intervalId)
-          }
-        }, 100)
-        const formData = new FormData()
-        formData.append('file', file.file)
-        // formData.append('noticeId', this.id)
-        uploadCover(formData).then(res => {
-          console.log('进入了方法')
-          this.$notification.success({
-            message: '上传成功'
-          })
-          setTimeout(() => {
-            this.form.voucher = res.data.url
-            // this.form.noticeId = this.id
-            // this.imagesUrl = res.data.url
-          }, 0)
-          file.onSuccess(res, file.file)
-        }).catch(function (error) {
-          // 由网络或者服务器抛出的错误
-          console.log(error.toString())
-          // alert(error.toString())
+          file.onProgress(progress)// onProgress接收一个对象{ percent: 进度 }在进度条上显示
+        } else if ((progress.percent === 99)) {
+          progress.percent++
+        } else if (progress.percent > 100) {
+          file.onSuccess(file)
+          clearInterval(intervalId)
+        }
+      }, 100)
+      const formData = new FormData()
+      formData.append('file', file.file)
+      // formData.append('noticeId', this.id)
+      uploadCover(formData).then(res => {
+        console.log('进入了方法')
+        this.$notification.success({
+          message: '上传成功'
         })
-      },
-      handleChange (info) {
+        setTimeout(() => {
+          this.form.voucher = res.data.url
+          // this.form.noticeId = this.id
+          // this.imagesUrl = res.data.url
+        }, 0)
+        file.onSuccess(res, file.file)
+      }).catch(function (error) {
+        // 由网络或者服务器抛出的错误
+        console.log(error.toString())
+        // alert(error.toString())
+      })
+    },
+    handleChange(info) {
       let fileList = [...info.fileList]
       fileList = fileList.slice(-1)
       this.fileList = fileList
-        if (info.file.status === 'uploading') {
-          this.loading = true
-          return
-        }
-        if (info.file.status === 'done') {
-          this.loading = false
-        }
-      },
-    openEditor () {
+      if (info.file.status === 'uploading') {
+        this.loading = true
+        return
+      }
+      if (info.file.status === 'done') {
+        this.loading = false
+      }
+    },
+    openEditor() {
       this.$nextTick(() => {
         this.contentEditor = new Vditor('content', {
           height: 360,
@@ -418,23 +417,23 @@ export default {
         })
       })
     },
-    closeEditor () {
+    closeEditor() {
       this.noticeContentEditor.destroy()
     },
-    onClose () {
+    onClose() {
       this.open = false
       this.$refs['form'].resetFields()
       this.closeEditor()
     },
     // 取消按钮
-    cancel () {
+    cancel() {
       this.open = false
       this.$refs['form'].resetFields()
       this.reset()
       this.closeEditor()
     },
     // 表单重置
-    reset () {
+    reset() {
       this.formType = 1
       this.form = {
         id: null,
@@ -473,7 +472,7 @@ export default {
       }
     },
     /** 新增按钮操作 */
-    handleAdd (row) {
+    handleAdd(row) {
       this.reset()
       this.formType = 1
       this.open = true
@@ -481,7 +480,7 @@ export default {
       this.formTitle = '添加'
     },
     /** 修改按钮操作 */
-    handleUpdate (row, ids) {
+    handleUpdate(row, ids) {
       this.reset()
       this.formType = 2
       const id = row ? row.id : ids

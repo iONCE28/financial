@@ -17,20 +17,20 @@
             </a-col>
             <template v-if="advanced">
               <a-col :md="8" :sm="24">
-              <a-form-item label="投资方" prop="investor">
-                <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>
-              </a-form-item>
-            </a-col>
+                <a-form-item label="投资方" prop="investor">
+                  <a-input v-model="queryParam.investor" placeholder="请输入投资方" allow-clear/>
+                </a-form-item>
+              </a-col>
               <a-col :md="8" :sm="24">
-              <a-form-item label="负责人" prop="dutior">
-                <a-input v-model="queryParam.dutior" placeholder="请输入负责人" allow-clear/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="立项部门" prop="deptName">
-                <a-input v-model="queryParam.deptName" placeholder="请输入立项部门" allow-clear/>
-              </a-form-item>
-            </a-col>
+                <a-form-item label="负责人" prop="dutior">
+                  <a-input v-model="queryParam.dutior" placeholder="请输入负责人" allow-clear/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="立项部门" prop="deptName">
+                  <a-input v-model="queryParam.deptName" placeholder="请输入立项部门" allow-clear/>
+                </a-form-item>
+              </a-col>
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons"
@@ -61,6 +61,10 @@
           <a-icon type="delete"/>
           删除
         </a-button> -->
+        <a-button type="primary" @click="handleExport" v-hasPermi="['system:contract:export']">
+          <a-icon type="download"/>
+          导出
+        </a-button>
         <a-button
           type="dashed"
           shape="circle"
@@ -74,9 +78,9 @@
         ref="createForm"
         @ok="getList"
       />
-       <DetailsFrom ref="detailsfrom">
+      <DetailsFrom ref="detailsfrom">
 
-       </DetailsFrom>
+      </DetailsFrom>
       <!-- 数据展示 -->
       <a-table
         :loading="loading"
@@ -86,7 +90,7 @@
         :data-source="list"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :pagination="false"
-        :scroll="{ x: 1800 }">
+        :scroll="{ x: 'max-content' }">
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
@@ -108,7 +112,7 @@
             <a-icon type="download"/>下载
           </a>
         </span>
-          <div v-else>
+        <div v-else>
             <span slot="files" slot-scope="text, record" style="display: none">
           <a @click="preview(record.file)">
             <a-icon type="eye"/>预览
@@ -118,7 +122,7 @@
             <a-icon type="download"/>下载
           </a>
         </span>
-          </div>
+        </div>
         <span slot="operation" slot-scope="text, record">
           <a @click="$refs.detailsfrom.handledetails(record, undefined)" v-hasPermi="['system:proj:edit']">
             <a-icon type="eye"/>详情
@@ -154,6 +158,7 @@ import {delProj, exportProj, listProj} from '@/api/system/proj'
 import CreateForm from './modules/CreateForm'
 import Base from '@/utils/base64'
 import DetailsFrom from './modules/DetailsFrom'
+
 export default {
   name: 'Proj',
   components: {
@@ -204,7 +209,8 @@ export default {
         {
           title: '序号',
           key: 'number',
-          width: '4%',
+          width: '80',
+          fixed: 'left',
           scopedSlots: {customRender: 'serial'},
           align: 'center'
         },
@@ -220,7 +226,7 @@ export default {
           ellipsis: true,
           align: 'center'
         },
-        {
+        /*{
           title: '项目性质',
           dataIndex: 'nature',
           ellipsis: true,
@@ -249,7 +255,7 @@ export default {
               return "已验收"
             }
           }
-        },
+        },*/
         {
           title: '场次',
           dataIndex: 'showNum',
@@ -303,7 +309,7 @@ export default {
         {
           title: '操作',
           dataIndex: 'operation',
-       width: 200,
+          width: 160,
           scopedSlots: {customRender: 'operation'},
           align: 'center',
           fixed: 'right',

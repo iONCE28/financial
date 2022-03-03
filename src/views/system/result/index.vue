@@ -156,31 +156,31 @@ export default {
           align: 'center'
         },
         {
-          title: '结算项目名称',
+          title: '项目名称',
           dataIndex: 'maxType',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算金额',
+          title: '结算金额(元)',
           dataIndex: 'projAmt',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算账户名称',
+          title: '账户名称',
           dataIndex: 'accountName',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算账户开户行',
+          title: '账户开户行',
           dataIndex: 'openBank',
           ellipsis: true,
           align: 'center'
         },
         {
-          title: '结算账户',
+          title: '账户',
           dataIndex: 'account',
           ellipsis: true,
           align: 'center'
